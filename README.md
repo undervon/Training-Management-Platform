@@ -1,1 +1,1 @@
-# Training-Management-Platform
+# Training Management Platform
