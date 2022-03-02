@@ -1,16 +1,13 @@
 services:
   app:
-    image: authentification.authorization.jwt.app
+    image: 2auth.jwt.app
     container_name: Authentification-Authorization-JWT-app
     build:
       context: .
     ports:
       - 8090:8090
-    depends_on:
-      postgres:
-        condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5431/trainingManagementPlatform
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trainingManagementPlatform
 
   postgres:
     image: postgres
