@@ -14,7 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -32,16 +32,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         final String token = header.substring(7);
-        if (Boolean.TRUE.equals(jwtTokenUtil.isTokenExpired(token))) {
+        if (!jwtTokenUtil.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
         final String username = jwtTokenUtil.getUsernameFromToken(token);
-        final ERole eRole = jwtTokenUtil.getRolesFromToken(token);
+        final List<ERole> roles = jwtTokenUtil.getRolesFromToken(token);
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null,
-                Collections.singleton(eRole));
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(username, null, roles);
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

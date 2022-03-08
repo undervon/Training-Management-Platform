@@ -1,7 +1,7 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
 import com.tmp.authentication.authorization.jwt.models.AuthCredentialsDTO;
-import com.tmp.authentication.authorization.jwt.models.TokenDTO;
+import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.services.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,20 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/1.0/tmp")
+@RequestMapping(path = "${api.path}")
 public class LoginController {
 
     private final LoginService loginService;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokenDTO> login(@RequestBody AuthCredentialsDTO authCredentialsDTO) {
+    public ResponseEntity<TokensDTO> login(@RequestBody AuthCredentialsDTO authCredentialsDTO) {
         log.info("[{}] -> login, authCredentialsDTO: {}", this.getClass().getSimpleName(), authCredentialsDTO);
 
-        TokenDTO tokenDTO = loginService.login(authCredentialsDTO);
+        TokensDTO tokensDTO = loginService.login(authCredentialsDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Token", tokenDTO.getAccessToken())
-                .header("Refresh-Token", tokenDTO.getRefreshToken())
-                .body(tokenDTO);
+                .header("Access-Token", tokensDTO.getAccessToken())
+                .header("Refresh-Token", tokensDTO.getRefreshToken())
+                .body(tokensDTO);
     }
 }

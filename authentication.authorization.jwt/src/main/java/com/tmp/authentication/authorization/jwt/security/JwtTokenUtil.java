@@ -5,12 +5,18 @@ import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.models.ERole;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.PrematureJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,26 +33,19 @@ public class JwtTokenUtil {
     public static final long JWT_REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000;          // 7 days
 
     @Value("${jwt.secret}")
-    private String secret;
+    private String jwtSecret;
 
     @Value("${jwt.address}:${jwt.port}")
-    private String issuer;
-
-    private Claims getAllTokenClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
-    }
+    private String jwtIssuer;
 
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
 
-        List<ERole> eRoles = user.getRoles().stream()
+        List<ERole> roles = user.getRoles().stream()
                 .map(Role::getERole)
                 .collect(Collectors.toList());
 
-        claims.put("roles", eRoles);
+        claims.put("roles", roles);
 
         return createAccessToken(claims, user.getEmail());
     }
@@ -56,11 +55,11 @@ public class JwtTokenUtil {
                 .setHeaderParam("typ", "JWT")
                 .setClaims(claims)
                 .setSubject(subject)
-                .setIssuer(issuer)
+                .setIssuer(jwtIssuer)
                 .setId(UUID.randomUUID().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_VALIDITY))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
@@ -72,12 +71,19 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setSubject(subject)
-                .setIssuer(issuer)
+                .setIssuer(jwtIssuer)
                 .setId(UUID.randomUUID().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_VALIDITY))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+    }
+
+    private Claims getAllTokenClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public String getUsernameFromToken(String token) {
@@ -86,26 +92,53 @@ public class JwtTokenUtil {
         return claims.getSubject();
     }
 
-    public ERole getRolesFromToken(String token) {
+    public List<ERole> getRolesFromToken(String token) {
         Claims claims = getAllTokenClaims(token);
 
-        String role = claims.get("roles").toString();
+        String unformattedRoles = claims.get("roles").toString();
 
-        switch (role.toUpperCase(Locale.ROOT)) {
-            case "EMPLOYEE":
-                return ERole.EMPLOYEE;
-            case "ADMIN":
-                return ERole.ADMIN;
-            case "MANAGER":
-                return ERole.MANAGER;
-            default:
-                throw new RoleDoesNotExistException(role);
-        }
+        unformattedRoles = unformattedRoles.replace("[", "");
+        unformattedRoles = unformattedRoles.replace("]", "");
+
+        List<String> roles = Arrays.stream(unformattedRoles.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        return roles.stream()
+                .map(role -> {
+                    switch (role.toUpperCase(Locale.ROOT)) {
+                        case "EMPLOYEE":
+                            return ERole.EMPLOYEE;
+                        case "ADMIN":
+                            return ERole.ADMIN;
+                        case "MANAGER":
+                            return ERole.MANAGER;
+                        default:
+                            throw new RoleDoesNotExistException(role);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
-    public Boolean isTokenExpired(String token) {
-        Claims claims = getAllTokenClaims(token);
-
-        return claims.getExpiration().before(new Date());
+    public boolean validate(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(jwtSecret)
+                    .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException expiredJwtException) {
+            log.error("Expired JWT token - {}", expiredJwtException.getMessage());
+        } catch (MalformedJwtException malformedJwtException) {
+            log.error("Invalid JWT token - {}", malformedJwtException.getMessage());
+        } catch (PrematureJwtException prematureJwtException) {
+            log.error("Unacceptable JWT token - {}", prematureJwtException.getMessage());
+        } catch (SignatureException signatureException) {
+            log.error("Invalid JWT signature - {}", signatureException.getMessage());
+        } catch (UnsupportedJwtException unsupportedJwtException) {
+            log.error("Unsupported JWT token - {}", unsupportedJwtException.getMessage());
+        } catch (IllegalArgumentException illegalArgumentException) {
+            log.error("JWT claims string is empty - {}", illegalArgumentException.getMessage());
+        }
+        return false;
     }
 }

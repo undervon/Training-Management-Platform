@@ -38,4 +38,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(String.format("User '%s' not found in DB", userNotFoundException.getMessage()));
     }
+
+    @ResponseBody
+    @ExceptionHandler(TokenInBlackListException.class)
+    public ResponseEntity<String> tokenInBlackListExceptionHandler(
+            TokenInBlackListException tokenInBlackListException) {
+        log.error("thrown TokenInBlackListException");
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(String.format("Token '%s' in BlackList", tokenInBlackListException.getMessage()));
+    }
 }
