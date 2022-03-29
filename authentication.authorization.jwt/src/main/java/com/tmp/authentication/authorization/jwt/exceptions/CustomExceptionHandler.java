@@ -48,4 +48,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body(String.format("Token '%s' in BlackList", tokenInBlackListException.getMessage()));
     }
+
+    @ResponseBody
+    @ExceptionHandler(RoleAlreadyExistsException.class)
+    public ResponseEntity<String> roleAlreadyExistsExceptionHandler(
+            RoleAlreadyExistsException roleAlreadyExistsException) {
+        log.error("thrown RoleAlreadyExistsException");
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(String.format("The role '%s' already exists", roleAlreadyExistsException.getMessage()));
+    }
 }
