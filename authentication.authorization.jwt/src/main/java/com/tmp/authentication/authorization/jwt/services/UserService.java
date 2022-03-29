@@ -23,4 +23,8 @@ public class UserService {
             throw new BadCredentialsException("password");
         }
     }
+
+    User getByUsername(String username) {
+        return userRepository.getByEmail(username);
+    }
 }

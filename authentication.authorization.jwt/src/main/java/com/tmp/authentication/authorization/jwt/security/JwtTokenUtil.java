@@ -3,7 +3,7 @@ package com.tmp.authentication.authorization.jwt.security;
 import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
-import com.tmp.authentication.authorization.jwt.models.ERole;
+import com.tmp.authentication.authorization.jwt.models.Roles;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -41,8 +41,8 @@ public class JwtTokenUtil {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
 
-        List<ERole> roles = user.getRoles().stream()
-                .map(Role::getERole)
+        List<Roles> roles = user.getRoles().stream()
+                .map(Role::getRoles)
                 .collect(Collectors.toList());
 
         claims.put("roles", roles);
@@ -92,7 +92,7 @@ public class JwtTokenUtil {
         return claims.getSubject();
     }
 
-    public List<ERole> getRolesFromToken(String token) {
+    public List<Roles> getRolesFromToken(String token) {
         Claims claims = getAllTokenClaims(token);
 
         String unformattedRoles = claims.get("roles").toString();
@@ -108,11 +108,11 @@ public class JwtTokenUtil {
                 .map(role -> {
                     switch (role.toUpperCase(Locale.ROOT)) {
                         case "EMPLOYEE":
-                            return ERole.EMPLOYEE;
+                            return Roles.EMPLOYEE;
                         case "ADMIN":
-                            return ERole.ADMIN;
+                            return Roles.ADMIN;
                         case "MANAGER":
-                            return ERole.MANAGER;
+                            return Roles.MANAGER;
                         default:
                             throw new RoleDoesNotExistException(role);
                     }

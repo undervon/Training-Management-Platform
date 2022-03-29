@@ -1,6 +1,7 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
 import com.tmp.authentication.authorization.jwt.models.AuthCredentialsDTO;
+import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.services.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,15 @@ public class LoginController {
     public ResponseEntity<TokensDTO> login(@RequestBody AuthCredentialsDTO authCredentialsDTO) {
         log.info("[{}] -> login, authCredentialsDTO: {}", this.getClass().getSimpleName(), authCredentialsDTO);
 
-        TokensDTO tokensDTO = loginService.login(authCredentialsDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(loginService.login(authCredentialsDTO));
+    }
+
+    @PostMapping(value = "/generateAccessToken", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TokenDTO> generateAccessToken(@RequestBody TokenDTO tokenDTO) {
+        log.info("[{}] -> generateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Token", tokensDTO.getAccessToken())
-                .header("Refresh-Token", tokensDTO.getRefreshToken())
-                .body(tokensDTO);
+                .body(loginService.generateAccessToken(tokenDTO));
     }
 }

@@ -3,7 +3,6 @@ package com.tmp.authentication.authorization.jwt.controllers;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.models.UserCharacteristicsDTO;
-import com.tmp.authentication.authorization.jwt.models.UsernameDTO;
 import com.tmp.authentication.authorization.jwt.services.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,7 +32,7 @@ public class LogoutController {
     }
 
     @GetMapping(value = "/validateRefreshToken", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UsernameDTO> validateRefreshToken(@RequestBody TokenDTO tokenDTO) {
+    public ResponseEntity<String> validateRefreshToken(@RequestBody TokenDTO tokenDTO) {
         log.info("[{}] -> validateRefreshToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
         return ResponseEntity.status(HttpStatus.OK)

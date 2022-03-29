@@ -1,11 +1,10 @@
 package com.tmp.authentication.authorization.jwt.services;
 
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
-import com.tmp.authentication.authorization.jwt.models.ERole;
+import com.tmp.authentication.authorization.jwt.models.Roles;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.models.UserCharacteristicsDTO;
-import com.tmp.authentication.authorization.jwt.models.UsernameDTO;
 import com.tmp.authentication.authorization.jwt.security.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +37,7 @@ public class LogoutService {
         jwtTokenUtil.validate(accessToken);
 
         String username = jwtTokenUtil.getUsernameFromToken(accessToken);
-        List<ERole> roles = jwtTokenUtil.getRolesFromToken(accessToken);
+        List<Roles> roles = jwtTokenUtil.getRolesFromToken(accessToken);
 
         // Check user by username if exist in DB
         userService.findByUsername(username);
@@ -49,7 +48,7 @@ public class LogoutService {
                 .build();
     }
 
-    public UsernameDTO validateRefreshToken(TokenDTO tokenDTO) {
+    public String validateRefreshToken(TokenDTO tokenDTO) {
         log.info("[{}] -> validateRefreshToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
         String refreshToken = tokenDTO.getToken();
@@ -66,9 +65,7 @@ public class LogoutService {
         // Check user by username if exist in DB
         userService.findByUsername(username);
 
-        return UsernameDTO.builder()
-                .username(username)
-                .build();
+        return username;
     }
 
     public String logout(TokensDTO tokensDTO) {
