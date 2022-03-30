@@ -7,6 +7,7 @@ import com.tmp.authentication.authorization.jwt.entities.UserRoleId;
 import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
+import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.EditRoleDTO;
 import com.tmp.authentication.authorization.jwt.models.Roles;
@@ -71,5 +72,36 @@ public class UserService {
                 .build();
 
         userRoleRepository.save(userRole);
+    }
+
+    public void deleteRole(EditRoleDTO editRoleDTO) {
+        log.info("[{}] -> deleteRole, editRoleDTO: {}", this.getClass().getSimpleName(), editRoleDTO);
+
+        String username = editRoleDTO.getUsername();
+        Roles newRole = editRoleDTO.getRole();
+
+        User user = this.findByUsername(username);
+        Role role = this.findByRoles(newRole);
+
+        if (user.getRoles().size() == 1) {
+            throw new UnsupportedRolesSizeException();
+        }
+
+        if (!user.getRoles().contains(role)) {
+            throw new RoleDoesNotExistException(newRole.getAuthority());
+        }
+
+        UserRoleId userRoleId = UserRoleId.builder()
+                .idRole(role.getId())
+                .idUser(user.getId())
+                .build();
+
+        UserRole userRole = UserRole.builder()
+                .id(userRoleId)
+                .idUser(user)
+                .idRole(role)
+                .build();
+
+        userRoleRepository.delete(userRole);
     }
 }

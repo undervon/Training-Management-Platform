@@ -58,4 +58,13 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body(String.format("The role '%s' already exists", roleAlreadyExistsException.getMessage()));
     }
+
+    @ResponseBody
+    @ExceptionHandler(UnsupportedRolesSizeException.class)
+    public ResponseEntity<String> unsupportedRolesSizeExceptionHandler() {
+        log.error("thrown UnsupportedRolesSizeException");
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body("Roles size is unsupported");
+    }
 }

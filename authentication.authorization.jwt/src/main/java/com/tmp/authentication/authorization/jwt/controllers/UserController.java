@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,15 @@ public class UserController {
         log.info("[{}] -> editRole, editRoleDTO: {}", this.getClass().getSimpleName(), editRoleDTO);
 
         userService.editRole(editRoleDTO);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping(value = "/deleteRole", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteRole(@RequestBody EditRoleDTO editRoleDTO) {
+        log.info("[{}] -> deleteRole, editRoleDTO: {}", this.getClass().getSimpleName(), editRoleDTO);
+
+        userService.deleteRole(editRoleDTO);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
