@@ -29,7 +29,7 @@ public class User {
 
     @Id
     @Column(name = "idEmployee")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String firstName;

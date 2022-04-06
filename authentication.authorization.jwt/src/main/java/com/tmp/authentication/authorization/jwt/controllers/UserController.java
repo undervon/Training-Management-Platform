@@ -1,6 +1,5 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
-import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.models.EditRoleDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.services.UserService;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +30,15 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.addUser(userDTO));
+    }
+
+    @DeleteMapping(value = "/deleteUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        log.info("[{}] -> deleteUser, id: {}", this.getClass().getSimpleName(), id);
+
+        userService.deleteUser(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping(value = "/editRole", produces = MediaType.APPLICATION_JSON_VALUE)

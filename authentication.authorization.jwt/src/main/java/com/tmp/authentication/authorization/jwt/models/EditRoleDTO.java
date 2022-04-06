@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class EditRoleDTO {
 
     private String username;
-    private Roles role;
+    private RoleValue roleValue;
 }

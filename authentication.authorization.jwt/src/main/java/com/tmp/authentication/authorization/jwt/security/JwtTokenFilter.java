@@ -1,6 +1,6 @@
 package com.tmp.authentication.authorization.jwt.security;
 
-import com.tmp.authentication.authorization.jwt.models.Roles;
+import com.tmp.authentication.authorization.jwt.models.RoleValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,10 +38,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         final String username = jwtTokenUtil.getUsernameFromToken(token);
-        final List<Roles> roles = jwtTokenUtil.getRolesFromToken(token);
+        final List<RoleValue> roleValues = jwtTokenUtil.getRolesFromToken(token);
 
         UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(username, null, roles);
+                new UsernamePasswordAuthenticationToken(username, null, roleValues);
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

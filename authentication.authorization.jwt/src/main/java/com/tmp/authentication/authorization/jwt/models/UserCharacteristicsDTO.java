@@ -14,5 +14,5 @@ import java.util.List;
 public class UserCharacteristicsDTO {
 
     private String username;
-    private List<Roles> roles;
+    private List<RoleValue> roleValues;
 }

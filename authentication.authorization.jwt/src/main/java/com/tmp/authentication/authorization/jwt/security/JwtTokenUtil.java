@@ -3,7 +3,7 @@ package com.tmp.authentication.authorization.jwt.security;
 import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
-import com.tmp.authentication.authorization.jwt.models.Roles;
+import com.tmp.authentication.authorization.jwt.models.RoleValue;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenUtil {
 
-    public static final long JWT_ACCESS_TOKEN_VALIDITY = 2 * 60 * 1000;                     // 2 minutes
+    public static final long JWT_ACCESS_TOKEN_VALIDITY = 1 * 60 * 60 * 1000;                // 1 hours
     public static final long JWT_REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000;          // 7 days
 
     @Value("${jwt.secret}")
@@ -41,11 +41,11 @@ public class JwtTokenUtil {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
 
-        List<Roles> roles = user.getRoles().stream()
-                .map(Role::getRoles)
+        List<RoleValue> roleValues = user.getRoles().stream()
+                .map(Role::getRoleValue)
                 .collect(Collectors.toList());
 
-        claims.put("roles", roles);
+        claims.put("roles", roleValues);
 
         return createAccessToken(claims, user.getEmail());
     }
@@ -92,7 +92,7 @@ public class JwtTokenUtil {
         return claims.getSubject();
     }
 
-    public List<Roles> getRolesFromToken(String token) {
+    public List<RoleValue> getRolesFromToken(String token) {
         Claims claims = getAllTokenClaims(token);
 
         String unformattedRoles = claims.get("roles").toString();
@@ -108,11 +108,11 @@ public class JwtTokenUtil {
                 .map(role -> {
                     switch (role.toUpperCase(Locale.ROOT)) {
                         case "EMPLOYEE":
-                            return Roles.EMPLOYEE;
+                            return RoleValue.EMPLOYEE;
                         case "ADMIN":
-                            return Roles.ADMIN;
+                            return RoleValue.ADMIN;
                         case "MANAGER":
-                            return Roles.MANAGER;
+                            return RoleValue.MANAGER;
                         default:
                             throw new RoleDoesNotExistException(role);
                     }

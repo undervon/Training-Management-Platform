@@ -77,4 +77,13 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body(String.format("The user '%s' already exists in db", userAlreadyExistsException.getMessage()));
     }
+
+    @ResponseBody
+    @ExceptionHandler(UnableToDeleteUserException.class)
+    public ResponseEntity<String> unableToDeleteUserExceptionHandler() {
+        log.error("thrown UnableToDeleteUserException");
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body("This user cannot be deleted because it's just ADMIN");
+    }
 }

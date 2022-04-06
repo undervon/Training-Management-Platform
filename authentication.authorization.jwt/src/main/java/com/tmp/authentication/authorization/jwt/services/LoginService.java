@@ -21,7 +21,7 @@ public class LoginService {
     public TokensDTO login(AuthCredentialsDTO authCredentialsDTO) {
         log.info("[{}] -> login, authCredentialsDTO: {}", this.getClass().getSimpleName(), authCredentialsDTO);
 
-        User user = userService.findByUsername(authCredentialsDTO.getUsername());
+        User user = userService.findUserByUsername(authCredentialsDTO.getUsername());
 
         userService.checkPassword(user.getPassword(), authCredentialsDTO.getPassword());
 
@@ -39,7 +39,7 @@ public class LoginService {
 
         String username = logoutService.validateRefreshToken(tokenDTO);
 
-        User user = userService.getByUsername(username);
+        User user = userService.getUserByUsername(username);
 
         String accessToken = jwtTokenUtil.generateAccessToken(user);
 

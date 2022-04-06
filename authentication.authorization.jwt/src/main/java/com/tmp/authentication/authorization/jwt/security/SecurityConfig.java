@@ -1,6 +1,6 @@
 package com.tmp.authentication.authorization.jwt.security;
 
-import com.tmp.authentication.authorization.jwt.models.Roles;
+import com.tmp.authentication.authorization.jwt.models.RoleValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -62,9 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/1.0/tmp/auth/validateRefreshToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/generateAccessToken/**").permitAll()
                 // Private endpoints
-                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(Roles.ADMIN.getAuthority())
-                .antMatchers("/api/1.0/tmp/auth/editRole/**").hasAuthority(Roles.ADMIN.getAuthority())
-                .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(Roles.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/deleteUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/editRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

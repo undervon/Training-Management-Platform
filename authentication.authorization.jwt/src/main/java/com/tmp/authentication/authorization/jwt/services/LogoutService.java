@@ -1,7 +1,7 @@
 package com.tmp.authentication.authorization.jwt.services;
 
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
-import com.tmp.authentication.authorization.jwt.models.Roles;
+import com.tmp.authentication.authorization.jwt.models.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.models.UserCharacteristicsDTO;
@@ -37,14 +37,14 @@ public class LogoutService {
         jwtTokenUtil.validate(accessToken);
 
         String username = jwtTokenUtil.getUsernameFromToken(accessToken);
-        List<Roles> roles = jwtTokenUtil.getRolesFromToken(accessToken);
+        List<RoleValue> roleValues = jwtTokenUtil.getRolesFromToken(accessToken);
 
         // Check user by username if exist in DB
-        userService.findByUsername(username);
+        userService.findUserByUsername(username);
 
         return UserCharacteristicsDTO.builder()
                 .username(username)
-                .roles(roles)
+                .roleValues(roleValues)
                 .build();
     }
 
@@ -63,7 +63,7 @@ public class LogoutService {
         String username = jwtTokenUtil.getUsernameFromToken(refreshToken);
 
         // Check user by username if exist in DB
-        userService.findByUsername(username);
+        userService.findUserByUsername(username);
 
         return username;
     }

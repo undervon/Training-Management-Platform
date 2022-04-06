@@ -2,7 +2,7 @@ package com.tmp.authentication.authorization.jwt.models;
 
 import org.springframework.security.core.GrantedAuthority;
 
-public enum Roles implements GrantedAuthority {
+public enum RoleValue implements GrantedAuthority {
     EMPLOYEE,
     MANAGER,
     ADMIN;

@@ -1,6 +1,6 @@
 package com.tmp.authentication.authorization.jwt.entities;
 
-import com.tmp.authentication.authorization.jwt.models.Roles;
+import com.tmp.authentication.authorization.jwt.models.RoleValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,5 +29,5 @@ public class Role {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private Roles roles;
+    private RoleValue roleValue;
 }
