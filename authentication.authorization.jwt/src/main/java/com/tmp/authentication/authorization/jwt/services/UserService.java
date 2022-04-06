@@ -8,9 +8,11 @@ import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsExcepti
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
+import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.EditRoleDTO;
 import com.tmp.authentication.authorization.jwt.models.Roles;
+import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.repositories.RoleRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRoleRepository;
@@ -27,7 +29,7 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
 
-    User findByUsername(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
@@ -38,13 +40,48 @@ public class UserService {
         }
     }
 
-    User getByUsername(String username) {
+    public User getByUsername(String username) {
         return userRepository.getByEmail(username);
     }
 
-    Role findByRoles(Roles roles) {
+    public Role findByRoles(Roles roles) {
         return roleRepository.findByRoles(roles)
                 .orElseThrow(() -> new RoleDoesNotExistException(roles.getAuthority()));
+    }
+
+    Role getByRoles(Roles roles) {
+        return roleRepository.getByRoles(roles);
+    }
+
+    public UserDTO addUser(UserDTO userDTO) {
+        log.info("[{}] -> addUser, userDTO: {}", this.getClass().getSimpleName(), userDTO);
+
+        try {
+            User dbUser = this.findByUsername(userDTO.getEmail());
+
+            if (dbUser.getEmail().equals(userDTO.getEmail())) {
+                throw new UserAlreadyExistsException(userDTO.getEmail());
+            }
+        } catch (UserNotFoundException userNotFoundException) {
+            log.error(userNotFoundException);
+        }
+
+        Role role = this.getByRoles(Roles.EMPLOYEE);
+
+        User user = User.builder()
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .email(userDTO.getEmail())
+                .password(userDTO.getPassword())
+                .department(userDTO.getDepartment())
+                .employeeNumber(userDTO.getEmployeeNumber())
+                .build();
+
+        userRepository.save(user);
+
+        userRoleRepository.save(this.createUserRoleObject(role, user));
+
+        return userDTO;
     }
 
     public void editRole(EditRoleDTO editRoleDTO) {
@@ -60,18 +97,7 @@ public class UserService {
             throw new RoleAlreadyExistsException(newRole.getAuthority());
         }
 
-        UserRoleId userRoleId = UserRoleId.builder()
-                .idRole(role.getId())
-                .idUser(user.getId())
-                .build();
-
-        UserRole userRole = UserRole.builder()
-                .id(userRoleId)
-                .idUser(user)
-                .idRole(role)
-                .build();
-
-        userRoleRepository.save(userRole);
+        userRoleRepository.save(this.createUserRoleObject(role, user));
     }
 
     public void deleteRole(EditRoleDTO editRoleDTO) {
@@ -91,17 +117,19 @@ public class UserService {
             throw new RoleDoesNotExistException(newRole.getAuthority());
         }
 
+        userRoleRepository.delete(this.createUserRoleObject(role, user));
+    }
+
+    private UserRole createUserRoleObject(Role role, User user) {
         UserRoleId userRoleId = UserRoleId.builder()
                 .idRole(role.getId())
                 .idUser(user.getId())
                 .build();
 
-        UserRole userRole = UserRole.builder()
+        return UserRole.builder()
                 .id(userRoleId)
                 .idUser(user)
                 .idRole(role)
                 .build();
-
-        userRoleRepository.delete(userRole);
     }
 }

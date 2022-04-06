@@ -67,4 +67,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body("Roles size is unsupported");
     }
+
+    @ResponseBody
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> userAlreadyExistsExceptionHandler(
+            UserAlreadyExistsException userAlreadyExistsException) {
+        log.error("thrown UserAlreadyExistsException");
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(String.format("The user '%s' already exists in db", userAlreadyExistsException.getMessage()));
+    }
 }
