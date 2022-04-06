@@ -62,8 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/1.0/tmp/auth/validateRefreshToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/generateAccessToken/**").permitAll()
                 // Private endpoints
-                .antMatchers("/api/1.0/tmp/auth/addUser/**").permitAll()
-//                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(Roles.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(Roles.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/editRole/**").hasAuthority(Roles.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(Roles.ADMIN.getAuthority())
                 .anyRequest().authenticated();
