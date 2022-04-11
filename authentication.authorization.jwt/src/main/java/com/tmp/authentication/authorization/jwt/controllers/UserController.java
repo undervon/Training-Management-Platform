@@ -41,7 +41,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping(value = "/editRole", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/editRole", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editRole(@RequestBody EditRoleDTO editRoleDTO) {
         log.info("[{}] -> editRole, editRoleDTO: {}", this.getClass().getSimpleName(), editRoleDTO);
 
