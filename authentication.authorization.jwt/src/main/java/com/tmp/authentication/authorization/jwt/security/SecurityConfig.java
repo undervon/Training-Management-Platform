@@ -1,6 +1,6 @@
 package com.tmp.authentication.authorization.jwt.security;
 
-import com.tmp.authentication.authorization.jwt.models.RoleValue;
+import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -57,7 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/1.0/tmp/auth/login/**").permitAll()
-                .antMatchers("/api/1.0/tmp/auth/logout/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/validateAccessToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/validateRefreshToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/generateAccessToken/**").permitAll()

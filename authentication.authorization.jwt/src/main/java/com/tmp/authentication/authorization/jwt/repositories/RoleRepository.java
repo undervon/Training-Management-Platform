@@ -1,7 +1,7 @@
 package com.tmp.authentication.authorization.jwt.repositories;
 
 import com.tmp.authentication.authorization.jwt.entities.Role;
-import com.tmp.authentication.authorization.jwt.models.RoleValue;
+import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

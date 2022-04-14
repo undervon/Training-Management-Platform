@@ -1,6 +1,6 @@
 package com.tmp.authentication.authorization.jwt.entities;
 
-import com.tmp.authentication.authorization.jwt.models.RoleValue;
+import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

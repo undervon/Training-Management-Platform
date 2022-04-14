@@ -12,7 +12,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeE
 import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.EditRoleDTO;
-import com.tmp.authentication.authorization.jwt.models.RoleValue;
+import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.repositories.RoleRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRepository;

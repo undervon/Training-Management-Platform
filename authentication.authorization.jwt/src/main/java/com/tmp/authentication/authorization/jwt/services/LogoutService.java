@@ -1,7 +1,7 @@
 package com.tmp.authentication.authorization.jwt.services;
 
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
-import com.tmp.authentication.authorization.jwt.models.RoleValue;
+import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.models.UserCharacteristicsDTO;

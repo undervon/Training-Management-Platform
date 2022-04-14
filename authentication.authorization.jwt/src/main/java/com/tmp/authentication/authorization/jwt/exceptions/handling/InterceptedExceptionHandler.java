@@ -1,4 +1,4 @@
-package com.tmp.authentication.authorization.jwt.exceptions;
+package com.tmp.authentication.authorization.jwt.exceptions.handling;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

@@ -1,5 +1,13 @@
-package com.tmp.authentication.authorization.jwt.exceptions;
+package com.tmp.authentication.authorization.jwt.exceptions.handling;
 
+import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsException;
+import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
+import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
+import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
+import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
+import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
+import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
+import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

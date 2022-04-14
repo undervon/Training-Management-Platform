@@ -1,4 +1,4 @@
-package com.tmp.authentication.authorization.jwt.models;
+package com.tmp.authentication.authorization.jwt.models.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
