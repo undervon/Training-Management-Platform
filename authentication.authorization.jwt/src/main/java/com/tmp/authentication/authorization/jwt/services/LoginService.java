@@ -1,7 +1,7 @@
 package com.tmp.authentication.authorization.jwt.services;
 
 import com.tmp.authentication.authorization.jwt.entities.User;
-import com.tmp.authentication.authorization.jwt.models.AuthCredentialsDTO;
+import com.tmp.authentication.authorization.jwt.models.UserCredentialsDTO;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.security.JwtTokenUtil;
@@ -18,12 +18,12 @@ public class LoginService {
     private final LogoutService logoutService;
     private final JwtTokenUtil jwtTokenUtil;
 
-    public TokensDTO login(AuthCredentialsDTO authCredentialsDTO) {
-        log.info("[{}] -> login, authCredentialsDTO: {}", this.getClass().getSimpleName(), authCredentialsDTO);
+    public TokensDTO login(UserCredentialsDTO userCredentialsDTO) {
+        log.info("[{}] -> login, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
 
-        User user = userService.findUserByUsername(authCredentialsDTO.getUsername());
+        User user = userService.findUserByUsername(userCredentialsDTO.getUsername());
 
-        userService.checkPassword(user.getPassword(), authCredentialsDTO.getPassword());
+        userService.checkPassword(user.getPassword(), userCredentialsDTO.getPassword());
 
         String accessToken = jwtTokenUtil.generateAccessToken(user);
         String refreshToken = jwtTokenUtil.generateRefreshToken(user);

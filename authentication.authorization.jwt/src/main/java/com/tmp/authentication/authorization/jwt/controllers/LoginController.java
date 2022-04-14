@@ -1,6 +1,6 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
-import com.tmp.authentication.authorization.jwt.models.AuthCredentialsDTO;
+import com.tmp.authentication.authorization.jwt.models.UserCredentialsDTO;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.services.LoginService;
@@ -23,11 +23,11 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokensDTO> login(@RequestBody AuthCredentialsDTO authCredentialsDTO) {
-        log.info("[{}] -> login, authCredentialsDTO: {}", this.getClass().getSimpleName(), authCredentialsDTO);
+    public ResponseEntity<TokensDTO> login(@RequestBody UserCredentialsDTO userCredentialsDTO) {
+        log.info("[{}] -> login, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(loginService.login(authCredentialsDTO));
+                .body(loginService.login(userCredentialsDTO));
     }
 
     @PostMapping(value = "/generateAccessToken", produces = MediaType.APPLICATION_JSON_VALUE)
