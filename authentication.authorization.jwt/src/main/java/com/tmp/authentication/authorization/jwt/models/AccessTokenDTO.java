@@ -6,14 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCharacteristicsDTO {
+public class AccessTokenDTO {
 
     private String username;
     private List<RoleValue> roleValues;
+    private Date creationDate;
+    private Date expirationDate;
 }

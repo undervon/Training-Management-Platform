@@ -120,6 +120,18 @@ public class JwtTokenUtil {
                 .collect(Collectors.toList());
     }
 
+    public Date getExpirationDateFromToken(String token) {
+        Claims claims = getAllTokenClaims(token);
+
+        return claims.getExpiration();
+    }
+
+    public Date getCreationDateFromToken(String token) {
+        Claims claims = getAllTokenClaims(token);
+
+        return claims.getIssuedAt();
+    }
+
     public boolean validate(String token) {
         try {
             Jwts.parser()

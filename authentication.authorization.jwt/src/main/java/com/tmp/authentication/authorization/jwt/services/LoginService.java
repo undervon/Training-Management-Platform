@@ -37,7 +37,7 @@ public class LoginService {
     public TokenDTO generateAccessToken(TokenDTO tokenDTO) {
         log.info("[{}] -> generateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
-        String username = logoutService.validateRefreshToken(tokenDTO);
+        String username = logoutService.validateRefreshToken(tokenDTO).getUsername();
 
         User user = userService.getUserByUsername(username);
 
