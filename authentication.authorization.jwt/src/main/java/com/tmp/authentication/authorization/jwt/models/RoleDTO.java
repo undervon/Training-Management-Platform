@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditRoleDTO {
+public class RoleDTO {
 
-    private String username;
     private RoleValue roleValue;
 }

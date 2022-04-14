@@ -11,7 +11,8 @@ import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserExc
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
-import com.tmp.authentication.authorization.jwt.models.EditRoleDTO;
+import com.tmp.authentication.authorization.jwt.models.RoleDTO;
+import com.tmp.authentication.authorization.jwt.models.adapters.UserAdapter;
 import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.repositories.RoleRepository;
@@ -40,6 +41,11 @@ public class UserService {
 
     public User getUserByUsername(String username) {
         return userRepository.getByEmail(username);
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id.toString()));
     }
 
     public void checkPassword(String dbPassword, String inPassword) {
@@ -117,13 +123,12 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public void editRole(EditRoleDTO editRoleDTO) {
-        log.info("[{}] -> editRole, editRoleDTO: {}", this.getClass().getSimpleName(), editRoleDTO);
+    public void editRole(Long id, RoleDTO roleDTO) {
+        log.info("[{}] -> editRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 
-        String username = editRoleDTO.getUsername();
-        RoleValue newRoleValue = editRoleDTO.getRoleValue();
+        RoleValue newRoleValue = roleDTO.getRoleValue();
 
-        User user = this.findUserByUsername(username);
+        User user = this.findUserById(id);
         Role role = this.findRoleByRoleValue(newRoleValue);
 
         if (user.getRoles().contains(role)) {
@@ -133,13 +138,12 @@ public class UserService {
         userRoleRepository.save(this.createUserRoleObject(role, user));
     }
 
-    public void deleteRole(EditRoleDTO editRoleDTO) {
-        log.info("[{}] -> deleteRole, editRoleDTO: {}", this.getClass().getSimpleName(), editRoleDTO);
+    public void deleteRole(Long id, RoleDTO roleDTO) {
+        log.info("[{}] -> deleteRole, roleDTO: {}", this.getClass().getSimpleName(), roleDTO);
 
-        String username = editRoleDTO.getUsername();
-        RoleValue newRoleValue = editRoleDTO.getRoleValue();
+        RoleValue newRoleValue = roleDTO.getRoleValue();
 
-        User user = this.findUserByUsername(username);
+        User user = this.findUserById(id);
         Role role = this.findRoleByRoleValue(newRoleValue);
 
         if (user.getRoles().size() == 1) {
@@ -151,6 +155,22 @@ public class UserService {
         }
 
         userRoleRepository.delete(this.createUserRoleObject(role, user));
+    }
+
+    public UserDTO getUserById(Long id) {
+        log.info("[{}] -> getUserById, id: {}", this.getClass().getSimpleName(), id);
+
+        User user = this.findUserById(id);
+
+        return UserAdapter.userToUserDTO(user);
+    }
+
+    public List<UserDTO> getUsers() {
+        log.info("[{}] -> getUsers", this.getClass().getSimpleName());
+
+        List<User> userList = userRepository.findAll();
+
+        return UserAdapter.userListToUserDTOList(userList);
     }
 
     private UserRole createUserRoleObject(Role role, User user) {
