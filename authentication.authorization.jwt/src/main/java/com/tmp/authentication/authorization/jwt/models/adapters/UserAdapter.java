@@ -15,9 +15,9 @@ public final class UserAdapter {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .department(user.getDepartment())
                 .employeeNumber(user.getEmployeeNumber())
+                .joinDate(user.getJoinDate())
                 .build();
     }
 

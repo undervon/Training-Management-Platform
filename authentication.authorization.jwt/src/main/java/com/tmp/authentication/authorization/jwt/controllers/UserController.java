@@ -1,6 +1,8 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
+import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
+import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +29,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/addUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
-        log.info("[{}] -> addUser, userDTO: {}", this.getClass().getSimpleName(), userDTO);
+    public ResponseEntity<User> addUser(@RequestBody AddUserDTO addUserDTO) {
+        log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.addUser(userDTO));
+                .body(userService.addUser(addUserDTO));
     }
 
     @DeleteMapping(value = "/deleteUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

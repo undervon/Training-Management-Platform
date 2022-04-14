@@ -2,7 +2,6 @@ package com.tmp.authentication.authorization.jwt.services;
 
 import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
-import com.tmp.authentication.authorization.jwt.entities.UserRole;
 import com.tmp.authentication.authorization.jwt.entities.UserRoleId;
 import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
@@ -12,9 +11,11 @@ import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeE
 import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
-import com.tmp.authentication.authorization.jwt.models.adapters.UserAdapter;
-import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
+import com.tmp.authentication.authorization.jwt.models.adapters.UserAdapter;
+import com.tmp.authentication.authorization.jwt.models.adapters.UserRoleAdapter;
+import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
+import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
 import com.tmp.authentication.authorization.jwt.repositories.RoleRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRoleRepository;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,14 +65,14 @@ public class UserService {
         return roleRepository.getByRoleValue(roleValue);
     }
 
-    public UserDTO addUser(UserDTO userDTO) {
-        log.info("[{}] -> addUser, userDTO: {}", this.getClass().getSimpleName(), userDTO);
+    public User addUser(AddUserDTO addUserDTO) {
+        log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
         try {
-            User dbUser = this.findUserByUsername(userDTO.getEmail());
+            User dbUser = this.findUserByUsername(addUserDTO.getEmail());
 
-            if (dbUser.getEmail().equals(userDTO.getEmail())) {
-                throw new UserAlreadyExistsException(userDTO.getEmail());
+            if (dbUser.getEmail().equals(addUserDTO.getEmail())) {
+                throw new UserAlreadyExistsException(addUserDTO.getEmail());
             }
         } catch (UserNotFoundException userNotFoundException) {
             log.error(userNotFoundException);
@@ -79,19 +81,20 @@ public class UserService {
         Role role = this.getRoleByRoleValue(RoleValue.EMPLOYEE);
 
         User user = User.builder()
-                .firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
-                .department(userDTO.getDepartment())
-                .employeeNumber(userDTO.getEmployeeNumber())
+                .firstName(addUserDTO.getFirstName())
+                .lastName(addUserDTO.getLastName())
+                .email(addUserDTO.getEmail())
+                .password(addUserDTO.getPassword())
+                .department(addUserDTO.getDepartment())
+                .employeeNumber(addUserDTO.getEmployeeNumber())
+                .joinDate(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
 
-        userRoleRepository.save(this.createUserRoleObject(role, user));
+        userRoleRepository.save(UserRoleAdapter.createUserRoleObject(role, user));
 
-        return userDTO;
+        return user;
     }
 
     public void deleteUser(Long id) {
@@ -108,15 +111,14 @@ public class UserService {
             throw new UnableToDeleteUserException();
         }
 
-        roles.stream()
-                .forEach(role -> {
-                    UserRoleId userRoleId = UserRoleId.builder()
-                            .idRole(role.getId())
-                            .idUser(user.getId())
-                            .build();
+        roles.forEach(role -> {
+            UserRoleId userRoleId = UserRoleId.builder()
+                    .idRole(role.getId())
+                    .idUser(user.getId())
+                    .build();
 
-                    userRoleRepository.deleteById(userRoleId);
-                });
+            userRoleRepository.deleteById(userRoleId);
+        });
 
         user.setRoles(null);
 
@@ -135,7 +137,7 @@ public class UserService {
             throw new RoleAlreadyExistsException(newRoleValue.getAuthority());
         }
 
-        userRoleRepository.save(this.createUserRoleObject(role, user));
+        userRoleRepository.save(UserRoleAdapter.createUserRoleObject(role, user));
     }
 
     public void deleteRole(Long id, RoleDTO roleDTO) {
@@ -154,7 +156,7 @@ public class UserService {
             throw new RoleDoesNotExistException(newRoleValue.getAuthority());
         }
 
-        userRoleRepository.delete(this.createUserRoleObject(role, user));
+        userRoleRepository.delete(UserRoleAdapter.createUserRoleObject(role, user));
     }
 
     public UserDTO getUserById(Long id) {
@@ -171,18 +173,5 @@ public class UserService {
         List<User> userList = userRepository.findAll();
 
         return UserAdapter.userListToUserDTOList(userList);
-    }
-
-    private UserRole createUserRoleObject(Role role, User user) {
-        UserRoleId userRoleId = UserRoleId.builder()
-                .idRole(role.getId())
-                .idUser(user.getId())
-                .build();
-
-        return UserRole.builder()
-                .id(userRoleId)
-                .idUser(user)
-                .idRole(role)
-                .build();
     }
 }
