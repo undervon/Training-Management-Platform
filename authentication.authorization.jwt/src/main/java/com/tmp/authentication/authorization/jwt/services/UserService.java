@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +46,8 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Value("${api.path}")
     private String apiPath;
 
@@ -63,8 +66,8 @@ public class UserService {
     }
 
     public void checkPassword(String dbPassword, String inPassword) {
-        if (!dbPassword.equals(inPassword)) {
-            throw new BadCredentialsException("password");
+        if (!bCryptPasswordEncoder.matches(inPassword, dbPassword)) {
+            throw new BadCredentialsException();
         }
     }
 
@@ -111,7 +114,7 @@ public class UserService {
                 .firstName(addUserDTO.getFirstName())
                 .lastName(addUserDTO.getLastName())
                 .email(addUserDTO.getEmail())
-                .password(addUserDTO.getPassword())
+                .password(bCryptPasswordEncoder.encode(addUserDTO.getPassword()))
                 .department(addUserDTO.getDepartment())
                 .employeeNumber(addUserDTO.getEmployeeNumber())
                 .joinDate(LocalDateTime.now())
@@ -146,7 +149,7 @@ public class UserService {
                 .firstName(addUserDTO.getFirstName())
                 .lastName(addUserDTO.getLastName())
                 .email(addUserDTO.getEmail())
-                .password(addUserDTO.getPassword())
+                .password(bCryptPasswordEncoder.encode(addUserDTO.getPassword()))
                 .department(addUserDTO.getDepartment())
                 .employeeNumber(addUserDTO.getEmployeeNumber())
                 .joinDate(dbUser.getJoinDate())

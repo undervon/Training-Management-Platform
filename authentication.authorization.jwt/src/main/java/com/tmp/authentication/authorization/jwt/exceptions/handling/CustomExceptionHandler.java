@@ -35,11 +35,11 @@ public class CustomExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> badCredentialsExceptionHandler(BadCredentialsException badCredentialsException) {
+    public ResponseEntity<String> badCredentialsExceptionHandler() {
         log.error("thrown BadCredentialsException");
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(String.format("Bad credentials (%s)", badCredentialsException.getMessage()));
+                .body("Wrong username or password");
     }
 
     @ResponseBody
