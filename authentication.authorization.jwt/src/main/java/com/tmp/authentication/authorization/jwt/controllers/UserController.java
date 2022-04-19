@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping(value = "/addUser",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> addUser(@RequestPart AddUserDTO addUserDTO,
+    public ResponseEntity<UserDTO> addUser(@RequestPart("addUser") AddUserDTO addUserDTO,
             @RequestPart("image") MultipartFile image) {
         log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
@@ -41,8 +41,8 @@ public class UserController {
                 .body(userService.addUser(addUserDTO, image));
     }
 
-    @DeleteMapping(value = "/deleteUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    @DeleteMapping(value = "/deleteUser/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         log.info("[{}] -> deleteUser, id: {}", this.getClass().getSimpleName(), id);
 
         userService.deleteUser(id);
@@ -50,7 +50,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping(value = "/editRole/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
         log.info("[{}] -> editRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 
@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping(value = "/deleteRole/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
         log.info("[{}] -> deleteRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 

@@ -24,7 +24,9 @@ public class LogoutController {
 
     private final LogoutService logoutService;
 
-    @GetMapping(value = "/validateAccessToken", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/validateAccessToken",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccessTokenDTO> validateAccessToken(@RequestBody TokenDTO tokenDTO) {
         log.info("[{}] -> validateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
@@ -32,7 +34,9 @@ public class LogoutController {
                 .body(logoutService.validateAccessToken(tokenDTO));
     }
 
-    @GetMapping(value = "/validateRefreshToken", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/validateRefreshToken",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RefreshTokenDTO> validateRefreshToken(@RequestBody TokenDTO tokenDTO) {
         log.info("[{}] -> validateRefreshToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
@@ -40,7 +44,7 @@ public class LogoutController {
                 .body(logoutService.validateRefreshToken(tokenDTO));
     }
 
-    @PostMapping(value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> logout(@RequestBody TokensDTO tokensDTO) {
         log.info("[{}] -> logout, tokenDTO: {}", this.getClass().getSimpleName(), tokensDTO);
 

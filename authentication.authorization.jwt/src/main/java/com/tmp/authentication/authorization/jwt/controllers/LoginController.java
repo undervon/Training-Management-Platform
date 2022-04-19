@@ -22,7 +22,9 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokensDTO> login(@RequestBody UserCredentialsDTO userCredentialsDTO) {
         log.info("[{}] -> login, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
 
@@ -30,7 +32,9 @@ public class LoginController {
                 .body(loginService.login(userCredentialsDTO));
     }
 
-    @PostMapping(value = "/generateAccessToken", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/generateAccessToken",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenDTO> generateAccessToken(@RequestBody TokenDTO tokenDTO) {
         log.info("[{}] -> generateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 

@@ -41,6 +41,7 @@ public class User {
     private String department;
     private Integer employeeNumber;
     private LocalDateTime joinDate;
+
     @Lob
     private byte[] image;
 
