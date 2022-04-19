@@ -19,4 +19,5 @@ public class UserDTO {
     private String department;
     private Integer employeeNumber;
     private LocalDateTime joinDate;
+    private String imageURL;
 }

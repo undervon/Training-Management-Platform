@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,12 +30,15 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping(value = "/addUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> addUser(@RequestBody AddUserDTO addUserDTO) {
+    @PostMapping(value = "/addUser",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> addUser(@RequestPart AddUserDTO addUserDTO,
+            @RequestPart("image") MultipartFile image) {
         log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.addUser(addUserDTO));
+                .body(userService.addUser(addUserDTO, image));
     }
 
     @DeleteMapping(value = "/deleteUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

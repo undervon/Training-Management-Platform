@@ -67,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/getUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/getUsers/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/image/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

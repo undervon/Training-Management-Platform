@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class LoginService {
     private final LogoutService logoutService;
     private final JwtTokenUtil jwtTokenUtil;
 
+    @Transactional
     public TokensDTO login(UserCredentialsDTO userCredentialsDTO) {
         log.info("[{}] -> login, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
 
@@ -34,6 +37,7 @@ public class LoginService {
                 .build();
     }
 
+    @Transactional
     public TokenDTO generateAccessToken(TokenDTO tokenDTO) {
         log.info("[{}] -> generateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 

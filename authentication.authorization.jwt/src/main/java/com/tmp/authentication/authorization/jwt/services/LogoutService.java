@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ public class LogoutService {
     private static final List<String> accessTokenBlackList = new ArrayList<>();
     private static final List<String> refreshTokenBlackList = new ArrayList<>();
 
+    @Transactional
     public AccessTokenDTO validateAccessToken(TokenDTO tokenDTO) {
         log.info("[{}] -> validateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
@@ -54,6 +56,7 @@ public class LogoutService {
                 .build();
     }
 
+    @Transactional
     public RefreshTokenDTO validateRefreshToken(TokenDTO tokenDTO) {
         log.info("[{}] -> validateRefreshToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 

@@ -1,12 +1,16 @@
 package com.tmp.authentication.authorization.jwt.exceptions.handling;
 
 import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsException;
+import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
+import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
+import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
+import com.tmp.authentication.authorization.jwt.exceptions.UserImageNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -93,5 +97,42 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body("This user cannot be deleted because it's just ADMIN");
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UserImageNotFoundException.class)
+    public ResponseEntity<String> userImageNotFoundExceptionHandler(
+            UserImageNotFoundException userImageNotFoundException) {
+        log.error("thrown UserImageNotFoundException");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(String.format("The user image '%s' not found in DB", userImageNotFoundException.getMessage()));
+    }
+
+    @ResponseBody
+    @ExceptionHandler(GenericException.class)
+    public ResponseEntity<String> genericExceptionHandler() {
+        log.error("thrown GenericException");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Something wrong was done");
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ImageEmptyException.class)
+    public ResponseEntity<String> imageEmptyExceptionHandler() {
+        log.error("thrown ImageEmptyException");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("The image is empty");
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ImageContentTypeException.class)
+    public ResponseEntity<String> imageContentTypeExceptionHandler() {
+        log.error("thrown ImageContentTypeException");
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body("The image has wrong content type");
     }
 }

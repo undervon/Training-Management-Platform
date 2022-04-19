@@ -16,6 +16,8 @@ services:
     ports:
       - 5431:5432
     volumes:
+      - ./images/admin-icon.png:/docker-entrypoint-initdb.d/admin-icon.png
+      - ./images/user-icon.png:/docker-entrypoint-initdb.d/user-icon.png
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       POSTGRES_DB: trainingManagementPlatform

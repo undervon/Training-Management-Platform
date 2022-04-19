@@ -4,6 +4,9 @@ import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.entities.UserRoleId;
 import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsException;
+import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
+import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
+import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
@@ -21,9 +24,15 @@ import com.tmp.authentication.authorization.jwt.repositories.UserRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +44,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
+
+    @Value("${api.path}")
+    private String apiPath;
 
     public User findUserByUsername(String username) {
         return userRepository.findByEmail(username)
@@ -65,7 +77,22 @@ public class UserService {
         return roleRepository.getByRoleValue(roleValue);
     }
 
-    public User addUser(AddUserDTO addUserDTO) {
+    public void checkIfImageIsEmpty(MultipartFile image) {
+        if (image.isEmpty()) {
+            throw new ImageEmptyException();
+        }
+    }
+
+    public void checkImageContentType(MultipartFile image) {
+        List<String> acceptableContentType = Arrays.asList(MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE);
+
+        if (!acceptableContentType.contains(image.getContentType())) {
+            throw new ImageContentTypeException();
+        }
+    }
+
+    @Transactional
+    public UserDTO addUser(AddUserDTO addUserDTO, MultipartFile image) {
         log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
         try {
@@ -90,11 +117,21 @@ public class UserService {
                 .joinDate(LocalDateTime.now())
                 .build();
 
+        checkIfImageIsEmpty(image);
+        checkImageContentType(image);
+
+        try {
+            user.setImage(image.getBytes());
+        } catch (IOException ioException) {
+            log.error(ioException);
+            throw new GenericException();
+        }
+
         userRepository.save(user);
 
         userRoleRepository.save(UserRoleAdapter.createUserRoleObject(role, user));
 
-        return user;
+        return UserAdapter.userToUserDTO(user, apiPath);
     }
 
     public void deleteUser(Long id) {
@@ -164,7 +201,7 @@ public class UserService {
 
         User user = this.findUserById(id);
 
-        return UserAdapter.userToUserDTO(user);
+        return UserAdapter.userToUserDTO(user, apiPath);
     }
 
     public List<UserDTO> getUsers() {
@@ -172,6 +209,6 @@ public class UserService {
 
         List<User> userList = userRepository.findAll();
 
-        return UserAdapter.userListToUserDTOList(userList);
+        return UserAdapter.userListToUserDTOList(userList, apiPath);
     }
 }
