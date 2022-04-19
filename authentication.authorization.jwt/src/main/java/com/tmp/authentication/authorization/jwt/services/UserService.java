@@ -117,8 +117,8 @@ public class UserService {
                 .joinDate(LocalDateTime.now())
                 .build();
 
-        checkIfImageIsEmpty(image);
-        checkImageContentType(image);
+        this.checkIfImageIsEmpty(image);
+        this.checkImageContentType(image);
 
         try {
             user.setImage(image.getBytes());
@@ -132,6 +132,41 @@ public class UserService {
         userRoleRepository.save(UserRoleAdapter.createUserRoleObject(role, user));
 
         return UserAdapter.userToUserDTO(user, apiPath);
+    }
+
+    @Transactional
+    public void editUser(AddUserDTO addUserDTO, MultipartFile image, Long id) {
+        log.info("[{}] -> editUser, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
+
+        // Check if user exist in db
+        User dbUser = this.findUserById(id);
+
+        User user = User.builder()
+                .id(id)
+                .firstName(addUserDTO.getFirstName())
+                .lastName(addUserDTO.getLastName())
+                .email(addUserDTO.getEmail())
+                .password(addUserDTO.getPassword())
+                .department(addUserDTO.getDepartment())
+                .employeeNumber(addUserDTO.getEmployeeNumber())
+                .joinDate(dbUser.getJoinDate())
+                .roles(dbUser.getRoles())
+                .build();
+
+        if (image.isEmpty()) {
+            user.setImage(dbUser.getImage());
+        } else {
+            this.checkImageContentType(image);
+
+            try {
+                user.setImage(image.getBytes());
+            } catch (IOException ioException) {
+                log.error(ioException);
+                throw new GenericException();
+            }
+        }
+
+        userRepository.save(user);
     }
 
     public void deleteUser(Long id) {

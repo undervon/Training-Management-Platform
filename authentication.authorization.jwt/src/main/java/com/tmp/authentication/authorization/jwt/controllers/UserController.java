@@ -1,6 +1,5 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
-import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -39,6 +39,16 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.addUser(addUserDTO, image));
+    }
+
+    @PutMapping(value = "/editUser/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> editUser(@RequestPart("addUser") AddUserDTO addUserDTO,
+            @RequestPart("image") MultipartFile image, @PathVariable("id") Long id) {
+        log.info("[{}] -> editUser, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
+
+        userService.editUser(addUserDTO, image, id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping(value = "/deleteUser/{id}")
