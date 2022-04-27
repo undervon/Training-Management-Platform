@@ -1,23 +1,13 @@
 services:
-  app:
-    image: 2auth-jwt-app
-    container_name: Authentification_Authorization_JWT_app
-    build:
-      context: .
-    ports:
-      - 8090:8090
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trainingManagementPlatform
-  
   postgres:
     image: postgres
-    container_name: postgres_db
+    container_name: postgres_db_for_build
     restart: always
     ports:
       - 5432:5432
     volumes:
-      - ./images/admin-icon.png:/docker-entrypoint-initdb.d/admin-icon.png
-      - ./images/user-icon.png:/docker-entrypoint-initdb.d/user-icon.png
+      - ../images/admin-icon.png:/docker-entrypoint-initdb.d/admin-icon.png
+      - ../images/user-icon.png:/docker-entrypoint-initdb.d/user-icon.png
     environment:
       POSTGRES_DB: trainingManagementPlatform
       POSTGRES_USER: postgres

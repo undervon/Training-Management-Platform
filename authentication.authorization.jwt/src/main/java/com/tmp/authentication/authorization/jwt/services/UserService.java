@@ -32,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -99,16 +98,16 @@ public class UserService {
         log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
         try {
-            User dbUser = this.findUserByUsername(addUserDTO.getEmail());
+            User dbUser = findUserByUsername(addUserDTO.getEmail());
 
             if (dbUser.getEmail().equals(addUserDTO.getEmail())) {
                 throw new UserAlreadyExistsException(addUserDTO.getEmail());
             }
         } catch (UserNotFoundException userNotFoundException) {
-            log.error(userNotFoundException);
+            // no-op
         }
 
-        Role role = this.getRoleByRoleValue(RoleValue.EMPLOYEE);
+        Role role = getRoleByRoleValue(RoleValue.EMPLOYEE);
 
         User user = User.builder()
                 .firstName(addUserDTO.getFirstName())
@@ -117,16 +116,14 @@ public class UserService {
                 .password(bCryptPasswordEncoder.encode(addUserDTO.getPassword()))
                 .department(addUserDTO.getDepartment())
                 .employeeNumber(addUserDTO.getEmployeeNumber())
-                .joinDate(LocalDateTime.now())
                 .build();
 
-        this.checkIfImageIsEmpty(image);
-        this.checkImageContentType(image);
+        checkIfImageIsEmpty(image);
+        checkImageContentType(image);
 
         try {
             user.setImage(image.getBytes());
         } catch (IOException ioException) {
-            log.error(ioException);
             throw new GenericException();
         }
 
@@ -142,7 +139,7 @@ public class UserService {
         log.info("[{}] -> editUser, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
 
         // Check if user exist in db
-        User dbUser = this.findUserById(id);
+        User dbUser = findUserById(id);
 
         User user = User.builder()
                 .id(id)
@@ -159,12 +156,11 @@ public class UserService {
         if (image.isEmpty()) {
             user.setImage(dbUser.getImage());
         } else {
-            this.checkImageContentType(image);
+            checkImageContentType(image);
 
             try {
                 user.setImage(image.getBytes());
             } catch (IOException ioException) {
-                log.error(ioException);
                 throw new GenericException();
             }
         }
@@ -179,7 +175,7 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id.toString()));
 
         List<Role> roles = user.getRoles().stream()
-                .map(role -> this.getRoleByRoleValue(role.getRoleValue()))
+                .map(role -> getRoleByRoleValue(role.getRoleValue()))
                 .collect(Collectors.toList());
 
         if (roles.size() == 1 && roles.get(0).getRoleValue() == RoleValue.ADMIN) {
@@ -205,8 +201,8 @@ public class UserService {
 
         RoleValue newRoleValue = roleDTO.getRoleValue();
 
-        User user = this.findUserById(id);
-        Role role = this.findRoleByRoleValue(newRoleValue);
+        User user = findUserById(id);
+        Role role = findRoleByRoleValue(newRoleValue);
 
         if (user.getRoles().contains(role)) {
             throw new RoleAlreadyExistsException(newRoleValue.getAuthority());
@@ -220,8 +216,8 @@ public class UserService {
 
         RoleValue newRoleValue = roleDTO.getRoleValue();
 
-        User user = this.findUserById(id);
-        Role role = this.findRoleByRoleValue(newRoleValue);
+        User user = findUserById(id);
+        Role role = findRoleByRoleValue(newRoleValue);
 
         if (user.getRoles().size() == 1) {
             throw new UnsupportedRolesSizeException();
@@ -237,7 +233,7 @@ public class UserService {
     public UserDTO getUserById(Long id) {
         log.info("[{}] -> getUserById, id: {}", this.getClass().getSimpleName(), id);
 
-        User user = this.findUserById(id);
+        User user = findUserById(id);
 
         return UserAdapter.userToUserDTO(user, apiPath);
     }

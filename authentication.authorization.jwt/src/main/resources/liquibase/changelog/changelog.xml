@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1650445336341-1" author="admin">
+    <changeSet id="1" author="silviu">
         <createTable tableName="employees">
             <column autoIncrement="true" name="id_employee" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="employees_pkey"/>
@@ -20,7 +20,7 @@
             <column name="password" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1650445336341-2" author="admin">
+    <changeSet id="2" author="silviu">
         <createTable tableName="roles">
             <column autoIncrement="true" name="id_role" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="roles_pkey"/>
@@ -28,7 +28,7 @@
             <column name="role_value" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1650445336341-3" author="admin">
+    <changeSet id="3" author="silviu">
         <createTable tableName="employees_roles">
             <column name="id_role" type="BIGINT">
                 <constraints nullable="false"/>
@@ -38,16 +38,16 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1650445336341-4" author="admin">
+    <changeSet id="4" author="silviu">
         <addPrimaryKey columnNames="id_employee, id_role" constraintName="employees_roles_pkey"
                        tableName="employees_roles"/>
     </changeSet>
-    <changeSet id="1650445336341-5" author="admin">
+    <changeSet id="5" author="silviu">
         <addForeignKeyConstraint baseColumnNames="id_role" baseTableName="employees_roles"
                                  constraintName="fk5aha8dr5vtutvrtqq1myb8l5h" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id_role" referencedTableName="roles"/>
     </changeSet>
-    <changeSet id="1650445336341-6" author="admin">
+    <changeSet id="6" author="silviu">
         <addForeignKeyConstraint baseColumnNames="id_employee" baseTableName="employees_roles"
                                  constraintName="fkthtko3d0awnvsaxf0iu1w5ocm" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id_employee" referencedTableName="employees"/>

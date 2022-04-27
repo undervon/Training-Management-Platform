@@ -24,7 +24,7 @@ public class UserImageService {
     public Resource getUserImageById(Long id) {
         log.info("[{}] -> getUserImageById, id: {}", this.getClass().getSimpleName(), id);
 
-        User user = this.findUserById(id);
+        User user = findUserById(id);
 
         byte[] image = user.getImage();
         if (null == image) {

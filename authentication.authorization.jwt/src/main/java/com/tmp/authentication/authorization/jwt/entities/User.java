@@ -40,7 +40,9 @@ public class User {
     private String password;
     private String department;
     private Integer employeeNumber;
-    private LocalDateTime joinDate;
+
+    @Builder.Default
+    private LocalDateTime joinDate = LocalDateTime.now();
 
     @Lob
     private byte[] image;
