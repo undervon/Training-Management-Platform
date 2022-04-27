@@ -29,8 +29,10 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenUtil {
 
-    public static final long JWT_ACCESS_TOKEN_VALIDITY = 1 * 60 * 60 * 1000;                // 1 hours
-    public static final long JWT_REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000;          // 7 days
+    private static final long JWT_ACCESS_TOKEN_VALIDITY = 1 * 60 * 60 * 1000;                // 1 hours
+    private static final long JWT_REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000;          // 7 days
+
+    private static final long JWT_TIMEZONE_FIXING = 3 * 60 * 60 * 1000;                      // 3 hours
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -57,8 +59,8 @@ public class JwtTokenUtil {
                 .setSubject(subject)
                 .setIssuer(jwtIssuer)
                 .setId(UUID.randomUUID().toString())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_VALIDITY))
+                .setIssuedAt(new Date(System.currentTimeMillis() + JWT_TIMEZONE_FIXING))
+                .setExpiration(new Date((System.currentTimeMillis() + JWT_TIMEZONE_FIXING) + JWT_ACCESS_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -73,8 +75,9 @@ public class JwtTokenUtil {
                 .setSubject(subject)
                 .setIssuer(jwtIssuer)
                 .setId(UUID.randomUUID().toString())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_VALIDITY))
+                .setIssuedAt(new Date(System.currentTimeMillis() + JWT_TIMEZONE_FIXING))
+                .setExpiration(
+                        new Date((System.currentTimeMillis() + JWT_TIMEZONE_FIXING) + JWT_REFRESH_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
