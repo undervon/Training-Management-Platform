@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ public class LogoutController {
 
     private final LogoutService logoutService;
 
+    @CrossOrigin
     @GetMapping(value = "/validateAccessToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,6 +36,7 @@ public class LogoutController {
                 .body(logoutService.validateAccessToken(tokenDTO));
     }
 
+    @CrossOrigin
     @GetMapping(value = "/validateRefreshToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,6 +47,7 @@ public class LogoutController {
                 .body(logoutService.validateRefreshToken(tokenDTO));
     }
 
+    @CrossOrigin
     @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> logout(@RequestBody TokensDTO tokensDTO) {
         log.info("[{}] -> logout, tokenDTO: {}", this.getClass().getSimpleName(), tokensDTO);

@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @CrossOrigin
     @PostMapping(value = "/addUser",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,6 +43,7 @@ public class UserController {
                 .body(userService.addUser(addUserDTO, image));
     }
 
+    @CrossOrigin
     @PutMapping(value = "/editUser/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> editUser(@RequestPart("addUser") AddUserDTO addUserDTO,
             @RequestPart("image") MultipartFile image, @PathVariable("id") Long id) {
@@ -51,6 +54,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @CrossOrigin
     @DeleteMapping(value = "/deleteUser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         log.info("[{}] -> deleteUser, id: {}", this.getClass().getSimpleName(), id);
@@ -60,6 +64,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @CrossOrigin
     @PostMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
         log.info("[{}] -> editRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
@@ -69,6 +74,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @CrossOrigin
     @DeleteMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
         log.info("[{}] -> deleteRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
@@ -78,6 +84,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @CrossOrigin
     @GetMapping(value = "/getUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
         log.info("[{}] -> getUserById, id: {}", this.getClass().getSimpleName(), id);
@@ -86,6 +93,7 @@ public class UserController {
                 .body(userService.getUserById(id));
     }
 
+    @CrossOrigin
     @GetMapping(value = "/getUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserDTO>> getUsers() {
         log.info("[{}] -> getUsers", this.getClass().getSimpleName());
