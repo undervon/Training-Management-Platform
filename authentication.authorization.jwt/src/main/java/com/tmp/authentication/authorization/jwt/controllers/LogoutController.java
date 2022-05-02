@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,7 @@ public class LogoutController {
     private final LogoutService logoutService;
 
     @CrossOrigin
-    @GetMapping(value = "/validateAccessToken",
+    @PostMapping(value = "/validateAccessToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccessTokenDTO> validateAccessToken(@RequestBody TokenDTO tokenDTO) {
@@ -37,7 +36,7 @@ public class LogoutController {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/validateRefreshToken",
+    @PostMapping(value = "/validateRefreshToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RefreshTokenDTO> validateRefreshToken(@RequestBody TokenDTO tokenDTO) {
