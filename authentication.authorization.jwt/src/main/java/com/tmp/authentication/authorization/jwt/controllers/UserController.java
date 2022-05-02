@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
         log.info("[{}] -> editRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
         log.info("[{}] -> deleteRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 
