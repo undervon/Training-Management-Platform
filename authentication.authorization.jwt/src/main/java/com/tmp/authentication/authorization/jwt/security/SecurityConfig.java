@@ -1,6 +1,5 @@
 package com.tmp.authentication.authorization.jwt.security;
 
-import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -16,9 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Log4j2
 @Configuration
@@ -73,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/1.0/tmp/auth/getUsers/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/user/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/image/**").permitAll()
+                .antMatchers("/api/1.0/tmp/auth/logout/**").permitAll()
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/api-tmp-auth-docs/**").permitAll()
@@ -80,18 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
     }
 
     @Bean
