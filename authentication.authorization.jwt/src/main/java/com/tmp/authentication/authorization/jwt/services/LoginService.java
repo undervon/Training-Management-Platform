@@ -20,9 +20,12 @@ public class LoginService {
     private final LogoutService logoutService;
     private final JwtTokenUtil jwtTokenUtil;
 
+    /*
+        Methods from LoginController
+     */
     @Transactional
-    public TokensDTO login(UserCredentialsDTO userCredentialsDTO) {
-        log.info("[{}] -> login, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
+    public TokensDTO loginReq(UserCredentialsDTO userCredentialsDTO) {
+        log.info("[{}] -> loginReq, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
 
         User user = userService.findUserByUsername(userCredentialsDTO.getUsername());
 
@@ -38,10 +41,10 @@ public class LoginService {
     }
 
     @Transactional
-    public TokenDTO generateAccessToken(TokenDTO tokenDTO) {
-        log.info("[{}] -> generateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
+    public TokenDTO generateAccessTokenReq(TokenDTO tokenDTO) {
+        log.info("[{}] -> generateAccessTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
-        String username = logoutService.validateRefreshToken(tokenDTO).getUsername();
+        String username = logoutService.validateRefreshTokenReq(tokenDTO).getUsername();
 
         User user = userService.getUserByUsername(username);
 

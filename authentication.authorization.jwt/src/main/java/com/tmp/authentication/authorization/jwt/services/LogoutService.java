@@ -27,9 +27,12 @@ public class LogoutService {
     private static final List<String> accessTokenBlackList = new ArrayList<>();
     private static final List<String> refreshTokenBlackList = new ArrayList<>();
 
+    /*
+        Methods from LogoutController
+     */
     @Transactional
-    public AccessTokenDTO validateAccessToken(TokenDTO tokenDTO) {
-        log.info("[{}] -> validateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
+    public AccessTokenDTO validateAccessTokenReq(TokenDTO tokenDTO) {
+        log.info("[{}] -> validateAccessTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
         String accessToken = tokenDTO.getToken();
 
@@ -57,8 +60,8 @@ public class LogoutService {
     }
 
     @Transactional
-    public RefreshTokenDTO validateRefreshToken(TokenDTO tokenDTO) {
-        log.info("[{}] -> validateRefreshToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
+    public RefreshTokenDTO validateRefreshTokenReq(TokenDTO tokenDTO) {
+        log.info("[{}] -> validateRefreshTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
         String refreshToken = tokenDTO.getToken();
 
@@ -83,8 +86,8 @@ public class LogoutService {
                 .build();
     }
 
-    public String logout(TokensDTO tokensDTO) {
-        log.info("[{}] -> logout, tokensDTO: {}", this.getClass().getSimpleName(), tokensDTO);
+    public String logoutReq(TokensDTO tokensDTO) {
+        log.info("[{}] -> logoutReq, tokensDTO: {}", this.getClass().getSimpleName(), tokensDTO);
 
         String accessToken = tokensDTO.getAccessToken();
         String refreshToken = tokensDTO.getRefreshToken();

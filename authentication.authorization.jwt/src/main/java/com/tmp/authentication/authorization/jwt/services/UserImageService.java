@@ -16,13 +16,19 @@ public class UserImageService {
 
     private final UserRepository userRepository;
 
+    /*
+        UserImageService methods
+     */
     public User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserImageNotFoundException(id.toString()));
     }
 
-    public Resource getUserImageById(Long id) {
-        log.info("[{}] -> getUserImageById, id: {}", this.getClass().getSimpleName(), id);
+    /*
+        Methods from UserImageController
+     */
+    public Resource getUserImageByIdReq(Long id) {
+        log.info("[{}] -> getUserImageByIdReq, id: {}", this.getClass().getSimpleName(), id);
 
         User user = findUserById(id);
 

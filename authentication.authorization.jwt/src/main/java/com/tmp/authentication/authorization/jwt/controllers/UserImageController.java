@@ -23,10 +23,10 @@ public class UserImageController {
 
     @CrossOrigin
     @GetMapping(value = "/image/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
-    public ResponseEntity<Resource> getUserImageById(@PathVariable("id") Long id) {
-        log.info("[{}] -> getUserImageById, id: {}", this.getClass().getSimpleName(), id);
+    public ResponseEntity<Resource> getUserImageByIdReq(@PathVariable("id") Long id) {
+        log.info("[{}] -> getUserImageByIdReq, id: {}", this.getClass().getSimpleName(), id);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userImageService.getUserImageById(id));
+                .body(userImageService.getUserImageByIdReq(id));
     }
 }

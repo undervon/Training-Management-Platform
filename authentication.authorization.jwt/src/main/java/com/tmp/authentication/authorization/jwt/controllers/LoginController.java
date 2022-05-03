@@ -27,21 +27,21 @@ public class LoginController {
     @PostMapping(value = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokensDTO> login(@RequestBody UserCredentialsDTO userCredentialsDTO) {
-        log.info("[{}] -> login, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
+    public ResponseEntity<TokensDTO> loginReq(@RequestBody UserCredentialsDTO userCredentialsDTO) {
+        log.info("[{}] -> loginReq, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(loginService.login(userCredentialsDTO));
+                .body(loginService.loginReq(userCredentialsDTO));
     }
 
     @CrossOrigin
     @PostMapping(value = "/generateAccessToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokenDTO> generateAccessToken(@RequestBody TokenDTO tokenDTO) {
-        log.info("[{}] -> generateAccessToken, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
+    public ResponseEntity<TokenDTO> generateAccessTokenReq(@RequestBody TokenDTO tokenDTO) {
+        log.info("[{}] -> generateAccessTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(loginService.generateAccessToken(tokenDTO));
+                .body(loginService.generateAccessTokenReq(tokenDTO));
     }
 }
