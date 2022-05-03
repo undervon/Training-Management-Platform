@@ -101,4 +101,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUsers());
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/user/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> getUserByUsernameReq(@PathVariable("username") String username) {
+        log.info("[{}] -> getUserByUsernameReq, username: {}", this.getClass().getSimpleName(), username);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUserByUsernameReq(username));
+    }
 }

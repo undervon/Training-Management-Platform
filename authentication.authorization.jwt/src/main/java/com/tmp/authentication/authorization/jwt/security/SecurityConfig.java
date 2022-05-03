@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/1.0/tmp/auth/deleteRole/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/getUser/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/getUsers/**").permitAll()
+                .antMatchers("/api/1.0/tmp/auth/user/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/image/**").permitAll()
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()

@@ -245,4 +245,13 @@ public class UserService {
 
         return UserAdapter.userListToUserDTOList(userList, apiPath);
     }
+
+    @Transactional
+    public UserDTO getUserByUsernameReq(String username) {
+        log.info("[{}] -> getUserByUsernameReq, username: {}", this.getClass().getSimpleName(), username);
+
+        User user = findUserByUsername(username);
+
+        return UserAdapter.userToUserDTO(user, apiPath);
+    }
 }
