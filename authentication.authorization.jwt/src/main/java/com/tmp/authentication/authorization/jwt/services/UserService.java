@@ -1,5 +1,6 @@
 package com.tmp.authentication.authorization.jwt.services;
 
+import com.tmp.authentication.authorization.jwt.entities.Manager;
 import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.entities.UserRoleId;
@@ -7,6 +8,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsExcepti
 import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
+import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
@@ -19,6 +21,7 @@ import com.tmp.authentication.authorization.jwt.models.adapters.UserAdapter;
 import com.tmp.authentication.authorization.jwt.models.adapters.UserRoleAdapter;
 import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
+import com.tmp.authentication.authorization.jwt.repositories.ManagerRepository;
 import com.tmp.authentication.authorization.jwt.repositories.RoleRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRoleRepository;
@@ -44,12 +47,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
+    private final ManagerRepository managerRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${api.path}")
     private String apiPath;
 
+    /*
+        UserService methods
+     */
     public User findUserByUsername(String username) {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
@@ -64,10 +71,9 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id.toString()));
     }
 
-    public void checkPassword(String dbPassword, String inPassword) {
-        if (!bCryptPasswordEncoder.matches(inPassword, dbPassword)) {
-            throw new BadCredentialsException();
-        }
+    public List<User> findUsersByManager(Manager manager, String username) {
+        return userRepository.findAllByManager(manager)
+                .orElseThrow(() -> new UserNotFoundException(username));
     }
 
     public Role findRoleByRoleValue(RoleValue roleValue) {
@@ -77,6 +83,17 @@ public class UserService {
 
     public Role getRoleByRoleValue(RoleValue roleValue) {
         return roleRepository.getByRoleValue(roleValue);
+    }
+
+    public Manager findManagerByUsername(String username) {
+        return managerRepository.findManagerByEmail(username)
+                .orElseThrow(() -> new ManagerNotFoundException(username));
+    }
+
+    public void checkPassword(String dbPassword, String inPassword) {
+        if (!bCryptPasswordEncoder.matches(inPassword, dbPassword)) {
+            throw new BadCredentialsException();
+        }
     }
 
     public void checkIfImageIsEmpty(MultipartFile image) {
@@ -93,9 +110,12 @@ public class UserService {
         }
     }
 
+    /*
+        Methods from UserController
+     */
     @Transactional
-    public UserDTO addUser(AddUserDTO addUserDTO, MultipartFile image) {
-        log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
+    public UserDTO addUserReq(AddUserDTO addUserDTO, MultipartFile image) {
+        log.info("[{}] -> addUserReq, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
         try {
             User dbUser = findUserByUsername(addUserDTO.getEmail());
@@ -135,8 +155,8 @@ public class UserService {
     }
 
     @Transactional
-    public void editUser(AddUserDTO addUserDTO, MultipartFile image, Long id) {
-        log.info("[{}] -> editUser, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
+    public void editUserReq(AddUserDTO addUserDTO, MultipartFile image, Long id) {
+        log.info("[{}] -> editUserReq, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
 
         // Check if user exist in db
         User dbUser = findUserById(id);
@@ -168,8 +188,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
-        log.info("[{}] -> deleteUser, id: {}", this.getClass().getSimpleName(), id);
+    public void deleteUserReq(Long id) {
+        log.info("[{}] -> deleteUserReq, id: {}", this.getClass().getSimpleName(), id);
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id.toString()));
@@ -196,7 +216,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public void editRole(Long id, RoleDTO roleDTO) {
+    public void editRoleReq(Long id, RoleDTO roleDTO) {
         log.info("[{}] -> editRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 
         RoleValue newRoleValue = roleDTO.getRoleValue();
@@ -211,8 +231,8 @@ public class UserService {
         userRoleRepository.save(UserRoleAdapter.createUserRoleObject(role, user));
     }
 
-    public void deleteRole(Long id, RoleDTO roleDTO) {
-        log.info("[{}] -> deleteRole, roleDTO: {}", this.getClass().getSimpleName(), roleDTO);
+    public void deleteRoleReq(Long id, RoleDTO roleDTO) {
+        log.info("[{}] -> deleteRoleReq, roleDTO: {}", this.getClass().getSimpleName(), roleDTO);
 
         RoleValue newRoleValue = roleDTO.getRoleValue();
 
@@ -230,16 +250,16 @@ public class UserService {
         userRoleRepository.delete(UserRoleAdapter.createUserRoleObject(role, user));
     }
 
-    public UserDTO getUserById(Long id) {
-        log.info("[{}] -> getUserById, id: {}", this.getClass().getSimpleName(), id);
+    public UserDTO getUserByIdReq(Long id) {
+        log.info("[{}] -> getUserByIdReq, id: {}", this.getClass().getSimpleName(), id);
 
         User user = findUserById(id);
 
         return UserAdapter.userToUserDTO(user, apiPath);
     }
 
-    public List<UserDTO> getUsers() {
-        log.info("[{}] -> getUsers", this.getClass().getSimpleName());
+    public List<UserDTO> getUsersReq() {
+        log.info("[{}] -> getUsersReq", this.getClass().getSimpleName());
 
         List<User> userList = userRepository.findAll();
 
@@ -253,5 +273,16 @@ public class UserService {
         User user = findUserByUsername(username);
 
         return UserAdapter.userToUserDTO(user, apiPath);
+    }
+
+    @Transactional
+    public List<UserDTO> getSubordinateUsersReq(String username) {
+        log.info("[{}] -> getSubordinateUsersReq, username: {}", this.getClass().getSimpleName(), username);
+
+        Manager manager = findManagerByUsername(username);
+
+        List<User> users = findUsersByManager(manager, username);
+
+        return UserAdapter.userListToUserDTOList(users, apiPath);
     }
 }

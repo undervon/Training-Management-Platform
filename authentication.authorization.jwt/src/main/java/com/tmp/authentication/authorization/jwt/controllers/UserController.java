@@ -35,71 +35,71 @@ public class UserController {
     @PostMapping(value = "/addUser",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> addUser(@RequestPart("addUser") AddUserDTO addUserDTO,
+    public ResponseEntity<UserDTO> addUserReq(@RequestPart("addUser") AddUserDTO addUserDTO,
             @RequestPart("image") MultipartFile image) {
-        log.info("[{}] -> addUser, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
+        log.info("[{}] -> addUserReq, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.addUser(addUserDTO, image));
+                .body(userService.addUserReq(addUserDTO, image));
     }
 
     @CrossOrigin
     @PutMapping(value = "/editUser/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> editUser(@RequestPart("addUser") AddUserDTO addUserDTO,
+    public ResponseEntity<?> editUserReq(@RequestPart("addUser") AddUserDTO addUserDTO,
             @RequestPart("image") MultipartFile image, @PathVariable("id") Long id) {
-        log.info("[{}] -> editUser, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
+        log.info("[{}] -> editUserReq, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
 
-        userService.editUser(addUserDTO, image, id);
+        userService.editUserReq(addUserDTO, image, id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @CrossOrigin
     @DeleteMapping(value = "/deleteUser/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        log.info("[{}] -> deleteUser, id: {}", this.getClass().getSimpleName(), id);
+    public ResponseEntity<?> deleteUserReq(@PathVariable("id") Long id) {
+        log.info("[{}] -> deleteUserReq, id: {}", this.getClass().getSimpleName(), id);
 
-        userService.deleteUser(id);
+        userService.deleteUserReq(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @CrossOrigin
     @PutMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
-        log.info("[{}] -> editRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
+    public ResponseEntity<?> editRoleReq(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
+        log.info("[{}] -> editRoleReq, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 
-        userService.editRole(id, roleDTO);
+        userService.editRoleReq(id, roleDTO);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @CrossOrigin
     @PutMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteRole(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
-        log.info("[{}] -> deleteRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
+    public ResponseEntity<?> deleteRoleReq(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
+        log.info("[{}] -> deleteRoleReq, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
 
-        userService.deleteRole(id, roleDTO);
+        userService.deleteRoleReq(id, roleDTO);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @CrossOrigin
     @GetMapping(value = "/getUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
-        log.info("[{}] -> getUserById, id: {}", this.getClass().getSimpleName(), id);
+    public ResponseEntity<UserDTO> getUserByIdReq(@PathVariable("id") Long id) {
+        log.info("[{}] -> getUserByIdReq, id: {}", this.getClass().getSimpleName(), id);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getUserById(id));
+                .body(userService.getUserByIdReq(id));
     }
 
     @CrossOrigin
     @GetMapping(value = "/getUsers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getUsers() {
-        log.info("[{}] -> getUsers", this.getClass().getSimpleName());
+    public ResponseEntity<List<UserDTO>> getUsersReq() {
+        log.info("[{}] -> getUsersReq", this.getClass().getSimpleName());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getUsers());
+                .body(userService.getUsersReq());
     }
 
     @CrossOrigin
@@ -109,5 +109,14 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUserByUsernameReq(username));
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/subordinateUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDTO>> getSubordinateUsersReq(@PathVariable("username") String username) {
+        log.info("[{}] -> getSubordinateUsersReq, username: {}", this.getClass().getSimpleName(), username);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getSubordinateUsersReq(username));
     }
 }

@@ -4,6 +4,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsExcepti
 import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
+import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
@@ -134,5 +135,14 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body("The image has wrong content type");
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ManagerNotFoundException.class)
+    public ResponseEntity<String> managerNotFoundExceptionHandler(ManagerNotFoundException managerNotFoundException) {
+        log.error("thrown ManagerNotFoundException");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(String.format("Manager '%s' not found in DB", managerNotFoundException.getMessage()));
     }
 }
