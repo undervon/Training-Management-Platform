@@ -49,7 +49,7 @@ public class CustomExceptionHandler {
         log.error("thrown UserNotFoundException");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(String.format("User '%s' not found in DB", userNotFoundException.getMessage()));
+                .body(String.format("The user '%s' not found in DB", userNotFoundException.getMessage()));
     }
 
     @ResponseBody
@@ -78,7 +78,7 @@ public class CustomExceptionHandler {
         log.error("thrown UnsupportedRolesSizeException");
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body("Roles size is unsupported");
+                .body("The roles size is unsupported");
     }
 
     @ResponseBody
@@ -143,6 +143,6 @@ public class CustomExceptionHandler {
         log.error("thrown ManagerNotFoundException");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(String.format("Manager '%s' not found in DB", managerNotFoundException.getMessage()));
+                .body(String.format("The manager '%s' not found in DB", managerNotFoundException.getMessage()));
     }
 }

@@ -19,7 +19,7 @@ public class UserImageService {
     /*
         UserImageService methods
      */
-    private User findUserById(Long id) {
+    private User findUserImageById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserImageNotFoundException(id.toString()));
     }
@@ -28,7 +28,7 @@ public class UserImageService {
         Methods from UserImageController
      */
     public Resource getUserImageByIdReq(Long id) {
-        User user = findUserById(id);
+        User user = findUserImageById(id);
 
         byte[] image = user.getImage();
         if (null == image) {
