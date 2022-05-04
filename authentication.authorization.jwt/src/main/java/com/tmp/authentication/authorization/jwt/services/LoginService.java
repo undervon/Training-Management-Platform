@@ -25,8 +25,6 @@ public class LoginService {
      */
     @Transactional
     public TokensDTO loginReq(UserCredentialsDTO userCredentialsDTO) {
-        log.info("[{}] -> loginReq, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
-
         User user = userService.findUserByUsername(userCredentialsDTO.getUsername());
 
         userService.checkPassword(user.getPassword(), userCredentialsDTO.getPassword());
@@ -42,8 +40,6 @@ public class LoginService {
 
     @Transactional
     public TokenDTO generateAccessTokenReq(TokenDTO tokenDTO) {
-        log.info("[{}] -> generateAccessTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
-
         String username = logoutService.validateRefreshTokenReq(tokenDTO).getUsername();
 
         User user = userService.getUserByUsername(username);

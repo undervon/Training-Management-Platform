@@ -32,8 +32,6 @@ public class LogoutService {
      */
     @Transactional
     public AccessTokenDTO validateAccessTokenReq(TokenDTO tokenDTO) {
-        log.info("[{}] -> validateAccessTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
-
         String accessToken = tokenDTO.getToken();
 
         if (accessTokenBlackList.contains(accessToken)) {
@@ -61,8 +59,6 @@ public class LogoutService {
 
     @Transactional
     public RefreshTokenDTO validateRefreshTokenReq(TokenDTO tokenDTO) {
-        log.info("[{}] -> validateRefreshTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
-
         String refreshToken = tokenDTO.getToken();
 
         if (refreshTokenBlackList.contains(refreshToken)) {
@@ -87,8 +83,6 @@ public class LogoutService {
     }
 
     public String logoutReq(TokensDTO tokensDTO) {
-        log.info("[{}] -> logoutReq, tokensDTO: {}", this.getClass().getSimpleName(), tokensDTO);
-
         String accessToken = tokensDTO.getAccessToken();
         String refreshToken = tokensDTO.getRefreshToken();
 

@@ -1,11 +1,13 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
+import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,8 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> addUserReq(@RequestPart("addUser") AddUserDTO addUserDTO,
             @RequestPart("image") MultipartFile image) {
-        log.info("[{}] -> addUserReq, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
+        log.info("[ {} ] -> [ {} ] -> [ addUserReq ] addUserDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, addUserDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.addUserReq(addUserDTO, image));
@@ -45,11 +48,13 @@ public class UserController {
 
     @CrossOrigin
     @PutMapping(value = "/editUser/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> editUserReq(@RequestPart("addUser") AddUserDTO addUserDTO,
-            @RequestPart("image") MultipartFile image, @PathVariable("id") Long id) {
-        log.info("[{}] -> editUserReq, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
+    public ResponseEntity<?> editUserReq(@RequestPart("editUser") EditUserDTO editUserDTO,
+            @RequestPart("image") MultipartFile image,
+            @PathVariable("id") Long id) {
+        log.info("[ {} ] -> [ {} ] -> [ editUserReq ] editUserDTO: {}, id: {}",
+                this.getClass().getSimpleName(), HttpMethod.PUT, editUserDTO, id);
 
-        userService.editUserReq(addUserDTO, image, id);
+        userService.editUserReq(editUserDTO, image, id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -57,7 +62,8 @@ public class UserController {
     @CrossOrigin
     @DeleteMapping(value = "/deleteUser/{id}")
     public ResponseEntity<?> deleteUserReq(@PathVariable("id") Long id) {
-        log.info("[{}] -> deleteUserReq, id: {}", this.getClass().getSimpleName(), id);
+        log.info("[ {} ] -> [ {} ] -> [ deleteUserReq ] id: {}",
+                this.getClass().getSimpleName(), HttpMethod.DELETE, id);
 
         userService.deleteUserReq(id);
 
@@ -66,8 +72,10 @@ public class UserController {
 
     @CrossOrigin
     @PutMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editRoleReq(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
-        log.info("[{}] -> editRoleReq, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
+    public ResponseEntity<?> editRoleReq(@PathVariable("id") Long id,
+            @RequestBody RoleDTO roleDTO) {
+        log.info("[ {} ] -> [ {} ] -> [ editRoleReq ] id: {}, roleDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.PUT, id, roleDTO);
 
         userService.editRoleReq(id, roleDTO);
 
@@ -76,8 +84,10 @@ public class UserController {
 
     @CrossOrigin
     @PutMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteRoleReq(@PathVariable("id") Long id, @RequestBody RoleDTO roleDTO) {
-        log.info("[{}] -> deleteRoleReq, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
+    public ResponseEntity<?> deleteRoleReq(@PathVariable("id") Long id,
+            @RequestBody RoleDTO roleDTO) {
+        log.info("[ {} ] -> [ {} ] -> [ deleteRoleReq ] id: {}, roleDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.PUT, id, roleDTO);
 
         userService.deleteRoleReq(id, roleDTO);
 
@@ -87,7 +97,8 @@ public class UserController {
     @CrossOrigin
     @GetMapping(value = "/getUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> getUserByIdReq(@PathVariable("id") Long id) {
-        log.info("[{}] -> getUserByIdReq, id: {}", this.getClass().getSimpleName(), id);
+        log.info("[ {} ] -> [ {} ] -> [ getUserByIdReq ] id: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, id);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUserByIdReq(id));
@@ -96,7 +107,8 @@ public class UserController {
     @CrossOrigin
     @GetMapping(value = "/getUsers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserDTO>> getUsersReq() {
-        log.info("[{}] -> getUsersReq", this.getClass().getSimpleName());
+        log.info("[ {} ] -> [ {} ] -> [ getUsersReq ]",
+                this.getClass().getSimpleName(), HttpMethod.GET);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUsersReq());
@@ -105,7 +117,8 @@ public class UserController {
     @CrossOrigin
     @GetMapping(value = "/user/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> getUserByUsernameReq(@PathVariable("username") String username) {
-        log.info("[{}] -> getUserByUsernameReq, username: {}", this.getClass().getSimpleName(), username);
+        log.info("[ {} ] -> [ {} ] -> [ getUserByUsernameReq ] username: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, username);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getUserByUsernameReq(username));
@@ -114,7 +127,8 @@ public class UserController {
     @CrossOrigin
     @GetMapping(value = "/subordinateUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserDTO>> getSubordinateUsersReq(@PathVariable("username") String username) {
-        log.info("[{}] -> getSubordinateUsersReq, username: {}", this.getClass().getSimpleName(), username);
+        log.info("[ {} ] -> [ {} ] -> [ getSubordinateUsersReq ] username: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, username);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getSubordinateUsersReq(username));

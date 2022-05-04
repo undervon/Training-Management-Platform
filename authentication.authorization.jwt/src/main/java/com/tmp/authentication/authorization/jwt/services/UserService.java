@@ -3,7 +3,6 @@ package com.tmp.authentication.authorization.jwt.services;
 import com.tmp.authentication.authorization.jwt.entities.Manager;
 import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
-import com.tmp.authentication.authorization.jwt.entities.UserRoleId;
 import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsException;
 import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
@@ -15,6 +14,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserExc
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
+import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.models.adapters.UserAdapter;
@@ -54,59 +54,82 @@ public class UserService {
     @Value("${api.path}")
     private String apiPath;
 
+    @Value("${user.manager.email}")
+    private String managerUsername;
+
     /*
         UserService methods
      */
-    public User findUserByUsername(String username) {
+    protected User findUserByUsername(String username) {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public User getUserByUsername(String username) {
+    protected User getUserByUsername(String username) {
         return userRepository.getByEmail(username);
     }
 
-    public User findUserById(Long id) {
+    protected User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id.toString()));
     }
 
-    public List<User> findUsersByManager(Manager manager, String username) {
+    protected List<User> findUsersByManager(Manager manager, String username) {
         return userRepository.findAllByManager(manager)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public Role findRoleByRoleValue(RoleValue roleValue) {
+    protected Role findRoleByRoleValue(RoleValue roleValue) {
         return roleRepository.findByRoleValue(roleValue)
                 .orElseThrow(() -> new RoleDoesNotExistException(roleValue.getAuthority()));
     }
 
-    public Role getRoleByRoleValue(RoleValue roleValue) {
+    protected Role getRoleByRoleValue(RoleValue roleValue) {
         return roleRepository.getByRoleValue(roleValue);
     }
 
-    public Manager findManagerByUsername(String username) {
+    protected Manager findManagerByUsername(String username) {
         return managerRepository.findManagerByEmail(username)
                 .orElseThrow(() -> new ManagerNotFoundException(username));
     }
 
-    public void checkPassword(String dbPassword, String inPassword) {
+    protected Manager getManagerByUsername(String username) {
+        return managerRepository.getManagerByEmail(username);
+    }
+
+    protected boolean existsManagerByUsername(String username) {
+        return managerRepository.existsManagerByEmail(username);
+    }
+
+    protected void checkPassword(String dbPassword, String inPassword) {
         if (!bCryptPasswordEncoder.matches(inPassword, dbPassword)) {
             throw new BadCredentialsException();
         }
     }
 
-    public void checkIfImageIsEmpty(MultipartFile image) {
+    private void checkIfImageIsEmpty(MultipartFile image) {
         if (image.isEmpty()) {
             throw new ImageEmptyException();
         }
     }
 
-    public void checkImageContentType(MultipartFile image) {
+    private void checkImageContentType(MultipartFile image) {
         List<String> acceptableContentType = Arrays.asList(MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE);
 
         if (!acceptableContentType.contains(image.getContentType())) {
             throw new ImageContentTypeException();
+        }
+    }
+
+    private void checkUserAlreadyExistsInDB(String username) {
+        try {
+            User dbUser = findUserByUsername(username);
+
+            if (dbUser.getEmail().equals(username)) {
+                throw new UserAlreadyExistsException(username);
+            }
+        } catch (UserNotFoundException userNotFoundException) {
+            // no-op
         }
     }
 
@@ -115,32 +138,24 @@ public class UserService {
      */
     @Transactional
     public UserDTO addUserReq(AddUserDTO addUserDTO, MultipartFile image) {
-        log.info("[{}] -> addUserReq, addUserDTO: {}", this.getClass().getSimpleName(), addUserDTO);
+        checkUserAlreadyExistsInDB(addUserDTO.getEmail());
 
-        try {
-            User dbUser = findUserByUsername(addUserDTO.getEmail());
-
-            if (dbUser.getEmail().equals(addUserDTO.getEmail())) {
-                throw new UserAlreadyExistsException(addUserDTO.getEmail());
-            }
-        } catch (UserNotFoundException userNotFoundException) {
-            // no-op
-        }
-
-        Role role = getRoleByRoleValue(RoleValue.EMPLOYEE);
+        Manager manager = getManagerByUsername(managerUsername);
 
         User user = User.builder()
                 .firstName(addUserDTO.getFirstName())
                 .lastName(addUserDTO.getLastName())
                 .email(addUserDTO.getEmail())
-                .password(bCryptPasswordEncoder.encode(addUserDTO.getPassword()))
+                .password(bCryptPasswordEncoder.encode(addUserDTO.getEmail()))
                 .department(addUserDTO.getDepartment())
                 .employeeNumber(addUserDTO.getEmployeeNumber())
+                .manager(manager)
                 .build();
 
         checkIfImageIsEmpty(image);
         checkImageContentType(image);
 
+        // Set the image
         try {
             user.setImage(image.getBytes());
         } catch (IOException ioException) {
@@ -149,30 +164,33 @@ public class UserService {
 
         userRepository.save(user);
 
+        Role role = getRoleByRoleValue(RoleValue.EMPLOYEE);
+
+        // Set the EMPLOYEE role
         userRoleRepository.save(UserRoleAdapter.createUserRoleObject(role, user));
 
         return UserAdapter.userToUserDTO(user, apiPath);
     }
 
     @Transactional
-    public void editUserReq(AddUserDTO addUserDTO, MultipartFile image, Long id) {
-        log.info("[{}] -> editUserReq, addUserDTO: {}, id: {}", this.getClass().getSimpleName(), addUserDTO, id);
-
-        // Check if user exist in db
+    public void editUserReq(EditUserDTO editUserDTO, MultipartFile image, Long id) {
+        // Check if the user exists in db
         User dbUser = findUserById(id);
 
         User user = User.builder()
                 .id(id)
-                .firstName(addUserDTO.getFirstName())
-                .lastName(addUserDTO.getLastName())
-                .email(addUserDTO.getEmail())
-                .password(bCryptPasswordEncoder.encode(addUserDTO.getPassword()))
-                .department(addUserDTO.getDepartment())
-                .employeeNumber(addUserDTO.getEmployeeNumber())
+                .firstName(editUserDTO.getFirstName())
+                .lastName(editUserDTO.getLastName())
+                .email(editUserDTO.getEmail())
+                .password(bCryptPasswordEncoder.encode(editUserDTO.getPassword()))
+                .department(editUserDTO.getDepartment())
+                .employeeNumber(editUserDTO.getEmployeeNumber())
                 .joinDate(dbUser.getJoinDate())
                 .roles(dbUser.getRoles())
+                .manager(dbUser.getManager())
                 .build();
 
+        // If the image is empty set the old image else set the new image
         if (image.isEmpty()) {
             user.setImage(dbUser.getImage());
         } else {
@@ -188,12 +206,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUserReq(Long id) {
-        log.info("[{}] -> deleteUserReq, id: {}", this.getClass().getSimpleName(), id);
+        User user = findUserById(id);
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id.toString()));
-
+        // Create a role list of roles with user roles
         List<Role> roles = user.getRoles().stream()
                 .map(role -> getRoleByRoleValue(role.getRoleValue()))
                 .collect(Collectors.toList());
@@ -202,14 +219,17 @@ public class UserService {
             throw new UnableToDeleteUserException();
         }
 
-        roles.forEach(role -> {
-            UserRoleId userRoleId = UserRoleId.builder()
-                    .idRole(role.getId())
-                    .idUser(user.getId())
-                    .build();
+        // Checking if the user is a MANAGER; if it is,
+        // for each subordinate user the manager will be set with the user manager to be deleted
+        String username = user.getEmail();
+        if (existsManagerByUsername(username)) {
+            Manager manager = getManagerByUsername(username);
+            List<User> users = findUsersByManager(manager, username);
 
-            userRoleRepository.deleteById(userRoleId);
-        });
+            users.forEach(employee -> employee.setManager(user.getManager()));
+
+            managerRepository.delete(manager);
+        }
 
         user.setRoles(null);
 
@@ -217,8 +237,6 @@ public class UserService {
     }
 
     public void editRoleReq(Long id, RoleDTO roleDTO) {
-        log.info("[{}] -> editRole, id: {}, roleDTO: {}", this.getClass().getSimpleName(), id, roleDTO);
-
         RoleValue newRoleValue = roleDTO.getRoleValue();
 
         User user = findUserById(id);
@@ -232,8 +250,6 @@ public class UserService {
     }
 
     public void deleteRoleReq(Long id, RoleDTO roleDTO) {
-        log.info("[{}] -> deleteRoleReq, roleDTO: {}", this.getClass().getSimpleName(), roleDTO);
-
         RoleValue newRoleValue = roleDTO.getRoleValue();
 
         User user = findUserById(id);
@@ -251,16 +267,12 @@ public class UserService {
     }
 
     public UserDTO getUserByIdReq(Long id) {
-        log.info("[{}] -> getUserByIdReq, id: {}", this.getClass().getSimpleName(), id);
-
         User user = findUserById(id);
 
         return UserAdapter.userToUserDTO(user, apiPath);
     }
 
     public List<UserDTO> getUsersReq() {
-        log.info("[{}] -> getUsersReq", this.getClass().getSimpleName());
-
         List<User> userList = userRepository.findAll();
 
         return UserAdapter.userListToUserDTOList(userList, apiPath);
@@ -268,8 +280,6 @@ public class UserService {
 
     @Transactional
     public UserDTO getUserByUsernameReq(String username) {
-        log.info("[{}] -> getUserByUsernameReq, username: {}", this.getClass().getSimpleName(), username);
-
         User user = findUserByUsername(username);
 
         return UserAdapter.userToUserDTO(user, apiPath);
@@ -277,8 +287,6 @@ public class UserService {
 
     @Transactional
     public List<UserDTO> getSubordinateUsersReq(String username) {
-        log.info("[{}] -> getSubordinateUsersReq, username: {}", this.getClass().getSimpleName(), username);
-
         Manager manager = findManagerByUsername(username);
 
         List<User> users = findUsersByManager(manager, username);

@@ -6,6 +6,7 @@ import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.services.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,8 @@ public class LoginController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokensDTO> loginReq(@RequestBody UserCredentialsDTO userCredentialsDTO) {
-        log.info("[{}] -> loginReq, userCredentialsDTO: {}", this.getClass().getSimpleName(), userCredentialsDTO);
+        log.info("[ {} ] -> [ {} ] -> [ loginReq ] userCredentialsDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, userCredentialsDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(loginService.loginReq(userCredentialsDTO));
@@ -39,7 +41,8 @@ public class LoginController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenDTO> generateAccessTokenReq(@RequestBody TokenDTO tokenDTO) {
-        log.info("[{}] -> generateAccessTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
+        log.info("[ {} ] -> [ {} ] -> [ generateAccessTokenReq ] tokenDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, tokenDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(loginService.generateAccessTokenReq(tokenDTO));

@@ -4,6 +4,7 @@ import com.tmp.authentication.authorization.jwt.services.UserImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,8 @@ public class UserImageController {
     @CrossOrigin
     @GetMapping(value = "/image/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
     public ResponseEntity<Resource> getUserImageByIdReq(@PathVariable("id") Long id) {
-        log.info("[{}] -> getUserImageByIdReq, id: {}", this.getClass().getSimpleName(), id);
+        log.info("[ {} ] -> [ {} ] -> [ getUserImageByIdReq ] id: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, id);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userImageService.getUserImageByIdReq(id));

@@ -7,6 +7,7 @@ import com.tmp.authentication.authorization.jwt.models.AccessTokenDTO;
 import com.tmp.authentication.authorization.jwt.services.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,8 @@ public class LogoutController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccessTokenDTO> validateAccessTokenReq(@RequestBody TokenDTO tokenDTO) {
-        log.info("[{}] -> validateAccessTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
+        log.info("[ {} ] -> [ {} ] -> [ validateAccessTokenReq ] tokenDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, tokenDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(logoutService.validateAccessTokenReq(tokenDTO));
@@ -40,7 +42,8 @@ public class LogoutController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RefreshTokenDTO> validateRefreshTokenReq(@RequestBody TokenDTO tokenDTO) {
-        log.info("[{}] -> validateRefreshTokenReq, tokenDTO: {}", this.getClass().getSimpleName(), tokenDTO);
+        log.info("[ {} ] -> [ {} ] -> [ validateRefreshTokenReq ] tokenDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, tokenDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(logoutService.validateRefreshTokenReq(tokenDTO));
@@ -49,7 +52,8 @@ public class LogoutController {
     @CrossOrigin
     @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> logoutReq(@RequestBody TokensDTO tokensDTO) {
-        log.info("[{}] -> logoutReq, tokenDTO: {}", this.getClass().getSimpleName(), tokensDTO);
+        log.info("[ {} ] -> [ {} ] -> [ logoutReq ] tokensDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, tokensDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(logoutService.logoutReq(tokensDTO));
