@@ -109,7 +109,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Operation(summary = "Doesn't work right now")
+    @Operation(summary = "Edit role by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB or "
+                    + "the role does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "406", description = "NOT_ACCEPTABLE - if this role already exists",
+                    content = @Content)
+    })
     @CrossOrigin
     @PutMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editRoleReq(@PathVariable("id") Long id,
