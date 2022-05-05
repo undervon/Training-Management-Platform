@@ -5,6 +5,10 @@ import com.tmp.authentication.authorization.jwt.models.TokenDTO;
 import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.models.AccessTokenDTO;
 import com.tmp.authentication.authorization.jwt.services.LogoutService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
@@ -25,6 +29,21 @@ public class LogoutController {
 
     private final LogoutService logoutService;
 
+    @Operation(summary = "Validate access token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB or "
+                    + "the role does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "406", description = "NOT_ACCEPTABLE - if [ the token is in BlackList ] OR "
+                    + "[ Expired JWT token ] OR "
+                    + "[ Invalid JWT token ] OR "
+                    + "[ Unacceptable JWT token ] OR "
+                    + "[ Invalid JWT signature ] OR "
+                    + "[ Unsupported JWT token ] OR "
+                    + "[ JWT claims string is empty ]",
+                    content = @Content)
+    })
     @CrossOrigin
     @PostMapping(value = "/validateAccessToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -37,6 +56,20 @@ public class LogoutController {
                 .body(logoutService.validateAccessTokenReq(tokenDTO));
     }
 
+    @Operation(summary = "Validate refresh token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
+                    content = @Content),
+            @ApiResponse(responseCode = "406", description = "NOT_ACCEPTABLE - if [ the token is in BlackList ] OR "
+                    + "[ Expired JWT token ] OR "
+                    + "[ Invalid JWT token ] OR "
+                    + "[ Unacceptable JWT token ] OR "
+                    + "[ Invalid JWT signature ] OR "
+                    + "[ Unsupported JWT token ] OR "
+                    + "[ JWT claims string is empty ]",
+                    content = @Content)
+    })
     @CrossOrigin
     @PostMapping(value = "/validateRefreshToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -49,6 +82,10 @@ public class LogoutController {
                 .body(logoutService.validateRefreshTokenReq(tokenDTO));
     }
 
+    @Operation(summary = "Logout request")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful")
+    })
     @CrossOrigin
     @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> logoutReq(@RequestBody TokensDTO tokensDTO) {
