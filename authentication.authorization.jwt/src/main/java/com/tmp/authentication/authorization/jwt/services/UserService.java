@@ -54,8 +54,8 @@ public class UserService {
     @Value("${api.path}")
     private String apiPath;
 
-    @Value("${user.manager.email}")
-    private String managerUsername;
+    @Value("${user.manager-generic.email}")
+    private String managerGenericUsername;
 
     /*
         UserService methods
@@ -140,7 +140,7 @@ public class UserService {
     public UserDTO addUserReq(AddUserDTO addUserDTO, MultipartFile image) {
         checkUserAlreadyExistsInDB(addUserDTO.getEmail());
 
-        Manager manager = getManagerByUsername(managerUsername);
+        Manager manager = getManagerByUsername(managerGenericUsername);
 
         User user = User.builder()
                 .firstName(addUserDTO.getFirstName())
