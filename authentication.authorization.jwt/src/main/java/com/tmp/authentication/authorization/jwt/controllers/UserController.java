@@ -131,7 +131,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Operation(summary = "Doesn't work right now")
+    @Operation(summary = "Delete role by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if [ the user not found in DB ] OR "
+                    + "[ the role does not exist ] OR [ the manager not found in DB ]",
+                    content = @Content),
+            @ApiResponse(responseCode = "406", description = "NOT_ACCEPTABLE - if the roles size is unsupported",
+                    content = @Content)
+    })
     @CrossOrigin
     @PutMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteRoleReq(@PathVariable("id") Long id,

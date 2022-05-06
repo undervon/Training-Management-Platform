@@ -237,23 +237,33 @@ public class UserService {
     }
 
     public void editRoleReq(Long id, RoleDTO roleDTO) {
-        RoleValue newRoleValue = roleDTO.getRoleValue();
+        final RoleValue newRoleValue = roleDTO.getRoleValue();
 
-        User user = findUserById(id);
-        Role role = findRoleByRoleValue(newRoleValue);
+        final User user = findUserById(id);
+        final Role role = findRoleByRoleValue(newRoleValue);
 
         if (user.getRoles().contains(role)) {
             throw new RoleAlreadyExistsException(newRoleValue.getAuthority());
         }
 
+        // if the input role is MANAGER, create new manager in managers table
+        if (newRoleValue.equals(RoleValue.MANAGER)) {
+            final Manager newManager = Manager.builder()
+                    .email(user.getEmail())
+                    .build();
+
+            managerRepository.save(newManager);
+        }
+
         userRoleRepository.save(UserRoleAdapter.createUserRoleObject(role, user));
     }
 
+    @Transactional
     public void deleteRoleReq(Long id, RoleDTO roleDTO) {
-        RoleValue newRoleValue = roleDTO.getRoleValue();
+        final RoleValue newRoleValue = roleDTO.getRoleValue();
 
-        User user = findUserById(id);
-        Role role = findRoleByRoleValue(newRoleValue);
+        final User user = findUserById(id);
+        final Role role = findRoleByRoleValue(newRoleValue);
 
         if (user.getRoles().size() == 1) {
             throw new UnsupportedRolesSizeException();
@@ -261,6 +271,18 @@ public class UserService {
 
         if (!user.getRoles().contains(role)) {
             throw new RoleDoesNotExistException(newRoleValue.getAuthority());
+        }
+
+        final String username = user.getEmail();
+        // if the input role is MANAGER, delete from managers table; for each subordinate users
+        // the manager will be set with the user manager to be deleted
+        if (newRoleValue.equals(RoleValue.MANAGER)) {
+            final Manager manager = findManagerByUsername(username);
+            final List<User> users = findUsersByManager(manager, username);
+
+            users.forEach(employee -> employee.setManager(user.getManager()));
+
+            managerRepository.delete(manager);
         }
 
         userRoleRepository.delete(UserRoleAdapter.createUserRoleObject(role, user));
