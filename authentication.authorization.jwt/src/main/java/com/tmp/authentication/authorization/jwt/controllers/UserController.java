@@ -215,4 +215,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.getSubordinateUsersReq(username));
     }
+
+    @Operation(summary = "Get all unassigned users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
+                    content = @Content)
+    })
+    @CrossOrigin
+    @GetMapping(value = "/unassignedUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDTO>> getUnassignedUsersReq(@PathVariable("username") String username) {
+        log.info("[ {} ] -> [ {} ] -> [ getNotAssignedUsersReq ] username: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, username);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getUnassignedUsersReq(username));
+    }
 }

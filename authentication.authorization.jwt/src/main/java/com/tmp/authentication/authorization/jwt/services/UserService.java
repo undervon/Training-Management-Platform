@@ -79,6 +79,10 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
+    protected List<User> getAllByManagerAndDepartment(Manager manager, String department) {
+        return userRepository.getAllByManagerAndDepartment(manager, department);
+    }
+
     protected Role findRoleByRoleValue(RoleValue roleValue) {
         return roleRepository.findByRoleValue(roleValue)
                 .orElseThrow(() -> new RoleDoesNotExistException(roleValue.getAuthority()));
@@ -211,7 +215,7 @@ public class UserService {
         User user = findUserById(id);
 
         // Create a role list of roles with user roles
-        List<Role> roles = user.getRoles().stream()
+        final List<Role> roles = user.getRoles().stream()
                 .map(role -> getRoleByRoleValue(role.getRoleValue()))
                 .collect(Collectors.toList());
 
@@ -220,13 +224,15 @@ public class UserService {
         }
 
         // Checking if the user is a MANAGER; if it is,
-        // for each subordinate user the manager will be set with the user manager to be deleted
+        // for each subordinate user the manager will be set with the generic manager
         String username = user.getEmail();
         if (existsManagerByUsername(username)) {
-            Manager manager = getManagerByUsername(username);
-            List<User> users = findUsersByManager(manager, username);
+            final Manager manager = getManagerByUsername(username);
+            final List<User> users = findUsersByManager(manager, username);
 
-            users.forEach(employee -> employee.setManager(user.getManager()));
+            final Manager genericManager = getManagerByUsername(managerGenericUsername);
+
+            users.forEach(employee -> employee.setManager(genericManager));
 
             managerRepository.delete(manager);
         }
@@ -275,12 +281,14 @@ public class UserService {
 
         final String username = user.getEmail();
         // if the input role is MANAGER, delete from managers table; for each subordinate users
-        // the manager will be set with the user manager to be deleted
+        // the manager will be set with the generic manager
         if (newRoleValue.equals(RoleValue.MANAGER)) {
             final Manager manager = findManagerByUsername(username);
             final List<User> users = findUsersByManager(manager, username);
 
-            users.forEach(employee -> employee.setManager(user.getManager()));
+            final Manager genericManager = getManagerByUsername(managerGenericUsername);
+
+            users.forEach(employee -> employee.setManager(genericManager));
 
             managerRepository.delete(manager);
         }
@@ -312,6 +320,25 @@ public class UserService {
         Manager manager = findManagerByUsername(username);
 
         List<User> users = findUsersByManager(manager, username);
+
+        return UserAdapter.userListToUserDTOList(users, apiPath);
+    }
+
+    @Transactional
+    public List<UserDTO> getUnassignedUsersReq(String username) {
+        final User user = findUserByUsername(username);
+
+        // Get generic manager from DB
+        final Manager manager = getManagerByUsername(managerGenericUsername);
+
+        // Get department by user who create this request
+        final String department = user.getDepartment();
+
+        // Get all users by manager and department
+        final List<User> users = getAllByManagerAndDepartment(manager, department);
+
+        // Delete the user who created the request from the users list
+        users.remove(user);
 
         return UserAdapter.userListToUserDTOList(users, apiPath);
     }

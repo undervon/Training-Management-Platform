@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User getByEmail(String email);
 
     Optional<List<User>> findAllByManager(Manager manager);
+
+    List<User> getAllByManagerAndDepartment(Manager manager, String department);
 }

@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/1.0/tmp/auth/image/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/logout/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/subordinateUsers/**").permitAll()
+                .antMatchers("/api/1.0/tmp/auth/unassignedUsers/**").permitAll()
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/api-tmp-auth-docs/**").permitAll()
