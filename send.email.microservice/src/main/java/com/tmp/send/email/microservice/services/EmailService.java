@@ -4,6 +4,7 @@ import com.tmp.send.email.microservice.configuration.EmailConfiguration;
 import com.tmp.send.email.microservice.exceptions.SendEmailUnknownException;
 import com.tmp.send.email.microservice.models.EmailAssignedCourseEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailAssignedCourseManagerDTO;
+import com.tmp.send.email.microservice.models.EmailCourseCompletedEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailCourseCompletedManagerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -249,6 +250,51 @@ public class EmailService {
         String html = springTemplateEngine.process(template, context);
 
         final String emailTo = emailCourseCompletedManagerDTO.getManagerEmail();
+        createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectCourseCompleted, html);
+    }
+
+    public void sendEmailCourseCompletedEmployeeReq(EmailCourseCompletedEmployeeDTO emailCourseCompletedEmployeeDTO,
+            String template) {
+        // Set the mail properties
+        Properties properties = setMailProperties();
+
+        // Create a new SMTP session with previous properties and with
+        // email and password authentication from Gmail account
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(emailConfiguration.fromEmail, emailConfiguration.fromPassword);
+            }
+        });
+
+        session.setDebug(true);
+
+        LocalDateTime startDate = emailCourseCompletedEmployeeDTO.getCourseStartDate();
+        LocalDateTime endDate = emailCourseCompletedEmployeeDTO.getCourseCompletionDate();
+
+        String courseCompletionInterval = generatingDifferenceBetweenTwoDate(startDate, endDate);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm:ss");
+        String formattedStartDate = formatter.format(startDate);
+        String formattedEndDate = formatter.format(endDate);
+
+        // Create a Map with all variables and their values from template .html file
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("employeeEmail", emailCourseCompletedEmployeeDTO.getEmployeeEmail());
+        variables.put("employeeUsername", emailCourseCompletedEmployeeDTO.getEmployeeUsername());
+        variables.put("courseName", emailCourseCompletedEmployeeDTO.getCourseName());
+        variables.put("courseId", emailCourseCompletedEmployeeDTO.getCourseId());
+        variables.put("courseCategory", emailCourseCompletedEmployeeDTO.getCourseCategory());
+        variables.put("courseStartDate", formattedStartDate);
+        variables.put("courseCompletionDate", formattedEndDate);
+        variables.put("courseCompletionInterval", courseCompletionInterval);
+
+        Context context = new Context();
+        context.setVariables(variables);
+
+        String html = springTemplateEngine.process(template, context);
+
+        final String emailTo = emailCourseCompletedEmployeeDTO.getEmployeeEmail();
         createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectCourseCompleted, html);
     }
 }

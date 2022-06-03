@@ -2,6 +2,7 @@ package com.tmp.send.email.microservice.controllers;
 
 import com.tmp.send.email.microservice.models.EmailAssignedCourseEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailAssignedCourseManagerDTO;
+import com.tmp.send.email.microservice.models.EmailCourseCompletedEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailCourseCompletedManagerDTO;
 import com.tmp.send.email.microservice.services.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,8 @@ public class EmailController {
 
     private final EmailService emailService;
 
-    @PostMapping(path = "/assignedCourseManager", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/assignedCourseManager",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sendEmailAssignedCourseManagerReq(
             @RequestBody EmailAssignedCourseManagerDTO emailAssignedCourseManagerDTO) {
@@ -37,7 +39,8 @@ public class EmailController {
                 .body("The email assigned course for manager sent successfully!");
     }
 
-    @PostMapping(path = "/assignedCourseEmployee", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/assignedCourseEmployee",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sendEmailAssignedCourseEmployeeReq(
             @RequestBody EmailAssignedCourseEmployeeDTO emailAssignedCourseEmployeeDTO) {
@@ -51,7 +54,8 @@ public class EmailController {
                 .body("The email assigned course for employee sent successfully!");
     }
 
-    @PostMapping(path = "/courseCompletedManager", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/courseCompletedManager",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sendEmailCourseCompletedManagerReq(
             @RequestBody EmailCourseCompletedManagerDTO emailCourseCompletedManagerDTO) {
@@ -63,5 +67,20 @@ public class EmailController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body("The email course completed for manager sent successfully!");
+    }
+
+    @PostMapping(path = "/courseCompletedEmployee",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> sendEmailCourseCompletedEmployeeReq(
+            @RequestBody EmailCourseCompletedEmployeeDTO emailCourseCompletedEmployeeDTO) {
+        log.info("[ {} ] -> [ {} ] -> [ sendEmailCourseCompletedEmployeeReq ] emailCourseCompletedEmployeeDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, emailCourseCompletedEmployeeDTO);
+
+        emailService.sendEmailCourseCompletedEmployeeReq(emailCourseCompletedEmployeeDTO,
+                "CourseCompletedEmployeeEmailTemplate.html");
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("The email course completed for employee sent successfully!");
     }
 }
