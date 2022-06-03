@@ -2,24 +2,28 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title>Assigned course manager email template</title>
+        <title>Course completed manager email template</title>
     </head>
 
     <body style="text-align: center;">
         <br>
-        Draga <th:block th:text="${managerUsername}">managerUsername</th:block>,<br><br><br>
+        Draga <th:block th:text="${managerUsername}">managerUsername</th:block>,<br><br>
+
+        Avem vesti noi pentru tine!<br><br>
+        <span style='font-size: 25px;'>&#127881;&#127881;&#127881;</span><br><br>
 
         Subalternul tau,
         <th:block th:text="${employeeUsername}">employeeUsername</th:block> cu email-ul
-        <th:block th:text="${employeeEmail}">employeeEmail</th:block>, tocmai ce si-a asignat cursul
+        <th:block th:text="${employeeEmail}">employeeEmail</th:block>, tocmai ce a finalizat cursul
         '<th:block th:text="${courseName}">courseName</th:block>' cu numarul
         <th:block th:text="${courseId}">courseId</th:block> din categoria
         '<th:block th:text="${courseCategory}">courseCategory</th:block>'.<br><br>
 
-        Timpul alocat parcurgerii este de
-        <th:block th:text="${timeToMakeCourse}">timeToMakeCourse</th:block>h.<br><br>
-        Vom reveni cu un email in momentul in care cursul va fi finalizat!<br><br>
-        <span style='font-size: 25px;'>&#128515;</span><br><br><br><br>
+        Acesta si l-a asignat in data de
+        <th:block th:text="${courseStartDate}">courseStartDate</th:block> si l-a finalizat in
+        <th:block th:text="${courseCompletionDate}">courseCompletionDate</th:block>.<br><br>
+        Asadar, cursul a fost parcurs intr-un interval de:
+        <th:block th:text="${courseCompletionInterval}">courseCompletionInterval</th:block>.<br><br><br><br>
 
         <hr style="border: 0.1px solid #656464;
         margin-bottom: 15px;
