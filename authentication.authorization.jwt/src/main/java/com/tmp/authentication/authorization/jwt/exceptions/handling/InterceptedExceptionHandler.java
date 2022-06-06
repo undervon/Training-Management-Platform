@@ -1,5 +1,6 @@
 package com.tmp.authentication.authorization.jwt.exceptions.handling;
 
+import com.tmp.authentication.authorization.jwt.models.ExceptionResponseDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.PrematureJwtException;
@@ -18,55 +19,71 @@ public class InterceptedExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<String> expiredJwtExceptionHandler(ExpiredJwtException expiredJwtException) {
+    public ResponseEntity<ExceptionResponseDTO> expiredJwtExceptionHandler(ExpiredJwtException expiredJwtException) {
         log.error("thrown ExpiredJwtException");
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(expiredJwtException.getMessage());
+                .body(ExceptionResponseDTO.builder()
+                        .message(expiredJwtException.getMessage())
+                        .build());
     }
 
     @ResponseBody
     @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<String> malformedJwtExceptionHandler(MalformedJwtException malformedJwtException) {
+    public ResponseEntity<ExceptionResponseDTO> malformedJwtExceptionHandler(
+            MalformedJwtException malformedJwtException) {
         log.error("thrown MalformedJwtException");
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(malformedJwtException.getMessage());
+                .body(ExceptionResponseDTO.builder()
+                        .message(malformedJwtException.getMessage())
+                        .build());
     }
 
     @ResponseBody
     @ExceptionHandler(PrematureJwtException.class)
-    public ResponseEntity<String> prematureJwtExceptionHandler(PrematureJwtException prematureJwtException) {
+    public ResponseEntity<ExceptionResponseDTO> prematureJwtExceptionHandler(
+            PrematureJwtException prematureJwtException) {
         log.error("thrown PrematureJwtException");
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(prematureJwtException.getMessage());
+                .body(ExceptionResponseDTO.builder()
+                        .message(prematureJwtException.getMessage())
+                        .build());
     }
 
     @ResponseBody
     @ExceptionHandler(SignatureException.class)
-    public ResponseEntity<String> signatureExceptionHandler(SignatureException signatureException) {
+    public ResponseEntity<ExceptionResponseDTO> signatureExceptionHandler(SignatureException signatureException) {
         log.error("thrown SignatureException");
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(signatureException.getMessage());
+                .body(ExceptionResponseDTO.builder()
+                        .message(signatureException.getMessage())
+                        .build());
     }
 
     @ResponseBody
     @ExceptionHandler(UnsupportedJwtException.class)
-    public ResponseEntity<String> unsupportedJwtExceptionHandler(UnsupportedJwtException unsupportedJwtException) {
+    public ResponseEntity<ExceptionResponseDTO> unsupportedJwtExceptionHandler(
+            UnsupportedJwtException unsupportedJwtException) {
         log.error("thrown UnsupportedJwtException");
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(unsupportedJwtException.getMessage());
+                .body(ExceptionResponseDTO.builder()
+                        .message(unsupportedJwtException.getMessage())
+                        .build());
     }
 
     @ResponseBody
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> illegalArgumentExceptionHandler(IllegalArgumentException illegalArgumentException) {
+    public ResponseEntity<ExceptionResponseDTO> illegalArgumentExceptionHandler(
+            IllegalArgumentException illegalArgumentException) {
         log.error("thrown IllegalArgumentException");
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                .body(illegalArgumentException.getMessage());
+                .body(ExceptionResponseDTO.builder()
+                        .message(illegalArgumentException.getMessage())
+                        .build());
     }
 }

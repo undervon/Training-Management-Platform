@@ -1,6 +1,7 @@
 package com.tmp.authentication.authorization.jwt.services;
 
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
+import com.tmp.authentication.authorization.jwt.models.GenericDTO;
 import com.tmp.authentication.authorization.jwt.models.RefreshTokenDTO;
 import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
@@ -82,7 +83,7 @@ public class LogoutService {
                 .build();
     }
 
-    public String logoutReq(TokensDTO tokensDTO) {
+    public GenericDTO logoutReq(TokensDTO tokensDTO) {
         String accessToken = tokensDTO.getAccessToken();
         String refreshToken = tokensDTO.getRefreshToken();
 
@@ -98,6 +99,8 @@ public class LogoutService {
             refreshTokenBlackList.add(refreshToken);
         }
 
-        return "Tokens successfully destroyed";
+        return GenericDTO.builder()
+                .message("Tokens successfully destroyed")
+                .build();
     }
 }

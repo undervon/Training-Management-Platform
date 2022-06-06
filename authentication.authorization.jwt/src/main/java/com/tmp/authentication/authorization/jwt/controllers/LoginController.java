@@ -1,11 +1,13 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
+import com.tmp.authentication.authorization.jwt.models.SuccessResponseDTO;
+import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.models.UserCredentialsDTO;
 import com.tmp.authentication.authorization.jwt.models.TokenDTO;
-import com.tmp.authentication.authorization.jwt.models.TokensDTO;
 import com.tmp.authentication.authorization.jwt.services.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,10 @@ public class LoginController {
 
     @Operation(summary = "Login request")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TokensDTO.class))
+            }),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED - if the username or the password is wrong",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
@@ -40,17 +45,22 @@ public class LoginController {
     @PostMapping(value = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokensDTO> loginReq(@RequestBody UserCredentialsDTO userCredentialsDTO) {
+    public ResponseEntity<SuccessResponseDTO<?>> loginReq(@RequestBody UserCredentialsDTO userCredentialsDTO) {
         log.info("[ {} ] -> [ {} ] -> [ loginReq ] userCredentialsDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.POST, userCredentialsDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(loginService.loginReq(userCredentialsDTO));
+                .body(SuccessResponseDTO.builder()
+                        .data(loginService.loginReq(userCredentialsDTO))
+                        .build());
     }
 
     @Operation(summary = "Generate access token by refresh token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TokenDTO.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
                     content = @Content),
             @ApiResponse(responseCode = "406", description = "NOT_ACCEPTABLE - if [ the token is in BlackList ] OR "
@@ -66,11 +76,13 @@ public class LoginController {
     @PostMapping(value = "/generateAccessToken",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokenDTO> generateAccessTokenReq(@RequestBody TokenDTO tokenDTO) {
+    public ResponseEntity<SuccessResponseDTO<?>> generateAccessTokenReq(@RequestBody TokenDTO tokenDTO) {
         log.info("[ {} ] -> [ {} ] -> [ generateAccessTokenReq ] tokenDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.POST, tokenDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(loginService.generateAccessTokenReq(tokenDTO));
+                .body(SuccessResponseDTO.builder()
+                        .data(loginService.generateAccessTokenReq(tokenDTO))
+                        .build());
     }
 }

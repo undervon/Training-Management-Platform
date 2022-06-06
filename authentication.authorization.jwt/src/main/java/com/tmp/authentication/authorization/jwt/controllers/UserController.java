@@ -3,10 +3,12 @@ package com.tmp.authentication.authorization.jwt.controllers;
 import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
+import com.tmp.authentication.authorization.jwt.models.SuccessResponseDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +41,10 @@ public class UserController {
 
     @Operation(summary = "Create new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "CREATED - if successful"),
+            @ApiResponse(responseCode = "201", description = "CREATED - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserDTO.class))
+            }),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST - if something wrong was done",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the image is empty",
@@ -54,14 +57,16 @@ public class UserController {
     @PostMapping(value = "/addUser",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> addUserReq(
+    public ResponseEntity<SuccessResponseDTO<?>> addUserReq(
             @RequestPart("addUser") @Parameter(schema = @Schema(type = "string", format = "binary")) AddUserDTO addUserDTO,
             @RequestPart("image") MultipartFile image) {
         log.info("[ {} ] -> [ {} ] -> [ addUserReq ] addUserDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.POST, addUserDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.addUserReq(addUserDTO, image));
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.addUserReq(addUserDTO, image))
+                        .build());
     }
 
     @Operation(summary = "Edit user by id")
@@ -155,80 +160,105 @@ public class UserController {
 
     @Operation(summary = "Get user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserDTO.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
                     content = @Content)
     })
     @CrossOrigin
     @GetMapping(value = "/getUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getUserByIdReq(@PathVariable("id") Long id) {
+    public ResponseEntity<SuccessResponseDTO<?>> getUserByIdReq(@PathVariable("id") Long id) {
         log.info("[ {} ] -> [ {} ] -> [ getUserByIdReq ] id: {}",
                 this.getClass().getSimpleName(), HttpMethod.GET, id);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getUserByIdReq(id));
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.getUserByIdReq(id))
+                        .build());
     }
 
     @Operation(summary = "Get all users")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - if successful")
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+            })
     })
     @CrossOrigin
     @GetMapping(value = "/getUsers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getUsersReq() {
+    public ResponseEntity<SuccessResponseDTO<?>> getUsersReq() {
         log.info("[ {} ] -> [ {} ] -> [ getUsersReq ]",
                 this.getClass().getSimpleName(), HttpMethod.GET);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getUsersReq());
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.getUsersReq())
+                        .build());
     }
 
     @Operation(summary = "Get user by username")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserDTO.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
                     content = @Content)
     })
     @CrossOrigin
     @GetMapping(value = "/user/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getUserByUsernameReq(@PathVariable("username") String username) {
+    public ResponseEntity<SuccessResponseDTO<?>> getUserByUsernameReq(@PathVariable("username") String username) {
         log.info("[ {} ] -> [ {} ] -> [ getUserByUsernameReq ] username: {}",
                 this.getClass().getSimpleName(), HttpMethod.GET, username);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getUserByUsernameReq(username));
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.getUserByUsernameReq(username))
+                        .build());
     }
 
     @Operation(summary = "Get all subordinate users by username")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - "
                     + "if the user not found in DB or the manager not found in DB",
                     content = @Content)
     })
     @CrossOrigin
     @GetMapping(value = "/subordinateUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getSubordinateUsersReq(@PathVariable("username") String username) {
+    public ResponseEntity<SuccessResponseDTO<?>> getSubordinateUsersReq(@PathVariable("username") String username) {
         log.info("[ {} ] -> [ {} ] -> [ getSubordinateUsersReq ] username: {}",
                 this.getClass().getSimpleName(), HttpMethod.GET, username);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getSubordinateUsersReq(username));
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.getSubordinateUsersReq(username))
+                        .build());
     }
 
     @Operation(summary = "Get all unassigned users")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
                     content = @Content)
     })
     @CrossOrigin
     @GetMapping(value = "/unassignedUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getUnassignedUsersReq(@PathVariable("username") String username) {
+    public ResponseEntity<SuccessResponseDTO<?>> getUnassignedUsersReq(@PathVariable("username") String username) {
         log.info("[ {} ] -> [ {} ] -> [ getNotAssignedUsersReq ] username: {}",
                 this.getClass().getSimpleName(), HttpMethod.GET, username);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(userService.getUnassignedUsersReq(username));
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.getUnassignedUsersReq(username))
+                        .build());
     }
 }
