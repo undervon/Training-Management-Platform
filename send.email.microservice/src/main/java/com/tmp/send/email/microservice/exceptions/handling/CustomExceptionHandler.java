@@ -1,6 +1,7 @@
 package com.tmp.send.email.microservice.exceptions.handling;
 
 import com.tmp.send.email.microservice.exceptions.SendEmailUnknownException;
+import com.tmp.send.email.microservice.models.ExceptionResponseDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,12 @@ public class CustomExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(SendEmailUnknownException.class)
-    public ResponseEntity<String> sendEmailUnknownExceptionHandler() {
+    public ResponseEntity<ExceptionResponseDTO> sendEmailUnknownExceptionHandler() {
         log.error("thrown SendEmailUnknownException");
 
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .body("Something went wrong when sending the email");
+                .body(ExceptionResponseDTO.builder()
+                        .message("Something went wrong when sending the email")
+                        .build());
     }
 }
