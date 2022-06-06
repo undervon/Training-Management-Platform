@@ -1,0 +1,15 @@
+services:
+  app:
+    image: send-email-app
+    container_name: Send_email_app
+    build:
+      context: .
+    ports:
+      - 8091:8091
+      
+#
+# Commands:
+#
+# docker-compose up                -> used to create a docker container
+# docker-compose down              -> used to destroy a docker container
+#
