@@ -1,5 +1,6 @@
 package com.tmp.authentication.authorization.jwt.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,13 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ExceptionResponseDTO {
 
-    private String status;
+    @Builder.Default
+    private String status = "error";
     private String message;
-
-    public ExceptionResponseDTO(String status, String message) {
-        this.status = "error";
-        this.message = message;
-    }
 }

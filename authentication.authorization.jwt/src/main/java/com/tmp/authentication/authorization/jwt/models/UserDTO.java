@@ -21,7 +21,7 @@ public class UserDTO {
     private String department;
     private Integer employeeNumber;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy - hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy - HH:mm:ss")
     private LocalDateTime joinDate;
 
     private String imageURL;
