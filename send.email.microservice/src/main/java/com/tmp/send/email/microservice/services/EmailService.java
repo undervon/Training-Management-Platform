@@ -6,6 +6,7 @@ import com.tmp.send.email.microservice.models.EmailAssignedCourseEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailAssignedCourseManagerDTO;
 import com.tmp.send.email.microservice.models.EmailCourseCompletedEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailCourseCompletedManagerDTO;
+import com.tmp.send.email.microservice.models.EmailCreateCourseManagerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -296,5 +297,39 @@ public class EmailService {
 
         final String emailTo = emailCourseCompletedEmployeeDTO.getEmployeeEmail();
         createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectCourseCompleted, html);
+    }
+
+    public void sendEmailCreateCourseManagerReq(EmailCreateCourseManagerDTO emailCreateCourseManagerDTO,
+            String template) {
+        // Set the mail properties
+        Properties properties = setMailProperties();
+
+        // Create a new SMTP session with previous properties and with
+        // email and password authentication from Gmail account
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(emailConfiguration.fromEmail, emailConfiguration.fromPassword);
+            }
+        });
+
+        session.setDebug(true);
+
+        // Create a Map with all variables and their values from template .html file
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("managerUsername", emailCreateCourseManagerDTO.getManagerUsername());
+        variables.put("employeeUsername", emailCreateCourseManagerDTO.getEmployeeUsername());
+        variables.put("employeeEmail", emailCreateCourseManagerDTO.getEmployeeEmail());
+        variables.put("courseName", emailCreateCourseManagerDTO.getCourseName());
+        variables.put("courseId", emailCreateCourseManagerDTO.getCourseId());
+        variables.put("courseCategory", emailCreateCourseManagerDTO.getCourseCategory());
+
+        Context context = new Context();
+        context.setVariables(variables);
+
+        String html = springTemplateEngine.process(template, context);
+
+        final String emailTo = emailCreateCourseManagerDTO.getManagerEmail();
+        createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectCreateCourse, html);
     }
 }

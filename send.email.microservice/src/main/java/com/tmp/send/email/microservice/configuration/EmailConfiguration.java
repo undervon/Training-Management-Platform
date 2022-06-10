@@ -20,6 +20,9 @@ public class EmailConfiguration {
     @Value("${subject.course.completed}")
     public String subjectCourseCompleted;
 
+    @Value("${subject.create.course}")
+    public String subjectCreateCourse;
+
     @Value("${mail.smtp.port}")
     public String mailSmtpPort;
 

@@ -4,6 +4,7 @@ import com.tmp.send.email.microservice.models.EmailAssignedCourseEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailAssignedCourseManagerDTO;
 import com.tmp.send.email.microservice.models.EmailCourseCompletedEmployeeDTO;
 import com.tmp.send.email.microservice.models.EmailCourseCompletedManagerDTO;
+import com.tmp.send.email.microservice.models.EmailCreateCourseManagerDTO;
 import com.tmp.send.email.microservice.models.SuccessResponseDTO;
 import com.tmp.send.email.microservice.services.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class EmailController {
 
     private final EmailService emailService;
 
-    @Operation(summary = "Send email for assigned course for manager request")
+    @Operation(summary = "Send email for assigned course for manager")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -59,7 +60,7 @@ public class EmailController {
                         .build());
     }
 
-    @Operation(summary = "Send email for assigned course for employee request")
+    @Operation(summary = "Send email for assigned course for employee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -87,7 +88,7 @@ public class EmailController {
                         .build());
     }
 
-    @Operation(summary = "Send email for completed the course for manager request")
+    @Operation(summary = "Send email for completed the course for manager")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -115,7 +116,7 @@ public class EmailController {
                         .build());
     }
 
-    @Operation(summary = "Send email for completed the course for employee request")
+    @Operation(summary = "Send email for completed the course for employee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -140,6 +141,34 @@ public class EmailController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(SuccessResponseDTO.builder()
                         .data("The email course completed for employee sent successfully!")
+                        .build());
+    }
+
+    @Operation(summary = "Send email for create new course for manager")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "422",
+                    description = "UNPROCESSABLE_ENTITY - if something went wrong when sending the email",
+                    content = @Content)
+    })
+    @CrossOrigin
+    @PostMapping(path = "/createCourseManager",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessResponseDTO<?>> sendEmailCreateCourseManagerReq(
+            @RequestBody EmailCreateCourseManagerDTO emailCreateCourseManagerDTO) {
+        log.info("[ {} ] -> [ {} ] -> [ sendEmailCreateCourseManagerReq ] emailCreateCourseManagerDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.POST, emailCreateCourseManagerDTO);
+
+        emailService.sendEmailCreateCourseManagerReq(emailCreateCourseManagerDTO,
+                "CreateCourseManagerEmailTemplate.html");
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO.builder()
+                        .data("The email create course for manager sent successfully!")
                         .build());
     }
 }
