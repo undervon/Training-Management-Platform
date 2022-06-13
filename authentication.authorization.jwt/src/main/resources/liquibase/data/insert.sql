@@ -37,28 +37,28 @@ INSERT INTO EMPLOYEES(DEPARTMENT, EMAIL, EMPLOYEE_NUMBER, FIRST_NAME, LAST_NAME,
 VALUES ('HMI', 'silviu.butnaru@student.tuiasi.ro', 1, 'Silviu', 'Butnaru',
         (SELECT id_manager FROM MANAGERS WHERE email = 'manager@manager.com'),
         '$2a$10$8ZDaoPmScOgEclTEUMh/Ku6njvMX3ae.qiQKNax9YKPsd7rqa2irO', CURRENT_TIMESTAMP,
-        LO_IMPORT('/docker-entrypoint-initdb.d/user-icon.png'));
+        LO_IMPORT('/docker-entrypoint-initdb.d/manager-icon.png'));
 
 -- pass: marian-ilie
 INSERT INTO EMPLOYEES(DEPARTMENT, EMAIL, EMPLOYEE_NUMBER, FIRST_NAME, LAST_NAME, ID_MANAGER, PASSWORD, JOIN_DATE, IMAGE)
 VALUES ('VNI', 'marian-ilie.butnaru@student.tuiasi.ro', 2, 'Marian-Ilie', 'Butnaru',
         (SELECT id_manager FROM MANAGERS WHERE email = 'manager@manager.com'),
         '$2a$10$I8W/6hos1D1XBjXWD3uEBu9CKjn8Gf95mRki1bjqafEVAdCqxGdFy', CURRENT_TIMESTAMP,
-        LO_IMPORT('/docker-entrypoint-initdb.d/user-icon.png'));
+        LO_IMPORT('/docker-entrypoint-initdb.d/manager-icon.png'));
 
 -- pass: alexandra
 INSERT INTO EMPLOYEES(DEPARTMENT, EMAIL, EMPLOYEE_NUMBER, FIRST_NAME, LAST_NAME, ID_MANAGER, PASSWORD, JOIN_DATE, IMAGE)
 VALUES ('HMI', 'alexandra.stefan@student.tuiasi.ro', 3, 'Alexandra', 'Stefan',
         (SELECT id_manager FROM MANAGERS WHERE email = 'silviu.butnaru@student.tuiasi.ro'),
         '$2a$10$LfggPragOiLHiLBBf3wSAe6//absugtgc86Cxr9Wl.mMG/RaXY19C', CURRENT_TIMESTAMP,
-        LO_IMPORT('/docker-entrypoint-initdb.d/user-icon.png'));
+        LO_IMPORT('/docker-entrypoint-initdb.d/manager-icon.png'));
 
 -- pass: alberto-ionut
 INSERT INTO EMPLOYEES(DEPARTMENT, EMAIL, EMPLOYEE_NUMBER, FIRST_NAME, LAST_NAME, ID_MANAGER, PASSWORD, JOIN_DATE, IMAGE)
 VALUES ('VNI', 'alberto-ionut.toscariu@student.tuiasi.ro', 4, 'Alberto-Ionut', 'Toscariu',
         (SELECT id_manager FROM MANAGERS WHERE email = 'marian-ilie.butnaru@student.tuiasi.ro'),
         '$2a$10$PGIKEzrA35U077fFS8H1hu30ZOXGZCTrKtmpWu68hQKOJ0ehnpVO6', CURRENT_TIMESTAMP,
-        LO_IMPORT('/docker-entrypoint-initdb.d/user-icon.png'));
+        LO_IMPORT('/docker-entrypoint-initdb.d/manager-icon.png'));
 
 -- pass: andrei
 INSERT INTO EMPLOYEES(DEPARTMENT, EMAIL, EMPLOYEE_NUMBER, FIRST_NAME, LAST_NAME, ID_MANAGER, PASSWORD, JOIN_DATE, IMAGE)

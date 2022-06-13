@@ -21,6 +21,7 @@ services:
     volumes:
       - ./images/admin-icon.png:/docker-entrypoint-initdb.d/admin-icon.png
       - ./images/user-icon.png:/docker-entrypoint-initdb.d/user-icon.png
+      - ./images/manager-icon.png:/docker-entrypoint-initdb.d/manager-icon.png
     environment:
       POSTGRES_DB: trainingManagementPlatform
       POSTGRES_USER: postgres
