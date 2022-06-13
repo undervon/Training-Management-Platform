@@ -1,10 +1,19 @@
 package com.tmp.courses.microservice.controllers;
 
 import com.tmp.courses.microservice.models.AddCourseDTO;
+import com.tmp.courses.microservice.models.CourseDTO;
+import com.tmp.courses.microservice.models.CoursesCategoryDTO;
+import com.tmp.courses.microservice.models.FileInfoDTO;
+import com.tmp.courses.microservice.models.GetCourseDTO;
 import com.tmp.courses.microservice.models.SuccessResponseDTO;
 import com.tmp.courses.microservice.services.CourseService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
@@ -32,6 +41,17 @@ public class CourseController {
 
     private final CourseService courseService;
 
+    @Operation(summary = "Create new course")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "CREATED - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CourseDTO.class))
+            }),
+            @ApiResponse(responseCode = "417",
+                    description = "EXPECTATION_FAILED - if [ failed to store empty file ] OR [ failed to store file ]"
+                            + " OR [ could not initialize storage ]",
+                    content = @Content)
+    })
     @CrossOrigin
     @PostMapping(value = "/add",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -48,6 +68,13 @@ public class CourseController {
                         .build());
     }
 
+    @Operation(summary = "Get all courses by category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = CoursesCategoryDTO.class)))
+            })
+    })
     @CrossOrigin
     @GetMapping(value = "/getCourses", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> getCoursesByCategoryParamReq(
@@ -61,6 +88,13 @@ public class CourseController {
                         .build());
     }
 
+    @Operation(summary = "Delete course by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
+                    content = @Content)
+    })
     @CrossOrigin
     @DeleteMapping(value = "/deleteCourse/{id}")
     public ResponseEntity<?> deleteCourseByIdReq(@PathVariable(value = "id") Long id) {
@@ -72,6 +106,15 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Operation(summary = "Get course by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GetCourseDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
+                    content = @Content)
+    })
     @CrossOrigin
     @GetMapping(value = "/getCourse/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> getCourseByIdReq(@PathVariable(value = "id") Long id) {
@@ -84,6 +127,18 @@ public class CourseController {
                         .build());
     }
 
+    @Operation(summary = "Get files path from directory")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = FileInfoDTO.class)))
+            }),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
+                    content = @Content),
+            @ApiResponse(responseCode = "417",
+                    description = "EXPECTATION_FAILED - if could not list the files",
+                    content = @Content)
+    })
     @CrossOrigin
     @GetMapping(value = "/{directory}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> getFilesFromDirectoryReq(
@@ -97,6 +152,15 @@ public class CourseController {
                         .build());
     }
 
+    @Operation(summary = "Get a file content")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful"),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
+                    content = @Content),
+            @ApiResponse(responseCode = "417",
+                    description = "EXPECTATION_FAILED - if could not read file",
+                    content = @Content)
+    })
     @CrossOrigin
     @GetMapping(value = "/{directory}/{filename}")
     public ResponseEntity<Resource> getFileReq(@PathVariable(value = "directory") String directory,
