@@ -1,3 +1,4 @@
+version: "3.9"
 services:
   app:
     image: 2auth-jwt-app
@@ -8,6 +9,8 @@ services:
       - 8090:8090
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trainingManagementPlatform
+    networks:
+      - backend_network
   
   postgres:
     image: postgres
@@ -23,6 +26,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       TZ: Europe/Bucharest
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true
 
 #
 # Commands:
