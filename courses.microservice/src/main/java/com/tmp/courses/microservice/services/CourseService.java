@@ -6,6 +6,7 @@ import com.tmp.courses.microservice.exceptions.StorageException;
 import com.tmp.courses.microservice.models.AddCourseDTO;
 import com.tmp.courses.microservice.models.CourseDTO;
 import com.tmp.courses.microservice.models.CoursesCategoryDTO;
+import com.tmp.courses.microservice.models.EditCourseDTO;
 import com.tmp.courses.microservice.models.FileInfoDTO;
 import com.tmp.courses.microservice.models.GetCourseDTO;
 import com.tmp.courses.microservice.models.adapters.CourseAdapter;
@@ -123,6 +124,19 @@ public class CourseService {
         } catch (MalformedURLException malformedURLException) {
             throw new StorageException(String.format("Could not read file %s (%s)", filename,
                     malformedURLException.getMessage()));
+        }
+    }
+
+    private void renameDirectory(File coursePath, Long id, String filename) {
+        Path route = Paths.get(coursePath.toString());
+
+        String newDirectoryName = id + "-" + filename.replace(" ", "");
+
+        try {
+            // Rename a file in the same directory
+            Files.move(route, route.resolveSibling(newDirectoryName));
+        } catch (IOException ioException) {
+            throw new StorageException("Could not change the file name");
         }
     }
 
@@ -260,5 +274,30 @@ public class CourseService {
         File coursePath = new File(coursesPath, course.getId().toString() + "-" + course.getName().replace(" ", ""));
 
         return load(coursePath, filename);
+    }
+
+    public void updateCourseByIdReq(Long id, EditCourseDTO editCourseDTO) {
+        Course course = findCourseById(id);
+
+        File coursePath = new File(coursesPath, course.getId().toString() + "-" + course.getName().replace(" ", ""));
+        renameDirectory(coursePath, course.getId(), editCourseDTO.getName());
+
+        Course newCourse = Course.builder()
+                .id(course.getId())
+                .name(editCourseDTO.getName())
+                .description(editCourseDTO.getDescription())
+                .language(editCourseDTO.getLanguage())
+                .requirements(editCourseDTO.getRequirements())
+                .category(editCourseDTO.getCategory())
+                .duration(editCourseDTO.getDuration())
+                .timeToMake(editCourseDTO.getTimeToMake())
+                .containsCertificate(editCourseDTO.getContainsCertificate())
+                .rating(course.getRating())
+                .ratedNumber(course.getRatedNumber())
+                .date(course.getDate())
+                .path(generateDirectoryURL(course.getId(), editCourseDTO.getName()))
+                .build();
+
+        courseRepository.save(newCourse);
     }
 }

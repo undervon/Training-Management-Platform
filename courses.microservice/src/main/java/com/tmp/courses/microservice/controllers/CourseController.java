@@ -3,6 +3,7 @@ package com.tmp.courses.microservice.controllers;
 import com.tmp.courses.microservice.models.AddCourseDTO;
 import com.tmp.courses.microservice.models.CourseDTO;
 import com.tmp.courses.microservice.models.CoursesCategoryDTO;
+import com.tmp.courses.microservice.models.EditCourseDTO;
 import com.tmp.courses.microservice.models.FileInfoDTO;
 import com.tmp.courses.microservice.models.GetCourseDTO;
 import com.tmp.courses.microservice.models.SuccessResponseDTO;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -173,6 +175,24 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
+    }
 
+    @Operation(summary = "Edite course partial by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
+                    content = @Content)
+    })
+    @CrossOrigin
+    @PutMapping(value = "/updateCourse/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateCourseByIdReq(@PathVariable(value = "id") Long id,
+            @RequestPart("editCourse") @Parameter(schema = @Schema(type = "string", format = "binary")) EditCourseDTO editCourseDTO) {
+        log.info("[ {} ] -> [ {} ] -> [ updateCourseByIdReq ] id: {}",
+                this.getClass().getSimpleName(), HttpMethod.PATCH, id);
+
+        courseService.updateCourseByIdReq(id, editCourseDTO);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
