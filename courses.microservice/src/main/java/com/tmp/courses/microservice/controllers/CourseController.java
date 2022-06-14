@@ -55,7 +55,7 @@ public class CourseController {
                     content = @Content)
     })
     @CrossOrigin
-    @PostMapping(value = "/add",
+    @PostMapping(value = "/addCourse",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> addCourseReq(

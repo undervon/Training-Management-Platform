@@ -11,6 +11,7 @@ import com.tmp.courses.microservice.models.FileInfoDTO;
 import com.tmp.courses.microservice.models.GetCourseDTO;
 import com.tmp.courses.microservice.models.adapters.CourseAdapter;
 import com.tmp.courses.microservice.repositories.CourseRepository;
+import com.tmp.courses.microservice.repositories.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final SurveyRepository surveyRepository;
 
     @Value("${courses.path}")
     private String coursesPath;
@@ -165,6 +168,10 @@ public class CourseService {
                 .orElseThrow(() -> new CourseNotFoundException(path));
     }
 
+    protected Course saveCourse(Course course) {
+        return courseRepository.save(course);
+    }
+
     private List<FileInfoDTO> getAllFilesPath(Course course) {
         File coursePath = new File(coursesPath, course.getId().toString() + "-" + course.getName().replace(" ", ""));
         Path route = Paths.get(coursePath.toString());
@@ -201,11 +208,11 @@ public class CourseService {
                 .containsCertificate(addCourseDTO.getContainsCertificate())
                 .build();
 
-        courseRepository.save(course);
+        saveCourse(course);
 
         course.setPath(generateDirectoryURL(course.getId(), course.getName()));
 
-        courseRepository.save(course);
+        saveCourse(course);
 
         // Store the files
         store(files, course.getId(), course.getName());
@@ -225,8 +232,13 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteCourseByIdReq(Long id) {
         Course course = findCourseById(id);
+
+        String surveyName = "Survey" + "-" + course.getId();
+
+        surveyRepository.deleteSurveysByName(surveyName);
 
         File coursePath = new File(coursesPath, course.getId().toString() + "-" + course.getName().replace(" ", ""));
         delete(coursePath);
@@ -298,6 +310,6 @@ public class CourseService {
                 .path(generateDirectoryURL(course.getId(), editCourseDTO.getName()))
                 .build();
 
-        courseRepository.save(newCourse);
+        saveCourse(newCourse);
     }
 }
