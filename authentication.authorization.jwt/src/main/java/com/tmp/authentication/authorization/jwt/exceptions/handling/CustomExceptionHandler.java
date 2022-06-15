@@ -7,6 +7,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
 import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
+import com.tmp.authentication.authorization.jwt.exceptions.StorageException;
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
@@ -175,6 +176,17 @@ public class CustomExceptionHandler {
                 .body(ExceptionResponseDTO.builder()
                         .message(String.format("The manager '%s' not found in DB",
                                 managerNotFoundException.getMessage()))
+                        .build());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ExceptionResponseDTO> storageExceptionHandler(StorageException storageException) {
+        log.error("thrown StorageException");
+
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                .body(ExceptionResponseDTO.builder()
+                        .message(storageException.getMessage())
                         .build());
     }
 }

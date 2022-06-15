@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Certificate template</title>
+    </head>
+    <body>
+        Nume angajat: <th:block th:text="${employeeFirstName}">employeeFirstName</th:block><br/><br/>
+        Prenume angajat: <th:block th:text="${employeeLastName}">employeeLastName</th:block><br/><br/>
+        Numar angajat: <th:block th:text="${employeeNumber}">employeeNumber</th:block><br/><br/>
+
+        Nume curs: <th:block th:text="${courseName}">courseName</th:block><br/><br/>
+        Categorie curs: <th:block th:text="${courseCategory}">courseCategory</th:block><br/><br/>
+        Completat la data de: <th:block th:text="${courseCompletedDate}">courseCompletedDate</th:block><br/><br/>
+    </body>
+</html>
