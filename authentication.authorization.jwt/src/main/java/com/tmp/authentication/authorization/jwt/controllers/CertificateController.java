@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -33,14 +35,20 @@ public class CertificateController {
             @ApiResponse(responseCode = "201", description = "CREATED - if successful", content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CreateCertificateDTO.class))
-            })
+            }),
+            @ApiResponse(responseCode = "417",
+                    description = "EXPECTATION_FAILED - if [ failed to store empty file ]"
+                            + " OR [ failed to store file ]"
+                            + " OR [ could not initialize storage ]"
+                            + " OR [ File not found on storage certificate or error on create pdf ]",
+                    content = @Content)
     })
     @CrossOrigin
     @PostMapping(value = "/createCertificate",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> createCertificateReq(
-            @RequestBody CreateCertificateDTO createCertificateDTO) {
+            @Valid @RequestBody CreateCertificateDTO createCertificateDTO) {
         log.info("[ {} ] -> [ {} ] -> [ createCertificateReq ] createCertificateDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.POST, createCertificateDTO);
 
