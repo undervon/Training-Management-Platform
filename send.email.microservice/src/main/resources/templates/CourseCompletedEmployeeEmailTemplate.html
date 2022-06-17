@@ -3,39 +3,66 @@
     <head>
         <meta charset="UTF-8">
         <title>Course completed employee email template</title>
+        <style>
+            body {
+                text-align: center;
+                font-family: 'Times New Roman', Times, serif;
+            }
+
+            hr {
+                border: 0.1px solid #656464;
+                margin-bottom: 15px;
+                opacity: 50%;
+                width: 75%;
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            .emoji {
+                font-size: 25px;
+            }
+
+            .footer-text {
+                color: #656464;
+            }
+
+            .logo-image {
+                position: static;
+                width: 255px;
+                height: 128px;
+            }
+        </style>
     </head>
 
     <body style="text-align: center;">
-        <br>
-        Draga <th:block th:text="${employeeUsername}">employeeUsername</th:block>,<br><br>
+        <img class="logo-image" src="./images/continental-logo.png"><br><br><br>
+        Draga <th:block th:text="${employeeUsername}">Silviu</th:block>,<br><br>
 
         Te felicitam pentru reusita!<br><br>
-        <span style='font-size: 25px;'>&#127881;&#127881;&#127881;</span><br><br>
+        <span class="emoji">&#127881;&#127881;&#127881;</span><br><br>
 
         Tocmai ce ai finalizat cursul
-        '<th:block th:text="${courseName}">courseName</th:block>' cu numarul
-        <th:block th:text="${courseId}">courseId</th:block> din categoria
-        '<th:block th:text="${courseCategory}">courseCategory</th:block>'.<br><br>
+        '<th:block th:text="${courseName}">Java Novice to Javanista</th:block>' cu numarul
+        <th:block th:text="${courseId}">99</th:block> din categoria
+        '<th:block th:text="${courseCategory}">Programming</th:block>'.<br><br>
         Pe acesta l-ai asignat in data de
-        <th:block th:text="${courseStartDate}">courseStartDate</th:block> si l-ai finalizat in
-        <th:block th:text="${courseCompletionDate}">courseCompletionDate</th:block>.<br><br>
+        <th:block th:text="${courseStartDate}">04.06.2022 - 12:00:00</th:block> si l-ai finalizat in
+        <th:block th:text="${courseCompletionDate}">05.06.2022 - 12:00:00</th:block>.<br><br>
         Asadar, a fost parcurs intr-un interval de:
-        <th:block th:text="${courseCompletionInterval}">courseCompletionInterval</th:block>.<br><br>
+        <th:block th:text="${courseCompletionInterval}">1 zi</th:block>.<br><br>
 
         In cazul generarii unui certificat digital in urma parcurgerii/completarii cursului, acesta poate fi
         accesat/descarcat din PDF-ul atasat in pagina cu certificatele tale.<br><br><br><br>
 
-        <hr style="border: 0.1px solid #656464;
-        margin-bottom: 15px;
-        opacity: 50%;
-        width: 65%;">
+        <hr/>
         <footer>
             Daca ai orice intrebare/nelamurire sau intampini o problema, te rog contacteaza-ne la adresa
-            <a href="mailto:continental.suport@gmail.com" style="text-decoration: none;">
-                continental.suport@gmail.com</a><br><br>
-            <span style="color: #656464;">
+            <a href="mailto:continental.suport@gmail.com">continental.suport@gmail.com</a><br><br>
+            <span class="footer-text">
                 Toate cele bune,<br>
-                Suport tehnic, &copy; Continental<br>
+                Suport tehnic, &copy; 2022 - Continental AG<br>
             </span>
         </footer>
     </body>
