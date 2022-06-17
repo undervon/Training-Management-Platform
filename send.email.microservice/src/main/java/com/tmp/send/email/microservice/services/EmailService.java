@@ -9,80 +9,53 @@ import com.tmp.send.email.microservice.models.EmailCourseCompletedManagerDTO;
 import com.tmp.send.email.microservice.models.EmailCreateCourseManagerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.FileUrlResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.Authenticator;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Part;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Objects;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class EmailService {
 
+    private final JavaMailSender javaMailSender;
     private final EmailConfiguration emailConfiguration;
     private final SpringTemplateEngine springTemplateEngine;
 
     /*
         EmailService methods
     */
-    private Properties setMailProperties() {
-        Properties properties = System.getProperties();
-
-        properties.put("mail.smtp.port", emailConfiguration.mailSmtpPort);
-        properties.put("mail.smtp.host", emailConfiguration.mailSmtpHost);
-        properties.put("mail.smtp.auth", emailConfiguration.mailSmtpAuth);
-        properties.put("mail.smtp.ssl.enable", emailConfiguration.mailSmtpSslEnable);
-        properties.put("mail.smtp.ssl.protocols", emailConfiguration.mailSmtpSslProtocols);
-        properties.put("mail.smtp.starttls.enable", emailConfiguration.mailSmtpStarttlsEnable);
-        properties.put("mail.smtp.starttls.required", emailConfiguration.mailSmtpStarttlsRequired);
-
-        return properties;
-    }
-
-    private void createNewEmailAndSendIt(Session session, String emailTo, String subject, String html) {
+    private void createNewEmailAndSendIt(String emailTo, String subject, String html) {
         try {
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(emailConfiguration.fromEmail));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
-            message.setSubject(subject);
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
 
-            MimeMultipart multipart = new MimeMultipart("related");
+            messageHelper.setFrom(emailConfiguration.fromEmail);
+            messageHelper.setTo(emailTo);
+            messageHelper.setSubject(subject);
+            messageHelper.setText(html, true);
 
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(html, "text/html");
-            multipart.addBodyPart(htmlPart);
+            FileUrlResource image = new FileUrlResource(
+                    Objects.requireNonNull(this.getClass().getResource("/templates/images/continental-logo.png")));
 
-            MimeBodyPart imagePart = new MimeBodyPart();
-            DataSource fds = new FileDataSource("src/main/resources/templates/images/continental-logo.png");
-            imagePart.setDataHandler(new DataHandler(fds));
-            imagePart.setDisposition(Part.INLINE);
-            imagePart.setFileName("continental-logo.png");
-            imagePart.setHeader("Content-ID", "<image>");
-            multipart.addBodyPart(imagePart);
+            messageHelper.addInline("image", image);
 
-            message.setContent(multipart);
-
-            Transport.send(message);
+            javaMailSender.send(message);
         } catch (MessagingException messagingException) {
             log.error("Problem trying to send email - {}", messagingException.getMessage());
             throw new SendEmailUnknownException();
@@ -162,20 +135,6 @@ public class EmailService {
     */
     public void sendEmailAssignedCourseManagerReq(EmailAssignedCourseManagerDTO emailAssignedCourseManagerDTO,
             String template) {
-        // Set the mail properties
-        Properties properties = setMailProperties();
-
-        // Create a new SMTP session with previous properties and with
-        // email and password authentication from Gmail account
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailConfiguration.fromEmail, emailConfiguration.fromPassword);
-            }
-        });
-
-        session.setDebug(true);
-
         // Create a Map with all variables and their values from template .html file
         Map<String, Object> variables = new HashMap<>();
         variables.put("managerUsername", emailAssignedCourseManagerDTO.getManagerUsername());
@@ -192,25 +151,11 @@ public class EmailService {
         String html = springTemplateEngine.process(template, context);
 
         final String emailTo = emailAssignedCourseManagerDTO.getManagerEmail();
-        createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectAssignedCourse, html);
+        createNewEmailAndSendIt(emailTo, emailConfiguration.subjectAssignedCourse, html);
     }
 
     public void sendEmailAssignedCourseEmployeeReq(EmailAssignedCourseEmployeeDTO emailAssignedCourseEmployeeDTO,
             String template) {
-        // Set the mail properties
-        Properties properties = setMailProperties();
-
-        // Create a new SMTP session with previous properties and with
-        // email and password authentication from Gmail account
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailConfiguration.fromEmail, emailConfiguration.fromPassword);
-            }
-        });
-
-        session.setDebug(true);
-
         // Create a Map with all variables and their values from template .html file
         Map<String, Object> variables = new HashMap<>();
         variables.put("employeeEmail", emailAssignedCourseEmployeeDTO.getEmployeeEmail());
@@ -226,25 +171,11 @@ public class EmailService {
         String html = springTemplateEngine.process(template, context);
 
         final String emailTo = emailAssignedCourseEmployeeDTO.getEmployeeEmail();
-        createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectAssignedCourse, html);
+        createNewEmailAndSendIt(emailTo, emailConfiguration.subjectAssignedCourse, html);
     }
 
     public void sendEmailCourseCompletedManagerReq(EmailCourseCompletedManagerDTO emailCourseCompletedManagerDTO,
             String template) {
-        // Set the mail properties
-        Properties properties = setMailProperties();
-
-        // Create a new SMTP session with previous properties and with
-        // email and password authentication from Gmail account
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailConfiguration.fromEmail, emailConfiguration.fromPassword);
-            }
-        });
-
-        session.setDebug(true);
-
         LocalDateTime startDate = emailCourseCompletedManagerDTO.getCourseStartDate();
         LocalDateTime endDate = emailCourseCompletedManagerDTO.getCourseCompletionDate();
 
@@ -272,25 +203,11 @@ public class EmailService {
         String html = springTemplateEngine.process(template, context);
 
         final String emailTo = emailCourseCompletedManagerDTO.getManagerEmail();
-        createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectCourseCompleted, html);
+        createNewEmailAndSendIt(emailTo, emailConfiguration.subjectCourseCompleted, html);
     }
 
     public void sendEmailCourseCompletedEmployeeReq(EmailCourseCompletedEmployeeDTO emailCourseCompletedEmployeeDTO,
             String template) {
-        // Set the mail properties
-        Properties properties = setMailProperties();
-
-        // Create a new SMTP session with previous properties and with
-        // email and password authentication from Gmail account
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailConfiguration.fromEmail, emailConfiguration.fromPassword);
-            }
-        });
-
-        session.setDebug(true);
-
         LocalDateTime startDate = emailCourseCompletedEmployeeDTO.getCourseStartDate();
         LocalDateTime endDate = emailCourseCompletedEmployeeDTO.getCourseCompletionDate();
 
@@ -317,25 +234,11 @@ public class EmailService {
         String html = springTemplateEngine.process(template, context);
 
         final String emailTo = emailCourseCompletedEmployeeDTO.getEmployeeEmail();
-        createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectCourseCompleted, html);
+        createNewEmailAndSendIt(emailTo, emailConfiguration.subjectCourseCompleted, html);
     }
 
     public void sendEmailCreateCourseManagerReq(EmailCreateCourseManagerDTO emailCreateCourseManagerDTO,
             String template) {
-        // Set the mail properties
-        Properties properties = setMailProperties();
-
-        // Create a new SMTP session with previous properties and with
-        // email and password authentication from Gmail account
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailConfiguration.fromEmail, emailConfiguration.fromPassword);
-            }
-        });
-
-        session.setDebug(true);
-
         // Create a Map with all variables and their values from template .html file
         Map<String, Object> variables = new HashMap<>();
         variables.put("managerUsername", emailCreateCourseManagerDTO.getManagerUsername());
@@ -351,6 +254,6 @@ public class EmailService {
         String html = springTemplateEngine.process(template, context);
 
         final String emailTo = emailCreateCourseManagerDTO.getManagerEmail();
-        createNewEmailAndSendIt(session, emailTo, emailConfiguration.subjectCreateCourse, html);
+        createNewEmailAndSendIt(emailTo, emailConfiguration.subjectCreateCourse, html);
     }
 }

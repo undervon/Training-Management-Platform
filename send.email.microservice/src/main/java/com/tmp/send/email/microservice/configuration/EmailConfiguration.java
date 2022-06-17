@@ -24,16 +24,19 @@ public class EmailConfiguration {
     public String subjectCreateCourse;
 
     @Value("${mail.smtp.port}")
-    public String mailSmtpPort;
+    public Integer mailSmtpPort;
+
+    @Value("${mail.smtp.host}")
+    public String mailSmtpHost;
+
+    @Value("${mail.smtp.debug}")
+    public String mailSmtpDebug;
 
     @Value("${mail.smtp.auth}")
     public String mailSmtpAuth;
 
-    @Value("${mail.smtp.ssl.enable}")
-    public String mailSmtpSslEnable;
-
-    @Value("${mail.smtp.host}")
-    public String mailSmtpHost;
+    @Value("${mail.smtp.transport.protocol}")
+    public String mailSmtpTransportProtocol;
 
     @Value("${mail.smtp.starttls.enable}")
     public String mailSmtpStarttlsEnable;
@@ -41,6 +44,6 @@ public class EmailConfiguration {
     @Value("${mail.smtp.ssl.protocols}")
     public String mailSmtpSslProtocols;
 
-    @Value("${mail.smtp.starttls.required}")
-    public String mailSmtpStarttlsRequired;
+    @Value("${mail.smtp.ssl.trust}")
+    public String mailSmtpSslTrust;
 }
