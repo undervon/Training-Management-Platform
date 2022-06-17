@@ -4,10 +4,6 @@
         <meta charset="UTF-8">
         <title>Course completed employee email template</title>
         <style>
-            body {
-                text-align: center;
-            }
-
             hr {
                 border: 0.1px solid #656464;
                 margin-bottom: 15px;
@@ -32,11 +28,15 @@
                 width: 255px;
                 height: 128px;
             }
+
+            .page {
+                text-align: center;
+            }
         </style>
     </head>
 
-    <body style="text-align: center;">
-        <img class="logo-image" src="./images/continental-logo.png"><br><br><br>
+    <body class="page">
+        <img class="logo-image" src="cid:image" alt="continental-logo"><br><br><br>
         Draga <th:block th:text="${employeeUsername}">Silviu</th:block>,<br><br>
 
         Te felicitam pentru reusita!<br><br>

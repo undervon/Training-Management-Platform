@@ -13,14 +13,20 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -59,7 +65,22 @@ public class EmailService {
             message.setFrom(new InternetAddress(emailConfiguration.fromEmail));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
             message.setSubject(subject);
-            message.setContent(html, "text/html; charset=utf-8");
+
+            MimeMultipart multipart = new MimeMultipart("related");
+
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(html, "text/html");
+            multipart.addBodyPart(htmlPart);
+
+            MimeBodyPart imagePart = new MimeBodyPart();
+            DataSource fds = new FileDataSource("src/main/resources/templates/images/continental-logo.png");
+            imagePart.setDataHandler(new DataHandler(fds));
+            imagePart.setDisposition(Part.INLINE);
+            imagePart.setFileName("continental-logo.png");
+            imagePart.setHeader("Content-ID", "<image>");
+            multipart.addBodyPart(imagePart);
+
+            message.setContent(multipart);
 
             Transport.send(message);
         } catch (MessagingException messagingException) {
