@@ -4,6 +4,9 @@ import com.tmp.authentication.authorization.jwt.entities.Certificate;
 import com.tmp.authentication.authorization.jwt.models.CertificateDTO;
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @UtilityClass
 public final class CertificateAdapter {
 
@@ -15,5 +18,11 @@ public final class CertificateAdapter {
                 .availability(certificate.getAvailability())
                 .path(certificate.getPath())
                 .build();
+    }
+
+    public static List<CertificateDTO> certificateListToCertificateDTOList(List<Certificate> certificateList) {
+        return certificateList.stream()
+                .map(CertificateAdapter::certificateToCertificateDTO)
+                .collect(Collectors.toList());
     }
 }

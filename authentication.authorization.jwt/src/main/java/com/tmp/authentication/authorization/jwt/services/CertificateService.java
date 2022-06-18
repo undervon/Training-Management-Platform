@@ -14,6 +14,8 @@ import com.tmp.authentication.authorization.jwt.repositories.EmployeesCertificat
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.context.Context;
@@ -21,13 +23,19 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -59,6 +67,24 @@ public class CertificateService {
         }
     }
 
+    private Resource load(File coursePath, String filename) {
+        try {
+            Path file = Paths.get(coursePath.toString())
+                    .resolve(filename);
+
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new StorageException(String.format("Could not read file %s", filename));
+            }
+        } catch (MalformedURLException malformedURLException) {
+            throw new StorageException(String.format("Could not read file %s (%s)", filename,
+                    malformedURLException.getMessage()));
+        }
+    }
+
     private String generateCertificateURL(String certificateName) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(apiPath + "/")
@@ -70,6 +96,12 @@ public class CertificateService {
         Methods from CertificateController
      */
     public CertificateDTO createCertificateDTO(CreateCertificateDTO createCertificateDTO, String template) {
+        Path route = Paths.get(certificatesPath);
+
+        if (!Files.exists(route)) {
+            init();
+        }
+
         User user = userService.findUserById(createCertificateDTO.getEmployeeId());
 
         String certificateName = "Certificate" +
@@ -103,6 +135,9 @@ public class CertificateService {
 
         employeesCertificateRepository.save(employeesCertificate);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String courseCompletedDateFormat = formatter.format(updateCertificate.getReleaseDate());
+
         // Create a Map with all variables and their values from template .html file
         Map<String, Object> variables = new HashMap<>();
         variables.put("employeeFirstName", user.getFirstName());
@@ -110,7 +145,7 @@ public class CertificateService {
         variables.put("employeeNumber", user.getEmployeeNumber());
         variables.put("courseName", createCertificateDTO.getCourseName());
         variables.put("courseCategory", createCertificateDTO.getCourseCategory());
-        variables.put("courseCompletedDate", updateCertificate.getReleaseDate());
+        variables.put("courseCompletedDate", courseCompletedDateFormat);
 
         Context context = new Context();
         context.setVariables(variables);
@@ -134,5 +169,25 @@ public class CertificateService {
         }
 
         return CertificateAdapter.certificateToCertificateDTO(savedCertificate);
+    }
+
+    public List<CertificateDTO> getCertificatesByUserIdReq(Long id) {
+        User user = userService.findUserById(id);
+
+        List<EmployeesCertificate> employeesCertificateList =
+                employeesCertificateRepository.getEmployeesCertificatesByIdEmployee(user);
+
+        List<Certificate> certificateList = employeesCertificateList.stream()
+                .map(employeesCertificate -> certificateRepository.getReferenceById(
+                        employeesCertificate.getIdCertificate().getId()))
+                .collect(Collectors.toList());
+
+        return CertificateAdapter.certificateListToCertificateDTOList(certificateList);
+    }
+
+    public Resource getPdfReq(String pdfName) {
+        File pdfPath = new File(certificatesPath);
+
+        return load(pdfPath, pdfName + ".pdf");
     }
 }
