@@ -14,6 +14,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       TZ: Europe/Bucharest
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true
 
 #
 # Commands:
