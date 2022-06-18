@@ -14,6 +14,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserExc
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
+import com.tmp.authentication.authorization.jwt.models.AssignUserDTO;
 import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
@@ -328,6 +329,9 @@ public class UserService {
     public List<UserDTO> getUnassignedUsersReq(String username) {
         final User user = findUserByUsername(username);
 
+        // Check if he is manager
+        findManagerByUsername(user.getEmail());
+
         // Get generic manager from DB
         final Manager manager = getManagerByUsername(managerGenericUsername);
 
@@ -341,5 +345,17 @@ public class UserService {
         users.remove(user);
 
         return UserAdapter.userListToUserDTOList(users, apiPath);
+    }
+
+    public void assignUserReq(AssignUserDTO assignUserDTO) {
+        User userWhoWillAssign = findUserById(assignUserDTO.getIdManager());
+
+        Manager manager = findManagerByUsername(userWhoWillAssign.getEmail());
+
+        User userToBeAssigned = findUserById(assignUserDTO.getIdUser());
+
+        userToBeAssigned.setManager(manager);
+
+        userRepository.save(userToBeAssigned);
     }
 }

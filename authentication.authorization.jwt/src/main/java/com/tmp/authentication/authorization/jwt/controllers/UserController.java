@@ -1,5 +1,6 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
+import com.tmp.authentication.authorization.jwt.models.AssignUserDTO;
 import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -260,5 +262,22 @@ public class UserController {
                 .body(SuccessResponseDTO.builder()
                         .data(userService.getUnassignedUsersReq(username))
                         .build());
+    }
+
+    @Operation(summary = "Assigned user to manager")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful", content = @Content),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if [ the user not found in DB ] OR "
+                    + "[ the manager not found in DB ]", content = @Content)
+    })
+    @CrossOrigin
+    @PatchMapping(value = "/assignUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> assignUserReq(@RequestBody AssignUserDTO assignUserDTO) {
+        log.info("[ {} ] -> [ {} ] -> [ assignUserReq ] assignUserDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.PATCH, assignUserDTO);
+
+        userService.assignUserReq(assignUserDTO);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
