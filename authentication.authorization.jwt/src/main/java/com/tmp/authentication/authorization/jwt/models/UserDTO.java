@@ -19,7 +19,7 @@ public class UserDTO {
     private String lastName;
     private String email;
     private String department;
-    private Integer employeeNumber;
+    private String employeeNumber;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy - HH:mm:ss")
     private LocalDateTime joinDate;

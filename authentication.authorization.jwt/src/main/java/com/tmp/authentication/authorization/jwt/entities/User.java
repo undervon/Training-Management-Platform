@@ -40,7 +40,7 @@ public class User {
     private String email;
     private String password;
     private String department;
-    private Integer employeeNumber;
+    private String employeeNumber;
 
     @Builder.Default
     private LocalDateTime joinDate = LocalDateTime.now();

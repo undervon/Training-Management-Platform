@@ -22,6 +22,7 @@ public class CertificateDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy")
     private LocalDateTime releaseDate;
+
     private Integer availability;
     private String path;
 }
