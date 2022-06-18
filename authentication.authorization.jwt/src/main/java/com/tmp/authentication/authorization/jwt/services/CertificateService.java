@@ -2,6 +2,9 @@ package com.tmp.authentication.authorization.jwt.services;
 
 import com.lowagie.text.DocumentException;
 import com.tmp.authentication.authorization.jwt.entities.Certificate;
+import com.tmp.authentication.authorization.jwt.entities.EmployeesCertificate;
+import com.tmp.authentication.authorization.jwt.entities.EmployeesCertificateId;
+import com.tmp.authentication.authorization.jwt.entities.User;
 import com.tmp.authentication.authorization.jwt.exceptions.StorageException;
 import com.tmp.authentication.authorization.jwt.models.CertificateDTO;
 import com.tmp.authentication.authorization.jwt.models.CreateCertificateDTO;
@@ -12,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -22,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +36,8 @@ public class CertificateService {
 
     private final CertificateRepository certificateRepository;
     private final EmployeesCertificateRepository employeesCertificateRepository;
+
+    private final UserService userService;
 
     private final SpringTemplateEngine springTemplateEngine;
 
@@ -55,56 +59,69 @@ public class CertificateService {
         }
     }
 
-    private void save(MultipartFile file) {
-        Path root = Paths.get(certificatesPath);
-        if (!Files.exists(root)) {
-            init();
-        }
-
-        try {
-            Files.copy(file.getInputStream(), root.resolve(file.getOriginalFilename()));
-        } catch (IOException ioException) {
-            throw new StorageException(String.format("Failed to store file %s (%s).", file.getOriginalFilename(),
-                    ioException.getMessage()));
-        }
-    }
-
-    private void checkEmptyFiles(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new StorageException("Failed to store empty file");
-        }
+    private String generateCertificateURL(String certificateName) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(apiPath + "/")
+                .path(certificateName)
+                .toUriString();
     }
 
     /*
         Methods from CertificateController
      */
     public CertificateDTO createCertificateDTO(CreateCertificateDTO createCertificateDTO, String template) {
+        User user = userService.findUserById(createCertificateDTO.getEmployeeId());
+
+        String certificateName = "Certificate" +
+                "-" + createCertificateDTO.getCourseName().replace(" ", "") +
+                "_" + createCertificateDTO.getEmployeeId().toString();
+
+        String certificatePath = generateCertificateURL(certificateName);
+
         Certificate certificate = Certificate.builder()
-                .name("certificate-1")
-                .path("path-1")
+                .name(certificateName)
+                .path(certificatePath)
                 .build();
 
         Certificate savedCertificate = certificateRepository.save(certificate);
+        certificateName = certificateName + "_" + savedCertificate.getId();
+        certificatePath = generateCertificateURL(certificateName);
+        savedCertificate.setName(certificateName);
+        savedCertificate.setPath(certificatePath);
+        Certificate updateCertificate = certificateRepository.save(savedCertificate);
+
+        EmployeesCertificateId employeesCertificateId = EmployeesCertificateId.builder()
+                .idCertificate(updateCertificate.getId())
+                .idEmployee(user.getId())
+                .build();
+
+        EmployeesCertificate employeesCertificate = EmployeesCertificate.builder()
+                .id(employeesCertificateId)
+                .idCertificate(updateCertificate)
+                .idEmployee(user)
+                .build();
+
+        employeesCertificateRepository.save(employeesCertificate);
 
         // Create a Map with all variables and their values from template .html file
         Map<String, Object> variables = new HashMap<>();
-        variables.put("employeeFirstName", createCertificateDTO.getEmployeeFirstName());
-        variables.put("employeeLastName", createCertificateDTO.getEmployeeLastName());
-        variables.put("employeeNumber", createCertificateDTO.getEmployeeNumber());
+        variables.put("employeeFirstName", user.getFirstName());
+        variables.put("employeeLastName", user.getLastName());
+        variables.put("employeeNumber", user.getEmployeeNumber());
         variables.put("courseName", createCertificateDTO.getCourseName());
         variables.put("courseCategory", createCertificateDTO.getCourseCategory());
-        variables.put("courseCompletedDate", savedCertificate.getReleaseDate());
+        variables.put("courseCompletedDate", updateCertificate.getReleaseDate());
 
         Context context = new Context();
         context.setVariables(variables);
 
         String html = springTemplateEngine.process(template, context);
 
-        String certificateName = savedCertificate.getName() + ".pdf";
+        String pdfCertificateName = updateCertificate.getName() + ".pdf";
 
         // Convert HTML to PDF and save in FileSystem
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(certificatesPath + "/" + certificateName);
+            FileOutputStream fileOutputStream = new FileOutputStream(certificatesPath + "/" + pdfCertificateName);
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(html);
             renderer.layout();

@@ -11,9 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateCertificateDTO {
 
-    private String employeeFirstName;
-    private String employeeLastName;
-    private Integer employeeNumber;
+    private Long employeeId;
 
     private String courseName;
     private String courseCategory;

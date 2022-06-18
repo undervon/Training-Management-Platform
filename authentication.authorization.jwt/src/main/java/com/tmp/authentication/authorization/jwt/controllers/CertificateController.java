@@ -36,6 +36,8 @@ public class CertificateController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CreateCertificateDTO.class))
             }),
+            @ApiResponse(responseCode = "404",
+                    description = "NOT_FOUND - if the user not found in DB", content = @Content),
             @ApiResponse(responseCode = "417",
                     description = "EXPECTATION_FAILED - if [ failed to store empty file ]"
                             + " OR [ failed to store file ]"
