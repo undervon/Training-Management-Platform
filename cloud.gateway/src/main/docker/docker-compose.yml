@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  app:
+    image: cloud-gateway-app
+    container_name: Cloud_gateway_app
+    build:
+      context: .
+    ports:
+      - 9000:9000
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true
+
+#
+# Commands:
+#
+# docker-compose up                -> used to create a docker container
+# docker-compose down              -> used to destroy a docker container
+#
