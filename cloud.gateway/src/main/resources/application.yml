@@ -33,4 +33,4 @@ eureka:
     service-url:
       defaultZone: http://app:8761/eureka/
   instance:
-    hostname: localhost
+    hostname: app
