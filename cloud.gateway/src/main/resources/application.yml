@@ -1,0 +1,25 @@
+# Custom port
+server:
+  port: 9000
+
+spring:
+  # Name the application
+  application:
+    name: API-GATEWAY
+
+  main:
+    web-application-type: reactive
+
+  # Spring Cloud configuration
+  cloud:
+    gateway:
+      routes:
+        - id: AUTHENTICATION-AUTHORIZATION-JWT
+          uri: lb://AUTHENTICATION-AUTHORIZATION-JWT
+          predicates:
+            - Path=/api/1.0/tmp/auth/**
+
+        - id: ASSIGNED-COURSES
+          uri: lb://ASSIGNED-COURSES
+          predicates:
+            - Path=/api/1.0/tmp/assigned/courses/**

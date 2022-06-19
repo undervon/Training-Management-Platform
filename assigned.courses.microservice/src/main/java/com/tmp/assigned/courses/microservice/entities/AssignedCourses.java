@@ -33,4 +33,6 @@ public class AssignedCourses {
 
     @Builder.Default
     private Boolean completed = false;
+
+    private Long idEmployee;
 }
