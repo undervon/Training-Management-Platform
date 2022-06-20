@@ -73,8 +73,10 @@ public class UserController {
 
     @Operation(summary = "Edit user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
-                    content = @Content),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST - if something wrong was done",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
@@ -84,7 +86,7 @@ public class UserController {
     })
     @CrossOrigin
     @PutMapping(value = "/editUser/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> editUserReq(
+    public ResponseEntity<SuccessResponseDTO<?>> editUserReq(
             @RequestPart("editUser") @Parameter(schema = @Schema(type = "string", format = "binary")) EditUserDTO editUserDTO,
             @RequestPart("image") MultipartFile image,
             @PathVariable("id") Long id) {
@@ -93,13 +95,19 @@ public class UserController {
 
         userService.editUserReq(editUserDTO, image, id);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("User successfully edited")
+                        .build());
     }
 
     @Operation(summary = "Delete user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
-                    content = @Content),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
                     content = @Content),
             @ApiResponse(responseCode = "406", description = "NOT_ACCEPTABLE - if this user it's just ADMIN",
@@ -107,19 +115,25 @@ public class UserController {
     })
     @CrossOrigin
     @DeleteMapping(value = "/deleteUser/{id}")
-    public ResponseEntity<?> deleteUserReq(@PathVariable("id") Long id) {
+    public ResponseEntity<SuccessResponseDTO<?>> deleteUserReq(@PathVariable("id") Long id) {
         log.info("[ {} ] -> [ {} ] -> [ deleteUserReq ] id: {}",
                 this.getClass().getSimpleName(), HttpMethod.DELETE, id);
 
         userService.deleteUserReq(id);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("The user has been successfully deleted")
+                        .build());
     }
 
     @Operation(summary = "Edit role by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
-                    content = @Content),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB or "
                     + "the role does not exist",
                     content = @Content),
@@ -128,20 +142,26 @@ public class UserController {
     })
     @CrossOrigin
     @PutMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editRoleReq(@PathVariable("id") Long id,
+    public ResponseEntity<SuccessResponseDTO<?>> editRoleReq(@PathVariable("id") Long id,
             @RequestBody RoleDTO roleDTO) {
         log.info("[ {} ] -> [ {} ] -> [ editRoleReq ] id: {}, roleDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.PUT, id, roleDTO);
 
         userService.editRoleReq(id, roleDTO);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("The role was successfully edited")
+                        .build());
     }
 
     @Operation(summary = "Delete role by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
-                    content = @Content),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if [ the user not found in DB ] OR "
                     + "[ the role does not exist ] OR [ the manager not found in DB ]",
                     content = @Content),
@@ -150,14 +170,18 @@ public class UserController {
     })
     @CrossOrigin
     @PutMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteRoleReq(@PathVariable("id") Long id,
+    public ResponseEntity<SuccessResponseDTO<?>> deleteRoleReq(@PathVariable("id") Long id,
             @RequestBody RoleDTO roleDTO) {
         log.info("[ {} ] -> [ {} ] -> [ deleteRoleReq ] id: {}, roleDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.PUT, id, roleDTO);
 
         userService.deleteRoleReq(id, roleDTO);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("The role has been successfully deleted")
+                        .build());
     }
 
     @Operation(summary = "Get user by id")
@@ -266,18 +290,25 @@ public class UserController {
 
     @Operation(summary = "Assigned user to manager")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful", content = @Content),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if [ the user not found in DB ] OR "
                     + "[ the manager not found in DB ]", content = @Content)
     })
     @CrossOrigin
     @PatchMapping(value = "/assignUser", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> assignUserReq(@RequestBody AssignUserDTO assignUserDTO) {
+    public ResponseEntity<SuccessResponseDTO<?>> assignUserReq(@RequestBody AssignUserDTO assignUserDTO) {
         log.info("[ {} ] -> [ {} ] -> [ assignUserReq ] assignUserDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.PATCH, assignUserDTO);
 
         userService.assignUserReq(assignUserDTO);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("User successfully assigned to manager")
+                        .build());
     }
 }
