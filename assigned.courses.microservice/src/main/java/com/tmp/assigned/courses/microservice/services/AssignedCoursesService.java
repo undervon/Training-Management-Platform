@@ -4,6 +4,7 @@ import com.tmp.assigned.courses.microservice.entities.AssignedCourses;
 import com.tmp.assigned.courses.microservice.exceptions.CourseAlreadyAssignedException;
 import com.tmp.assigned.courses.microservice.exceptions.GenericException;
 import com.tmp.assigned.courses.microservice.models.AssignCourseDTO;
+import com.tmp.assigned.courses.microservice.models.CoursesStatisticsDTO;
 import com.tmp.assigned.courses.microservice.models.CreateAssignCourseDTO;
 import com.tmp.assigned.courses.microservice.models.adapters.AssignedCourseAdapter;
 import com.tmp.assigned.courses.microservice.repositories.AssignedCoursesRepository;
@@ -67,6 +68,14 @@ public class AssignedCoursesService {
                         coursesPort,
                         idCourse.toString()),
                 SuccessResponseCourse.class);
+    }
+
+    protected Integer countAssignedCoursesCompleted(Long idEmployee) {
+        return assignedCoursesRepository.countAssignedCoursesByIdEmployeeAndCompleted(idEmployee, true);
+    }
+
+    protected Integer countAssignedCoursesIncomplete(Long idEmployee) {
+        return assignedCoursesRepository.countAssignedCoursesByIdEmployeeAndCompleted(idEmployee, false);
     }
 
     /*
@@ -155,6 +164,20 @@ public class AssignedCoursesService {
                             .description(course.getDescription())
                             .build())
                     .collect(Collectors.toList());
+        } catch (HttpClientErrorException httpClientErrorException) {
+            throw new GenericException();
+        }
+    }
+
+    public CoursesStatisticsDTO getCoursesStatisticsReq(Long idEmployee) {
+        try {
+            // Check if the employee exists
+            SuccessResponseEmployee employee = getEmployeeById(idEmployee);
+
+            return CoursesStatisticsDTO.builder()
+                    .countAssignedCourses(countAssignedCoursesIncomplete(employee.getData().getId()))
+                    .countCompletedCourses(countAssignedCoursesCompleted(employee.getData().getId()))
+                    .build();
         } catch (HttpClientErrorException httpClientErrorException) {
             throw new GenericException();
         }

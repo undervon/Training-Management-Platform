@@ -14,4 +14,6 @@ public interface AssignedCoursesRepository  extends JpaRepository<AssignedCourse
     List<AssignedCourses> getAssignedCoursesByIdEmployeeAndCompleted(Long idEmployee, Boolean completed);
 
     AssignedCourses getAssignedCoursesByIdCourseAndIdEmployee(Long idCourse, Long idEmployee);
+
+    Integer countAssignedCoursesByIdEmployeeAndCompleted(Long idEmployee, Boolean completed);
 }

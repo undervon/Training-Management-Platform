@@ -1,6 +1,7 @@
 package com.tmp.assigned.courses.microservice.controllers;
 
 import com.tmp.assigned.courses.microservice.models.AssignCourseDTO;
+import com.tmp.assigned.courses.microservice.models.CoursesStatisticsDTO;
 import com.tmp.assigned.courses.microservice.models.CreateAssignCourseDTO;
 import com.tmp.assigned.courses.microservice.models.SuccessResponseDTO;
 import com.tmp.assigned.courses.microservice.services.AssignedCoursesService;
@@ -126,6 +127,28 @@ public class AssignedCoursesController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(SuccessResponseDTO.builder()
                         .data(assignedCoursesService.getIncompleteCoursesReq(idEmployee))
+                        .build());
+    }
+
+    @Operation(summary = "Get statistics from courses by idEmployee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CoursesStatisticsDTO.class))
+            }),
+            @ApiResponse(responseCode = "400",
+                    description = "BAD_REQUEST - if something wrong was done", content = @Content),
+    })
+    @CrossOrigin
+    @GetMapping(value = "/getCoursesStatistics/{idEmployee}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessResponseDTO<?>> getCoursesStatisticsReq(
+            @PathVariable(value = "idEmployee") Long idEmployee) {
+        log.info("[ {} ] -> [ {} ] -> [ getCoursesStatisticsReq ] idEmployee: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, idEmployee);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO.builder()
+                        .data(assignedCoursesService.getCoursesStatisticsReq(idEmployee))
                         .build());
     }
 }
