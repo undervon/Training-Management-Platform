@@ -2,6 +2,7 @@
 # Package image from .jar file
 #
 FROM adoptopenjdk/openjdk11
+EXPOSE 8091
 COPY target/send.email.microservice-0.0.1-SNAPSHOT.jar send.email.jar
 ENTRYPOINT ["java", "-jar", "/send.email.jar"]
 

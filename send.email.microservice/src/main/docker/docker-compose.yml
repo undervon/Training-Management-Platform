@@ -1,12 +1,12 @@
 version: "3.9"
 services:
-  app:
+  email:
     image: send-email-app
     container_name: Send_email_app
     build:
       context: .
     ports:
-      - 8091:8091
+      - "8091:8091"
     networks:
       - backend_network
 
