@@ -1,4 +1,4 @@
-package com.tmp.assigned.courses.microservice.models;
+package com.tmp.assigned.courses.microservice.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAssignCourseDTO {
+public class SuccessResponseCourse {
 
-    private Long idEmployee;
-    private Long idCourse;
+    private String status;
+    private Course data;
 }

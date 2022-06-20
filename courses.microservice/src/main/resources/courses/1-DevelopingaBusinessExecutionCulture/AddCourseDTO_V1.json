@@ -1,0 +1,10 @@
+{
+    "name": "Java Novice to Javanista",
+    "description": "Java is one of the most in-demand programming languages in the world and one of the two official programming languages used in Android development. Though Java is a pure object-oriented language, it has developed into a multi-paradigm language making it highly compliant to any situation. Developers familiar with Java can build a wide range of applications, games, and tools. If you are new to Java development, you may be a little apprehensive - how easy is Java to learn? This journey helps you get started with Java and it will take you all the way to becoming an accomplished Java developer! In this Journey, you will begin by exploring the roots and the significant features of Java and you will get a solid foundation with step-by-step hands-on code examples using JShell. In the second track, you will take a deep dive into the advanced features of Java - like exception handling, Generics, Lambdas, and Reflection. The second track concludes with a focus on building jar files for Java Libraries. In the final track you will learn database connectivity with Java as well as how to build web applications and web services in Java. In short, you will learn to write Java programs from scratch and become a confident Java developer.",
+    "language": "EN",
+    "requirements": "OOP principles",
+    "category": "Programming",
+	"duration": "66h 47m 15s",
+	"timeToMake": "6 months",
+	"containsCertificate": true
+}

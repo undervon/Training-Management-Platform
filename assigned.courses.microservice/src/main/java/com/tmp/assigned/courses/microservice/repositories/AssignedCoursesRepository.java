@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AssignedCoursesRepository  extends JpaRepository<AssignedCourses, Long> {
 
+    Boolean existsAssignedCoursesByIdCourseAndIdEmployee(Long idCourse, Long idEmployee);
 }

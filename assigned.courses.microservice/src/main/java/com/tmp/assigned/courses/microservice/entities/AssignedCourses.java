@@ -29,10 +29,9 @@ public class AssignedCourses {
     @Builder.Default
     private LocalDateTime date = LocalDateTime.now();
 
-    private String state;
-
     @Builder.Default
     private Boolean completed = false;
 
     private Long idEmployee;
+    private Long idCourse;
 }
