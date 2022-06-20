@@ -1,12 +1,12 @@
 version: "3.9"
 services:
-  app:
+  courses:
     image: courses-app
     container_name: Courses_app
     build:
       context: .
     ports:
-      - 8092:8092
+      - "8092:8092"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trainingManagementPlatform
     networks:
