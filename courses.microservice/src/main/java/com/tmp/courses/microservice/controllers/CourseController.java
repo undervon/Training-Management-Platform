@@ -92,20 +92,26 @@ public class CourseController {
 
     @Operation(summary = "Delete course by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
-                    content = @Content),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
                     content = @Content)
     })
     @CrossOrigin
     @DeleteMapping(value = "/deleteCourse/{id}")
-    public ResponseEntity<?> deleteCourseByIdReq(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<SuccessResponseDTO<?>> deleteCourseByIdReq(@PathVariable(value = "id") Long id) {
         log.info("[ {} ] -> [ {} ] -> [ deleteCourseById ] id: {}",
                 this.getClass().getSimpleName(), HttpMethod.DELETE, id);
 
         courseService.deleteCourseByIdReq(id);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("The course has been successfully deleted")
+                        .build());
     }
 
     @Operation(summary = "Get course by id")
@@ -179,20 +185,26 @@ public class CourseController {
 
     @Operation(summary = "Edite course partial by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "NO_CONTENT - if successful",
-                    content = @Content),
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
                     content = @Content)
     })
     @CrossOrigin
     @PutMapping(value = "/updateCourse/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateCourseByIdReq(@PathVariable(value = "id") Long id,
+    public ResponseEntity<SuccessResponseDTO<?>> updateCourseByIdReq(@PathVariable(value = "id") Long id,
             @RequestPart("editCourse") @Parameter(schema = @Schema(type = "string", format = "binary")) EditCourseDTO editCourseDTO) {
         log.info("[ {} ] -> [ {} ] -> [ updateCourseByIdReq ] id: {}",
-                this.getClass().getSimpleName(), HttpMethod.PATCH, id);
+                this.getClass().getSimpleName(), HttpMethod.PUT, id);
 
         courseService.updateCourseByIdReq(id, editCourseDTO);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("The course was partially edited successfully")
+                        .build());
     }
 }
