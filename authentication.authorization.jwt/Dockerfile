@@ -2,6 +2,7 @@
 # Package image from .jar file
 #
 FROM adoptopenjdk/openjdk11
+EXPOSE 8090
 COPY target/authentication.authorization.jwt-0.0.1-SNAPSHOT.jar 2auth.jwt.jar
 ENTRYPOINT ["java", "-jar", "/2auth.jwt.jar"]
 
