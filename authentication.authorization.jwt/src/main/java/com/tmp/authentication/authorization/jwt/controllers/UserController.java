@@ -85,7 +85,9 @@ public class UserController {
                     content = @Content)
     })
     @CrossOrigin
-    @PutMapping(value = "/editUser/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/editUser/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> editUserReq(
             @RequestPart("editUser") @Parameter(schema = @Schema(type = "string", format = "binary")) EditUserDTO editUserDTO,
             @RequestPart("image") MultipartFile image,
@@ -114,7 +116,7 @@ public class UserController {
                     content = @Content)
     })
     @CrossOrigin
-    @DeleteMapping(value = "/deleteUser/{id}")
+    @DeleteMapping(value = "/deleteUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> deleteUserReq(@PathVariable("id") Long id) {
         log.info("[ {} ] -> [ {} ] -> [ deleteUserReq ] id: {}",
                 this.getClass().getSimpleName(), HttpMethod.DELETE, id);
@@ -141,7 +143,9 @@ public class UserController {
                     content = @Content)
     })
     @CrossOrigin
-    @PutMapping(value = "/editRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/editRole/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> editRoleReq(@PathVariable("id") Long id,
             @RequestBody RoleDTO roleDTO) {
         log.info("[ {} ] -> [ {} ] -> [ editRoleReq ] id: {}, roleDTO: {}",
@@ -169,7 +173,9 @@ public class UserController {
                     content = @Content)
     })
     @CrossOrigin
-    @PutMapping(value = "/deleteRole/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/deleteRole/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> deleteRoleReq(@PathVariable("id") Long id,
             @RequestBody RoleDTO roleDTO) {
         log.info("[ {} ] -> [ {} ] -> [ deleteRoleReq ] id: {}, roleDTO: {}",
@@ -298,7 +304,9 @@ public class UserController {
                     + "[ the manager not found in DB ]", content = @Content)
     })
     @CrossOrigin
-    @PatchMapping(value = "/assignUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/assignUser",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> assignUserReq(@RequestBody AssignUserDTO assignUserDTO) {
         log.info("[ {} ] -> [ {} ] -> [ assignUserReq ] assignUserDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.PATCH, assignUserDTO);
