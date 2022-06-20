@@ -100,7 +100,7 @@ public class CourseController {
                     content = @Content)
     })
     @CrossOrigin
-    @DeleteMapping(value = "/deleteCourse/{id}")
+    @DeleteMapping(value = "/deleteCourse/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> deleteCourseByIdReq(@PathVariable(value = "id") Long id) {
         log.info("[ {} ] -> [ {} ] -> [ deleteCourseById ] id: {}",
                 this.getClass().getSimpleName(), HttpMethod.DELETE, id);
@@ -193,7 +193,9 @@ public class CourseController {
                     content = @Content)
     })
     @CrossOrigin
-    @PutMapping(value = "/updateCourse/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/updateCourse/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> updateCourseByIdReq(@PathVariable(value = "id") Long id,
             @RequestPart("editCourse") @Parameter(schema = @Schema(type = "string", format = "binary")) EditCourseDTO editCourseDTO) {
         log.info("[ {} ] -> [ {} ] -> [ updateCourseByIdReq ] id: {}",
