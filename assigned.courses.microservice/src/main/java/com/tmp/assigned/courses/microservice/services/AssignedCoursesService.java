@@ -11,6 +11,7 @@ import com.tmp.assigned.courses.microservice.vo.SuccessResponseCourse;
 import com.tmp.assigned.courses.microservice.vo.SuccessResponseEmployee;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -23,6 +24,18 @@ public class AssignedCoursesService {
     private final AssignedCoursesRepository assignedCoursesRepository;
 
     private final RestTemplate restTemplate;
+
+    @Value("${auth.path}")
+    private String authPath;
+
+    @Value("${auth.port}")
+    private String authPort;
+
+    @Value("${courses.path}")
+    private String coursesPath;
+
+    @Value("${courses.port}")
+    private String coursesPort;
 
     /*
         AssignedCoursesService methods
@@ -37,13 +50,18 @@ public class AssignedCoursesService {
         try {
             SuccessResponseEmployee employee =
                     restTemplate.getForObject(
-                            "http://localhost:8090/api/1.0/tmp/auth/getUser/" + createAssignCourseDTO.getIdEmployee(),
+                            String.format("http://%s:%s/api/1.0/tmp/auth/getUser/%s",
+                                    authPath,
+                                    authPort,
+                                    createAssignCourseDTO.getIdEmployee().toString()),
                             SuccessResponseEmployee.class);
 
             SuccessResponseCourse course =
                     restTemplate.getForObject(
-                            "http://localhost:8092/api/1.0/tmp/courses/getCourse/"
-                                    + createAssignCourseDTO.getIdCourse(),
+                            String.format("http://%s:%s/api/1.0/tmp/courses/getCourse/%s",
+                                    coursesPath,
+                                    coursesPort,
+                                    createAssignCourseDTO.getIdCourse().toString()),
                             SuccessResponseCourse.class);
 
             Long idEmployee = employee.getData().getId();
