@@ -4,12 +4,12 @@
         <meta charset="UTF-8"/>
         <title>Certificate of Completion</title>
         <style>
-            @page {
+            body {
                 margin: 0;
             }
 
-            body {
-                margin: 0;
+            h1 {
+                color: yellow;
             }
 
             .sheet {
@@ -21,13 +21,11 @@
                 background: rgba(240, 240, 240, 1);
             }
 
-            /** Paper sizes **/
             body.A4 .sheet {
                 width: 210mm;
                 height: 297mm;
             }
 
-            /** Padding area **/
             .sheet.padding-0mm {
                 padding: 0;
             }
@@ -37,7 +35,7 @@
                 z-index: 1;
                 margin-left: 40px;
                 width: 255px;
-                height: 128px;
+                height: auto;
             }
 
             .upper-image {
@@ -46,6 +44,7 @@
                 margin-right: auto;
                 width: 150mm;
                 margin-top: 20px;
+                opacity: 0.5;
             }
 
             .wrapper-container {
@@ -111,6 +110,7 @@
                 display: flex;
                 flex-direction: row;
                 justify-content: center;
+                font-weight: 700;
             }
 
             .employee-name div:first-of-type {
@@ -119,38 +119,20 @@
 
             .course-name {
                 color: rgba(255, 165, 0, 1);
-            }
-
-            /** For screen preview **/
-            @media screen {
-                body {
-                    background: #e0e0e0;
-                }
-
-                .sheet {
-                    box-shadow: 0 .5mm 2mm rgba(0, 0, 0, .3);
-                    margin: 5mm auto;
-                }
-            }
-
-            /** Fix for Chrome issue #273306 **/
-            @media print {
-                body.A4 {
-                    width: 210mm;
-                }
+                font-weight: 700;
             }
         </style>
     </head>
     <body class="A4">
     <section class="sheet padding-0mm">
         <img class="logo-image"
-             src=""/>
+             src="https://cdn.continental.com/fileadmin/_processed_/3/b/csm_continental_20logo-1920x1080_247d99d89e.png" />
         <div class="wrapper-container">
             <img class="upper-image"
-                 src=""/>
+                 src="https://cdn.continental.com/fileadmin/_processed_/3/b/csm_continental_20logo-1920x1080_247d99d89e.png" />
             <div class="details-container">
                 <div class="marquee-container">
-                    <span>Certificate of Completion</span>
+                    <h1>Certificate of Completion</h1>
                 </div>
                 <div class="assignment-container">
                     <span class="detail-text">This certificate is presented to</span>
@@ -165,15 +147,15 @@
                         </div>
                     </div>
                     <span class="detail-text">identified by</span>
-                        <th:block th:text="${employeeNumber}" class="emphasized-text">ID12345</th:block>
+                    <th:block th:text="${employeeNumber}" class="emphasized-text">ID12345</th:block>
                 </div>
                 <div class="reason-container">
                     <span class="detail-text">for successfully completing the</span>
                     <div class="course-name"><span class="emphasized-text">
-                        <th:block th:text="${courseName}">Java Novice to Javanista</th:block>
-                        Course of
-                        <th:block th:text="${courseCategory}">Programming</th:block>
-                    </span></div>
+                            <th:block th:text="${courseName}">Java Novice to Javanista</th:block>
+                            Course of
+                            <th:block th:text="${courseCategory}">Programming</th:block>
+                        </span></div>
                     <span class="detail-text">on the day of <th:block th:text="${courseCompletedDate}">15.06.2022</th:block>
                     </span>
                 </div>
