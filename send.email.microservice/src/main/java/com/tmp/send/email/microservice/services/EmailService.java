@@ -177,7 +177,7 @@ public class EmailService {
     public void sendEmailCourseCompletedManagerReq(EmailCourseCompletedManagerDTO emailCourseCompletedManagerDTO,
             String template) {
         LocalDateTime startDate = emailCourseCompletedManagerDTO.getCourseStartDate();
-        LocalDateTime endDate = emailCourseCompletedManagerDTO.getCourseCompletionDate();
+        LocalDateTime endDate = LocalDateTime.now();
 
         String courseCompletionInterval = generatingDifferenceBetweenTwoDate(startDate, endDate);
 
@@ -209,7 +209,7 @@ public class EmailService {
     public void sendEmailCourseCompletedEmployeeReq(EmailCourseCompletedEmployeeDTO emailCourseCompletedEmployeeDTO,
             String template) {
         LocalDateTime startDate = emailCourseCompletedEmployeeDTO.getCourseStartDate();
-        LocalDateTime endDate = emailCourseCompletedEmployeeDTO.getCourseCompletionDate();
+        LocalDateTime endDate = LocalDateTime.now();
 
         String courseCompletionInterval = generatingDifferenceBetweenTwoDate(startDate, endDate);
 

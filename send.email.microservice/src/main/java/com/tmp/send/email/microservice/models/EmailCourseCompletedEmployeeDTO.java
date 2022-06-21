@@ -25,8 +25,4 @@ public class EmailCourseCompletedEmployeeDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy - HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy - HH:mm:ss")
     private LocalDateTime courseStartDate;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy - HH:mm:ss")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "dd.MM.yyyy - HH:mm:ss")
-    private LocalDateTime courseCompletionDate;
 }
