@@ -3,6 +3,7 @@ package com.tmp.assigned.courses.microservice.controllers;
 import com.tmp.assigned.courses.microservice.models.AssignCourseDTO;
 import com.tmp.assigned.courses.microservice.models.CoursesStatisticsDTO;
 import com.tmp.assigned.courses.microservice.models.CreateAssignCourseDTO;
+import com.tmp.assigned.courses.microservice.models.GetAssignCourseDTO;
 import com.tmp.assigned.courses.microservice.models.SuccessResponseDTO;
 import com.tmp.assigned.courses.microservice.services.AssignedCoursesService;
 import com.tmp.assigned.courses.microservice.vo.CompactedCourse;
@@ -149,6 +150,30 @@ public class AssignedCoursesController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(SuccessResponseDTO.builder()
                         .data(assignedCoursesService.getCoursesStatisticsReq(idEmployee))
+                        .build());
+    }
+
+    @Operation(summary = "Get assigned course properties by idEmployee and idCourse")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GetAssignCourseDTO.class))
+            }),
+            @ApiResponse(responseCode = "400",
+                    description = "BAD_REQUEST - if something wrong was done", content = @Content),
+    })
+    @CrossOrigin
+    @GetMapping(value = "/getAssignedCourseProperties/{idEmployee}/{idCourse}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessResponseDTO<?>> getAssignedCoursePropertiesReq(
+            @PathVariable(value = "idEmployee") Long idEmployee,
+            @PathVariable(value = "idCourse") Long idCourse) {
+        log.info("[ {} ] -> [ {} ] -> [ getAssignedCoursePropertiesReq ] idEmployee: {}, idCourse: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, idEmployee, idCourse);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO.builder()
+                        .data(assignedCoursesService.getAssignedCoursePropertiesReq(idEmployee, idCourse))
                         .build());
     }
 }

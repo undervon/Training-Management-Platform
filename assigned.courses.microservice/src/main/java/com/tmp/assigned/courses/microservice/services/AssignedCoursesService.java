@@ -6,6 +6,7 @@ import com.tmp.assigned.courses.microservice.exceptions.GenericException;
 import com.tmp.assigned.courses.microservice.models.AssignCourseDTO;
 import com.tmp.assigned.courses.microservice.models.CoursesStatisticsDTO;
 import com.tmp.assigned.courses.microservice.models.CreateAssignCourseDTO;
+import com.tmp.assigned.courses.microservice.models.GetAssignCourseDTO;
 import com.tmp.assigned.courses.microservice.models.adapters.AssignedCourseAdapter;
 import com.tmp.assigned.courses.microservice.repositories.AssignedCoursesRepository;
 import com.tmp.assigned.courses.microservice.vo.CompactedCourse;
@@ -177,6 +178,29 @@ public class AssignedCoursesService {
             return CoursesStatisticsDTO.builder()
                     .countAssignedCourses(countAssignedCoursesIncomplete(employee.getData().getId()))
                     .countCompletedCourses(countAssignedCoursesCompleted(employee.getData().getId()))
+                    .build();
+        } catch (HttpClientErrorException httpClientErrorException) {
+            throw new GenericException();
+        }
+    }
+
+    public GetAssignCourseDTO getAssignedCoursePropertiesReq(Long idEmployee, Long idCourse) {
+        try {
+            SuccessResponseEmployee employee = getEmployeeById(idEmployee);
+
+            SuccessResponseCourse course = getCourseById(idCourse);
+
+            Long rightIdEmployee = employee.getData().getId();
+            Long rightIdCourse = course.getData().getId();
+
+            AssignedCourses assignedCourses = assignedCoursesRepository.getAssignedCoursesByIdCourseAndIdEmployee(
+                    rightIdCourse,
+                    rightIdEmployee);
+
+            return GetAssignCourseDTO.builder()
+                    .id(assignedCourses.getId())
+                    .completed(assignedCourses.getCompleted())
+                    .date(assignedCourses.getDate())
                     .build();
         } catch (HttpClientErrorException httpClientErrorException) {
             throw new GenericException();
