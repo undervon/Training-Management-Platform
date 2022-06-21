@@ -2,6 +2,7 @@ package com.tmp.authentication.authorization.jwt.controllers;
 
 import com.tmp.authentication.authorization.jwt.models.AssignUserDTO;
 import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
+import com.tmp.authentication.authorization.jwt.models.ManagerDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
 import com.tmp.authentication.authorization.jwt.models.SuccessResponseDTO;
@@ -317,6 +318,28 @@ public class UserController {
                 .body(SuccessResponseDTO
                         .builder()
                         .data("User successfully assigned to manager")
+                        .build());
+    }
+
+    @Operation(summary = "Get manager by employee id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ManagerDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if [ the user not found in DB ] OR " +
+                    "[ the manager not found in DB ]",
+                    content = @Content)
+    })
+    @CrossOrigin
+    @GetMapping(value = "/getUserManager/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessResponseDTO<?>> getUserManagerByIdEmployeeReq(@PathVariable("id") Long id) {
+        log.info("[ {} ] -> [ {} ] -> [ getUserManagerByIdEmployeeReq ] id: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, id);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.getUserManagerByIdEmployeeReq(id))
                         .build());
     }
 }

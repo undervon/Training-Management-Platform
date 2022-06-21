@@ -16,6 +16,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsExce
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.AssignUserDTO;
 import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
+import com.tmp.authentication.authorization.jwt.models.ManagerDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
 import com.tmp.authentication.authorization.jwt.models.UserDTO;
 import com.tmp.authentication.authorization.jwt.models.adapters.UserAdapter;
@@ -100,6 +101,11 @@ public class UserService {
 
     protected Manager getManagerByUsername(String username) {
         return managerRepository.getManagerByEmail(username);
+    }
+
+    protected Manager findManagerById(Long id) {
+        return managerRepository.findManagerById(id)
+                .orElseThrow(() -> new ManagerNotFoundException(id.toString()));
     }
 
     protected boolean existsManagerByUsername(String username) {
@@ -357,5 +363,28 @@ public class UserService {
         userToBeAssigned.setManager(manager);
 
         userRepository.save(userToBeAssigned);
+    }
+
+    @Transactional
+    public ManagerDTO getUserManagerByIdEmployeeReq(Long id) {
+        User user = findUserById(id);
+
+        Manager manager = findManagerById(user.getManager().getId());
+
+        User managerAttributes = getUserByUsername(manager.getEmail());
+
+        if (managerAttributes == null) {
+            return ManagerDTO.builder()
+                    .id(0L)
+                    .firstName("Manager")
+                    .email(managerGenericUsername)
+                    .build();
+        }
+
+        return ManagerDTO.builder()
+                .id(managerAttributes.getId())
+                .firstName(managerAttributes.getFirstName())
+                .email(managerAttributes.getEmail())
+                .build();
     }
 }

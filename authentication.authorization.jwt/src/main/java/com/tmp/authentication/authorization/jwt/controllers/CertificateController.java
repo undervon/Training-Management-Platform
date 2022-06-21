@@ -37,7 +37,7 @@ public class CertificateController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "CREATED - if successful", content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = CreateCertificateDTO.class))
+                            schema = @Schema(implementation = CertificateDTO.class))
             }),
             @ApiResponse(responseCode = "404",
                     description = "NOT_FOUND - if the user not found in DB", content = @Content),
