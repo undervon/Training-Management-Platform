@@ -78,15 +78,16 @@ public class CourseController {
             })
     })
     @CrossOrigin
-    @GetMapping(value = "/getCourses", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getCourses/{idEmployee}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> getCoursesByCategoryParamReq(
-            @RequestParam(name = "category") String category) {
-        log.info("[ {} ] -> [ {} ] -> [ getCoursesByCategoryParamReq ] category: {}",
-                this.getClass().getSimpleName(), HttpMethod.GET, category);
+            @RequestParam(name = "category") String category,
+            @PathVariable(name = "idEmployee") Long idEmployee) {
+        log.info("[ {} ] -> [ {} ] -> [ getCoursesByCategoryParamReq ] category: {}, idEmployee: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, category, idEmployee);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(SuccessResponseDTO.builder()
-                        .data(courseService.getCoursesByCategoryParamReq(category))
+                        .data(courseService.getCoursesByCategoryParamReq(category, idEmployee))
                         .build());
     }
 

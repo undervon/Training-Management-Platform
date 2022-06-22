@@ -39,6 +39,8 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+
+    // HMI, VNI, ADAS, PSS
     private String department;
     private String employeeNumber;
 

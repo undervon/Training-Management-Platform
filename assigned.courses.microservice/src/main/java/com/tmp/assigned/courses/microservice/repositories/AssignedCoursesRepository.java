@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AssignedCoursesRepository  extends JpaRepository<AssignedCourses, Long> {
@@ -13,7 +14,7 @@ public interface AssignedCoursesRepository  extends JpaRepository<AssignedCourse
 
     List<AssignedCourses> getAssignedCoursesByIdEmployeeAndCompleted(Long idEmployee, Boolean completed);
 
-    AssignedCourses getAssignedCoursesByIdCourseAndIdEmployee(Long idCourse, Long idEmployee);
+    Optional<AssignedCourses> findAssignedCoursesByIdCourseAndIdEmployee(Long idCourse, Long idEmployee);
 
     Integer countAssignedCoursesByIdEmployeeAndCompleted(Long idEmployee, Boolean completed);
 }

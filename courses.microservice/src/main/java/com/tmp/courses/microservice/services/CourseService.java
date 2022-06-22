@@ -2,6 +2,7 @@ package com.tmp.courses.microservice.services;
 
 import com.tmp.courses.microservice.entities.Course;
 import com.tmp.courses.microservice.exceptions.CourseNotFoundException;
+import com.tmp.courses.microservice.exceptions.GenericException;
 import com.tmp.courses.microservice.exceptions.StorageException;
 import com.tmp.courses.microservice.models.AddCourseDTO;
 import com.tmp.courses.microservice.models.CourseDTO;
@@ -12,6 +13,8 @@ import com.tmp.courses.microservice.models.GetCourseDTO;
 import com.tmp.courses.microservice.models.adapters.CourseAdapter;
 import com.tmp.courses.microservice.repositories.CourseRepository;
 import com.tmp.courses.microservice.repositories.SurveyRepository;
+import com.tmp.courses.microservice.vo.CompactedCourse;
+import com.tmp.courses.microservice.vo.SuccessResponseCompactedCourse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +22,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -29,6 +34,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -42,15 +48,49 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final SurveyRepository surveyRepository;
 
+    private final RestTemplate restTemplate;
+
     @Value("${courses.path}")
     private String coursesPath;
 
     @Value("${api.path}")
     private String apiPath;
 
+    @Value("${auth.path}")
+    private String assignedPath;
+
+    @Value("${auth.port}")
+    private String assignedPort;
+
     /*
         CourseService methods
      */
+    protected SuccessResponseCompactedCourse getCompletedCoursesByIdEmployee(Long idEmployee) {
+        try {
+            return restTemplate.getForObject(
+                    String.format("http://%s:%s/api/1.0/tmp/assigned/courses/getCompletedCourses/%s",
+                            assignedPath,
+                            assignedPort,
+                            idEmployee.toString()),
+                    SuccessResponseCompactedCourse.class);
+        } catch (HttpClientErrorException httpClientErrorException) {
+            throw new GenericException();
+        }
+    }
+
+    protected SuccessResponseCompactedCourse getIncompleteCoursesByIdEmployee(Long idEmployee) {
+        try {
+            return restTemplate.getForObject(
+                    String.format("http://%s:%s/api/1.0/tmp/assigned/courses/getIncompleteCourses/%s",
+                            assignedPath,
+                            assignedPort,
+                            idEmployee.toString()),
+                    SuccessResponseCompactedCourse.class);
+        } catch (HttpClientErrorException httpClientErrorException) {
+            throw new GenericException();
+        }
+    }
+
     private void init(String uploadPath) {
         try {
             Files.createDirectories(Paths.get(uploadPath));
@@ -220,8 +260,42 @@ public class CourseService {
         return CourseAdapter.courseToCourseDTO(course);
     }
 
-    public List<CoursesCategoryDTO> getCoursesByCategoryParamReq(String category) {
+    public List<CoursesCategoryDTO> getCoursesByCategoryParamReq(String category, Long idEmployee) {
         List<Course> courses = courseRepository.getCoursesByCategory(category);
+
+        SuccessResponseCompactedCourse successResponseCompactedCourseIncomplete = getIncompleteCoursesByIdEmployee(
+                idEmployee);
+        List<Long> incompleteIdList = successResponseCompactedCourseIncomplete.getData().stream()
+                .map(CompactedCourse::getId)
+                .collect(Collectors.toList());
+        SuccessResponseCompactedCourse successResponseCompactedCourseCompleted = getCompletedCoursesByIdEmployee(
+                idEmployee);
+        List<Long> completedIdList = successResponseCompactedCourseCompleted.getData().stream()
+                .map(CompactedCourse::getId)
+                .collect(Collectors.toList());
+
+        List<Course> courseList = new ArrayList<>();
+        courses.forEach(course -> {
+            if (incompleteIdList.contains(course.getId()) || completedIdList.contains(course.getId())) {
+                courseList.add(Course.builder()
+                        .id(course.getId())
+                        .name(course.getName())
+                        .description(course.getDescription())
+                        .language(course.getLanguage())
+                        .requirements(course.getRequirements())
+                        .category(course.getCategory())
+                        .rating(course.getRating())
+                        .ratedNumber(course.getRatedNumber())
+                        .date(course.getDate())
+                        .duration(course.getDuration())
+                        .timeToMake(course.getTimeToMake())
+                        .path(course.getPath())
+                        .containsCertificate(course.getContainsCertificate())
+                        .build());
+            }
+        });
+
+        courses.removeAll(courseList);
 
         return courses.stream()
                 .map(course -> CoursesCategoryDTO.builder()

@@ -161,6 +161,8 @@ public class AssignedCoursesController {
             }),
             @ApiResponse(responseCode = "400",
                     description = "BAD_REQUEST - if something wrong was done", content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "NOT_FOUND - if the employee course assigned does not exist", content = @Content)
     })
     @CrossOrigin
     @GetMapping(value = "/getAssignedCourseProperties/{idEmployee}/{idCourse}",

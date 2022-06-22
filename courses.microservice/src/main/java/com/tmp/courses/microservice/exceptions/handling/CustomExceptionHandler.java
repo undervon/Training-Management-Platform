@@ -1,6 +1,7 @@
 package com.tmp.courses.microservice.exceptions.handling;
 
 import com.tmp.courses.microservice.exceptions.CourseNotFoundException;
+import com.tmp.courses.microservice.exceptions.GenericException;
 import com.tmp.courses.microservice.exceptions.RoleDoesNotExistException;
 import com.tmp.courses.microservice.exceptions.StorageException;
 import com.tmp.courses.microservice.models.ExceptionResponseDTO;
@@ -47,6 +48,17 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ExceptionResponseDTO.builder()
                         .message(String.format("The role '%s' does not exist", roleDoesNotExistException.getMessage()))
+                        .build());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(GenericException.class)
+    public ResponseEntity<ExceptionResponseDTO> genericExceptionHandler() {
+        log.error("thrown GenericException");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ExceptionResponseDTO.builder()
+                        .message("Something wrong was done")
                         .build());
     }
 }

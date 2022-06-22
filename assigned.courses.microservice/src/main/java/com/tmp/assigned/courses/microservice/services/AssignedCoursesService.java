@@ -2,6 +2,7 @@ package com.tmp.assigned.courses.microservice.services;
 
 import com.tmp.assigned.courses.microservice.entities.AssignedCourses;
 import com.tmp.assigned.courses.microservice.exceptions.CourseAlreadyAssignedException;
+import com.tmp.assigned.courses.microservice.exceptions.EmployeeCourseNotFoundException;
 import com.tmp.assigned.courses.microservice.exceptions.GenericException;
 import com.tmp.assigned.courses.microservice.models.AssignCourseDTO;
 import com.tmp.assigned.courses.microservice.models.CoursesStatisticsDTO;
@@ -56,19 +57,27 @@ public class AssignedCoursesService {
     }
 
     protected SuccessResponseEmployee getEmployeeById(Long idEmployee) {
-        return restTemplate.getForObject(String.format("http://%s:%s/api/1.0/tmp/auth/getUser/%s",
-                        authPath,
-                        authPort,
-                        idEmployee.toString()),
-                SuccessResponseEmployee.class);
+        try {
+            return restTemplate.getForObject(String.format("http://%s:%s/api/1.0/tmp/auth/getUser/%s",
+                            authPath,
+                            authPort,
+                            idEmployee.toString()),
+                    SuccessResponseEmployee.class);
+        } catch (HttpClientErrorException httpClientErrorException) {
+            throw new GenericException();
+        }
     }
 
     protected SuccessResponseCourse getCourseById(Long idCourse) {
-        return restTemplate.getForObject(String.format("http://%s:%s/api/1.0/tmp/courses/getCourse/%s",
-                        coursesPath,
-                        coursesPort,
-                        idCourse.toString()),
-                SuccessResponseCourse.class);
+        try {
+            return restTemplate.getForObject(String.format("http://%s:%s/api/1.0/tmp/courses/getCourse/%s",
+                            coursesPath,
+                            coursesPort,
+                            idCourse.toString()),
+                    SuccessResponseCourse.class);
+        } catch (HttpClientErrorException httpClientErrorException) {
+            throw new GenericException();
+        }
     }
 
     protected Integer countAssignedCoursesCompleted(Long idEmployee) {
@@ -83,127 +92,105 @@ public class AssignedCoursesService {
         Methods from AssignedCoursesController
      */
     public AssignCourseDTO assignUserCourseReq(CreateAssignCourseDTO createAssignCourseDTO) {
-        try {
-            SuccessResponseEmployee employee = getEmployeeById(createAssignCourseDTO.getIdEmployee());
+        SuccessResponseEmployee employee = getEmployeeById(createAssignCourseDTO.getIdEmployee());
 
-            SuccessResponseCourse course = getCourseById(createAssignCourseDTO.getIdCourse());
+        SuccessResponseCourse course = getCourseById(createAssignCourseDTO.getIdCourse());
 
-            Long idEmployee = employee.getData().getId();
-            Long idCourse = course.getData().getId();
+        Long idEmployee = employee.getData().getId();
+        Long idCourse = course.getData().getId();
 
-            if (assignedCoursesRepository.existsAssignedCoursesByIdCourseAndIdEmployee(idCourse, idEmployee)) {
-                throw new CourseAlreadyAssignedException(idCourse.toString());
-            }
-
-            AssignedCourses assignedCourses = AssignedCourses.builder()
-                    .idEmployee(idEmployee)
-                    .idCourse(idCourse)
-                    .build();
-
-            return AssignedCourseAdapter.assignedCourseToAssignCourseDTO(
-                    assignedCoursesRepository.save(assignedCourses));
-        } catch (HttpClientErrorException httpClientErrorException) {
-            throw new GenericException();
+        if (assignedCoursesRepository.existsAssignedCoursesByIdCourseAndIdEmployee(idCourse, idEmployee)) {
+            throw new CourseAlreadyAssignedException(idCourse.toString());
         }
+
+        AssignedCourses assignedCourses = AssignedCourses.builder()
+                .idEmployee(idEmployee)
+                .idCourse(idCourse)
+                .build();
+
+        return AssignedCourseAdapter.assignedCourseToAssignCourseDTO(
+                assignedCoursesRepository.save(assignedCourses));
     }
 
     public void setCompletedCourseReq(CreateAssignCourseDTO createAssignCourseDTO) {
-        try {
-            SuccessResponseCourse course = getCourseById(createAssignCourseDTO.getIdCourse());
-            SuccessResponseEmployee employee = getEmployeeById(createAssignCourseDTO.getIdEmployee());
+        SuccessResponseCourse course = getCourseById(createAssignCourseDTO.getIdCourse());
+        SuccessResponseEmployee employee = getEmployeeById(createAssignCourseDTO.getIdEmployee());
 
-            AssignedCourses assignedCourses = assignedCoursesRepository.getAssignedCoursesByIdCourseAndIdEmployee(
-                    course.getData().getId(),
-                    employee.getData().getId());
+        AssignedCourses assignedCourses = assignedCoursesRepository.findAssignedCoursesByIdCourseAndIdEmployee(
+                        course.getData().getId(),
+                        employee.getData().getId())
+                .orElseThrow(() -> new EmployeeCourseNotFoundException(course.getData().getId().toString()));
 
-            assignedCourses.setCompleted(true);
+        assignedCourses.setCompleted(true);
 
-            assignedCoursesRepository.save(assignedCourses);
-        } catch (HttpClientErrorException httpClientErrorException) {
-            throw new GenericException();
-        }
+        assignedCoursesRepository.save(assignedCourses);
     }
 
     public List<CompactedCourse> getCompletedCoursesReq(Long idEmployee) {
-        try {
-            // Check if the employee exists
-            getEmployeeById(idEmployee);
+        // Check if the employee exists
+        getEmployeeById(idEmployee);
 
-            List<AssignedCourses> assignedCoursesList = getAssignedCoursesCompleted(idEmployee);
+        List<AssignedCourses> assignedCoursesList = getAssignedCoursesCompleted(idEmployee);
 
-            List<Course> courseList = assignedCoursesList.stream()
-                    .map(assignedCourses -> getCourseById(assignedCourses.getIdCourse()).getData())
-                    .collect(Collectors.toList());
+        List<Course> courseList = assignedCoursesList.stream()
+                .map(assignedCourses -> getCourseById(assignedCourses.getIdCourse()).getData())
+                .collect(Collectors.toList());
 
-            return courseList.stream()
-                    .map(course -> CompactedCourse.builder()
-                            .id(course.getId())
-                            .name(course.getName())
-                            .description(course.getDescription())
-                            .build())
-                    .collect(Collectors.toList());
-        } catch (HttpClientErrorException httpClientErrorException) {
-            throw new GenericException();
-        }
+        return courseList.stream()
+                .map(course -> CompactedCourse.builder()
+                        .id(course.getId())
+                        .name(course.getName())
+                        .description(course.getDescription())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public List<CompactedCourse> getIncompleteCoursesReq(Long idEmployee) {
-        try {
-            // Check if the employee exists
-            getEmployeeById(idEmployee);
+        // Check if the employee exists
+        getEmployeeById(idEmployee);
 
-            List<AssignedCourses> assignedCoursesList = getAssignedCoursesIncomplete(idEmployee);
+        List<AssignedCourses> assignedCoursesList = getAssignedCoursesIncomplete(idEmployee);
 
-            List<Course> courseList = assignedCoursesList.stream()
-                    .map(assignedCourses -> getCourseById(assignedCourses.getIdCourse()).getData())
-                    .collect(Collectors.toList());
+        List<Course> courseList = assignedCoursesList.stream()
+                .map(assignedCourses -> getCourseById(assignedCourses.getIdCourse()).getData())
+                .collect(Collectors.toList());
 
-            return courseList.stream()
-                    .map(course -> CompactedCourse.builder()
-                            .id(course.getId())
-                            .name(course.getName())
-                            .description(course.getDescription())
-                            .build())
-                    .collect(Collectors.toList());
-        } catch (HttpClientErrorException httpClientErrorException) {
-            throw new GenericException();
-        }
+        return courseList.stream()
+                .map(course -> CompactedCourse.builder()
+                        .id(course.getId())
+                        .name(course.getName())
+                        .description(course.getDescription())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public CoursesStatisticsDTO getCoursesStatisticsReq(Long idEmployee) {
-        try {
-            // Check if the employee exists
-            SuccessResponseEmployee employee = getEmployeeById(idEmployee);
+        // Check if the employee exists
+        SuccessResponseEmployee employee = getEmployeeById(idEmployee);
 
-            return CoursesStatisticsDTO.builder()
-                    .countAssignedCourses(countAssignedCoursesIncomplete(employee.getData().getId()))
-                    .countCompletedCourses(countAssignedCoursesCompleted(employee.getData().getId()))
-                    .build();
-        } catch (HttpClientErrorException httpClientErrorException) {
-            throw new GenericException();
-        }
+        return CoursesStatisticsDTO.builder()
+                .countAssignedCourses(countAssignedCoursesIncomplete(employee.getData().getId()))
+                .countCompletedCourses(countAssignedCoursesCompleted(employee.getData().getId()))
+                .build();
     }
 
     public GetAssignCourseDTO getAssignedCoursePropertiesReq(Long idEmployee, Long idCourse) {
-        try {
-            SuccessResponseEmployee employee = getEmployeeById(idEmployee);
+        SuccessResponseEmployee employee = getEmployeeById(idEmployee);
 
-            SuccessResponseCourse course = getCourseById(idCourse);
+        SuccessResponseCourse course = getCourseById(idCourse);
 
-            Long rightIdEmployee = employee.getData().getId();
-            Long rightIdCourse = course.getData().getId();
+        Long rightIdEmployee = employee.getData().getId();
+        Long rightIdCourse = course.getData().getId();
 
-            AssignedCourses assignedCourses = assignedCoursesRepository.getAssignedCoursesByIdCourseAndIdEmployee(
-                    rightIdCourse,
-                    rightIdEmployee);
+        AssignedCourses assignedCourses = assignedCoursesRepository.findAssignedCoursesByIdCourseAndIdEmployee(
+                        rightIdCourse,
+                        rightIdEmployee)
+                .orElseThrow(() -> new EmployeeCourseNotFoundException(rightIdCourse.toString()));
 
-            return GetAssignCourseDTO.builder()
-                    .id(assignedCourses.getId())
-                    .completed(assignedCourses.getCompleted())
-                    .date(assignedCourses.getDate())
-                    .build();
-        } catch (HttpClientErrorException httpClientErrorException) {
-            throw new GenericException();
-        }
+        return GetAssignCourseDTO.builder()
+                .id(assignedCourses.getId())
+                .completed(assignedCourses.getCompleted())
+                .date(assignedCourses.getDate())
+                .build();
     }
 }
