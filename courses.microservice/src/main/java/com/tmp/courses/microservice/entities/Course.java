@@ -31,15 +31,9 @@ public class Course {
     @Column(length = 10000)
     private String description;
 
-    // EN, RO
     private String language;
     private String requirements;
 
-//    Business Operations,
-//    Engineering,
-//    Management,
-//    Programming,
-//    Sales and Marketing
     private String category;
 
     @Builder.Default
