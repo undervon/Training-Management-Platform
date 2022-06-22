@@ -1,5 +1,6 @@
 package com.tmp.authentication.authorization.jwt.services;
 
+import com.tmp.authentication.authorization.jwt.entities.Certificate;
 import com.tmp.authentication.authorization.jwt.entities.Manager;
 import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
@@ -23,6 +24,7 @@ import com.tmp.authentication.authorization.jwt.models.adapters.UserAdapter;
 import com.tmp.authentication.authorization.jwt.models.adapters.UserRoleAdapter;
 import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import com.tmp.authentication.authorization.jwt.models.AddUserDTO;
+import com.tmp.authentication.authorization.jwt.repositories.CertificateRepository;
 import com.tmp.authentication.authorization.jwt.repositories.ManagerRepository;
 import com.tmp.authentication.authorization.jwt.repositories.RoleRepository;
 import com.tmp.authentication.authorization.jwt.repositories.UserRepository;
@@ -33,12 +35,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -50,11 +56,15 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
     private final ManagerRepository managerRepository;
+    private final CertificateRepository certificateRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${api.path}")
     private String apiPath;
+
+    @Value("${certificates.path}")
+    private String certificatesPath;
 
     @Value("${user.manager-generic.email}")
     private String managerGenericUsername;
@@ -62,6 +72,12 @@ public class UserService {
     /*
         UserService methods
      */
+
+    protected void delete(File coursePath) {
+        FileSystemUtils.deleteRecursively(Paths.get(coursePath.toString())
+                .toFile());
+    }
+
     protected User findUserByUsername(String username) {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
@@ -222,12 +238,23 @@ public class UserService {
         User user = findUserById(id);
 
         // Create a role list of roles with user roles
-        final List<Role> roles = user.getRoles().stream()
+        List<Role> roles = user.getRoles().stream()
                 .map(role -> getRoleByRoleValue(role.getRoleValue()))
                 .collect(Collectors.toList());
 
         if (roles.size() == 1 && roles.get(0).getRoleValue() == RoleValue.ADMIN) {
             throw new UnableToDeleteUserException();
+        }
+
+        user.setRoles(null);
+
+        List<Certificate> certificateList = certificateRepository.getCertificatesByUsersIn(Set.of(user));
+        if (certificateList != null) {
+            certificateList.forEach(certificate -> {
+                File certificatePath = new File(certificatesPath, certificate.getName() + ".pdf");
+                delete(certificatePath);
+            });
+            certificateRepository.deleteAll(certificateList);
         }
 
         // Checking if the user is a MANAGER; if it is,
@@ -243,8 +270,6 @@ public class UserService {
 
             managerRepository.delete(manager);
         }
-
-        user.setRoles(null);
 
         userRepository.delete(user);
     }
