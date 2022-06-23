@@ -5,6 +5,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
 import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
+import com.tmp.authentication.authorization.jwt.exceptions.PasswordException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.StorageException;
@@ -187,6 +188,17 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
                 .body(ExceptionResponseDTO.builder()
                         .message(storageException.getMessage())
+                        .build());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(PasswordException.class)
+    public ResponseEntity<ExceptionResponseDTO> passwordExceptionHandler(PasswordException passwordException) {
+        log.error("thrown PasswordException");
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ExceptionResponseDTO.builder()
+                        .message(passwordException.getMessage())
                         .build());
     }
 }

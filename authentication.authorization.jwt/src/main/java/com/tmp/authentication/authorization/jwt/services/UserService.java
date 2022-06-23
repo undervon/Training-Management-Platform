@@ -9,6 +9,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
 import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
+import com.tmp.authentication.authorization.jwt.exceptions.PasswordException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
@@ -16,6 +17,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeE
 import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.AssignUserDTO;
+import com.tmp.authentication.authorization.jwt.models.ChangeUserPasswordDTO;
 import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
 import com.tmp.authentication.authorization.jwt.models.ManagerDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
@@ -411,5 +413,22 @@ public class UserService {
                 .firstName(managerAttributes.getFirstName())
                 .email(managerAttributes.getEmail())
                 .build();
+    }
+
+    @Transactional
+    public void changePasswordReq(ChangeUserPasswordDTO changeUserPasswordDTO) {
+        User user = findUserByUsername(changeUserPasswordDTO.getEmail());
+
+        if (!bCryptPasswordEncoder.matches(changeUserPasswordDTO.getOldPassword(), user.getPassword())) {
+            throw new PasswordException("Wrong old password");
+        }
+
+        if (!changeUserPasswordDTO.getNewPassword().equals(changeUserPasswordDTO.getConfirmNewPassword())) {
+            throw new PasswordException("The new password and tha new confirm password are not the same");
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(changeUserPasswordDTO.getNewPassword()));
+
+        userRepository.save(user);
     }
 }

@@ -1,6 +1,7 @@
 package com.tmp.authentication.authorization.jwt.controllers;
 
 import com.tmp.authentication.authorization.jwt.models.AssignUserDTO;
+import com.tmp.authentication.authorization.jwt.models.ChangeUserPasswordDTO;
 import com.tmp.authentication.authorization.jwt.models.EditUserDTO;
 import com.tmp.authentication.authorization.jwt.models.ManagerDTO;
 import com.tmp.authentication.authorization.jwt.models.RoleDTO;
@@ -340,6 +341,36 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(SuccessResponseDTO.builder()
                         .data(userService.getUserManagerByIdEmployeeReq(id))
+                        .build());
+    }
+
+    @Operation(summary = "Change user password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED - if [ wrong old password ] OR "
+                    + "[ the new password and tha new confirm password are not the same ]",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if [ the user not found in DB ]",
+                    content = @Content)
+    })
+    @CrossOrigin
+    @PatchMapping(value = "/changePassword",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessResponseDTO<?>> changePasswordReq(
+            @RequestBody ChangeUserPasswordDTO changeUserPasswordDTO) {
+        log.info("[ {} ] -> [ {} ] -> [ changePasswordReq ] changeUserPasswordDTO: {}",
+                this.getClass().getSimpleName(), HttpMethod.PATCH, changeUserPasswordDTO);
+
+        userService.changePasswordReq(changeUserPasswordDTO);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("The user has successfully changed the password")
                         .build());
     }
 }
