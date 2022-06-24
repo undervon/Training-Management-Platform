@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .antMatchers("/api/1.0/tmp/auth/validateAccessToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/validateRefreshToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/generateAccessToken/**").permitAll()
+                .antMatchers("/api/1.0/tmp/auth/changePassword/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/**").permitAll()
                 // Private endpoints
 //                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
