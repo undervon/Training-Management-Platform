@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -62,7 +64,7 @@ public class UserController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> addUserReq(
-            @RequestPart("addUser") @Parameter(schema = @Schema(type = "string", format = "binary")) AddUserDTO addUserDTO,
+            @Valid @RequestPart("addUser") @Parameter(schema = @Schema(type = "string", format = "binary")) AddUserDTO addUserDTO,
             @RequestPart("image") MultipartFile image) {
         log.info("[ {} ] -> [ {} ] -> [ addUserReq ] addUserDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.POST, addUserDTO);
@@ -91,7 +93,7 @@ public class UserController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> editUserReq(
-            @RequestPart("editUser") @Parameter(schema = @Schema(type = "string", format = "binary")) EditUserDTO editUserDTO,
+            @Valid @RequestPart("editUser") @Parameter(schema = @Schema(type = "string", format = "binary")) EditUserDTO editUserDTO,
             @RequestPart("image") MultipartFile image,
             @PathVariable("id") Long id) {
         log.info("[ {} ] -> [ {} ] -> [ editUserReq ] editUserDTO: {}, id: {}",

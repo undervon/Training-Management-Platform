@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,6 +20,8 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
+
+    @Pattern(regexp = "HMI|VNI|ADAS|PSS|ADMIN")
     private String department;
     private String employeeNumber;
 
