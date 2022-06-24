@@ -9,6 +9,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,6 +85,18 @@ public class InterceptedExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body(ExceptionResponseDTO.builder()
                         .message(illegalArgumentException.getMessage())
+                        .build());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponseDTO> methodArgumentNotValidExceptionHandler(
+            MethodArgumentNotValidException methodArgumentNotValidException) {
+        log.error("thrown MethodArgumentNotValidException");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ExceptionResponseDTO.builder()
+                        .message(methodArgumentNotValidException.getMessage())
                         .build());
     }
 }

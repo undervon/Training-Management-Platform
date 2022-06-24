@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -59,7 +61,7 @@ public class CourseController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> addCourseReq(
-            @RequestPart("addCourse") @Parameter(schema = @Schema(type = "string", format = "binary")) AddCourseDTO addCourseDTO,
+            @Valid @RequestPart("addCourse") @Parameter(schema = @Schema(type = "string", format = "binary")) AddCourseDTO addCourseDTO,
             @RequestPart("file") MultipartFile[] files) {
         log.info("[ {} ] -> [ {} ] -> [ addCourseReq ] addCourseDTO: {}",
                 this.getClass().getSimpleName(), HttpMethod.POST, addCourseDTO);
@@ -198,7 +200,7 @@ public class CourseController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessResponseDTO<?>> updateCourseByIdReq(@PathVariable(value = "id") Long id,
-            @RequestPart("editCourse") @Parameter(schema = @Schema(type = "string", format = "binary")) EditCourseDTO editCourseDTO) {
+            @Valid @RequestPart("editCourse") @Parameter(schema = @Schema(type = "string", format = "binary")) EditCourseDTO editCourseDTO) {
         log.info("[ {} ] -> [ {} ] -> [ updateCourseByIdReq ] id: {}",
                 this.getClass().getSimpleName(), HttpMethod.PUT, id);
 

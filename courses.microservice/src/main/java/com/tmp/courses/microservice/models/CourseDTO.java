@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,8 +19,12 @@ public class CourseDTO {
 
     private String name;
     private String description;
+
+    @Pattern(regexp = "English|Romanian")
     private String language;
     private String requirements;
+
+    @Pattern(regexp = "Business Operations|Engineering|Management|Programming|Sales and Marketing")
     private String category;
 
     private Double rating;
