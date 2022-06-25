@@ -2,6 +2,7 @@ package com.tmp.courses.microservice.services;
 
 import com.tmp.courses.microservice.entities.Course;
 import com.tmp.courses.microservice.exceptions.CourseNotFoundException;
+import com.tmp.courses.microservice.exceptions.FileContentTypeException;
 import com.tmp.courses.microservice.exceptions.GenericException;
 import com.tmp.courses.microservice.exceptions.StorageException;
 import com.tmp.courses.microservice.models.AddCourseDTO;
@@ -20,6 +21,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.client.HttpClientErrorException;
@@ -133,6 +135,23 @@ public class CourseService {
         });
     }
 
+    private void checkFilesContentType(MultipartFile[] files) {
+        List<String> acceptableContentType = Arrays.asList(
+                MediaType.TEXT_PLAIN_VALUE, // .txt
+                MediaType.APPLICATION_PDF_VALUE, // .pdf
+                MediaType.IMAGE_JPEG_VALUE, // .jpeg
+                MediaType.IMAGE_PNG_VALUE, // .png
+                "video/mp4", // .mp4
+                "audio/wave", // .wav
+                "audio/mpeg" // .mp3
+        );
+        Arrays.asList(files).forEach(file -> {
+            if (!acceptableContentType.contains(file.getContentType())) {
+                throw new FileContentTypeException();
+            }
+        });
+    }
+
     private void delete(File coursePath) {
         FileSystemUtils.deleteRecursively(Paths.get(coursePath.toString())
                 .toFile());
@@ -236,6 +255,8 @@ public class CourseService {
     public CourseDTO addCourseReq(AddCourseDTO addCourseDTO, MultipartFile[] files) {
         // Check if the files is empty
         checkEmptyFiles(files);
+        // Check if the files content type is right
+        checkFilesContentType(files);
 
         Course course = Course.builder()
                 .name(addCourseDTO.getName())

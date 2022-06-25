@@ -1,6 +1,7 @@
 package com.tmp.courses.microservice.exceptions.handling;
 
 import com.tmp.courses.microservice.exceptions.CourseNotFoundException;
+import com.tmp.courses.microservice.exceptions.FileContentTypeException;
 import com.tmp.courses.microservice.exceptions.GenericException;
 import com.tmp.courses.microservice.exceptions.RoleDoesNotExistException;
 import com.tmp.courses.microservice.exceptions.StorageException;
@@ -59,6 +60,17 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDTO.builder()
                         .message("Something wrong was done")
+                        .build());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(FileContentTypeException.class)
+    public ResponseEntity<ExceptionResponseDTO> fileContentTypeExceptionHandler() {
+        log.error("thrown FileContentTypeException");
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(ExceptionResponseDTO.builder()
+                        .message("The file has wrong content type")
                         .build());
     }
 }
