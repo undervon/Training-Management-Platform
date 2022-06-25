@@ -8,13 +8,13 @@ import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsExcepti
 import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
+import com.tmp.authentication.authorization.jwt.exceptions.ManagerDepartmentException;
 import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.PasswordException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleDoesNotExistException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
-import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.AssignUserDTO;
 import com.tmp.authentication.authorization.jwt.models.ChangeUserPasswordDTO;
@@ -150,25 +150,11 @@ public class UserService {
         }
     }
 
-    private void checkUserAlreadyExistsInDB(String username) {
-        try {
-            User dbUser = findUserByUsername(username);
-
-            if (dbUser.getEmail().equals(username)) {
-                throw new UserAlreadyExistsException(username);
-            }
-        } catch (UserNotFoundException userNotFoundException) {
-            // no-op
-        }
-    }
-
     /*
         Methods from UserController
      */
     @Transactional
     public UserDTO addUserReq(AddUserDTO addUserDTO, MultipartFile image) {
-        checkUserAlreadyExistsInDB(addUserDTO.getEmail());
-
         Manager manager = getManagerByUsername(managerGenericUsername);
 
         User user = User.builder()
@@ -229,6 +215,20 @@ public class UserService {
                 user.setImage(image.getBytes());
             } catch (IOException ioException) {
                 throw new GenericException();
+            }
+        }
+
+        if (existsManagerByUsername(dbUser.getEmail())) {
+            if (!dbUser.getDepartment().equals(editUserDTO.getDepartment())) {
+                throw new ManagerDepartmentException();
+            }
+
+            if (!dbUser.getEmail().equals(editUserDTO.getEmail())) {
+                Manager manager = findManagerByUsername(dbUser.getEmail());
+
+                manager.setEmail(editUserDTO.getEmail());
+
+                managerRepository.save(manager);
             }
         }
 

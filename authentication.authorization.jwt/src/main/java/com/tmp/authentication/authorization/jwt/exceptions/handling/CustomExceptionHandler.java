@@ -4,6 +4,7 @@ import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsExcepti
 import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
+import com.tmp.authentication.authorization.jwt.exceptions.ManagerDepartmentException;
 import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.PasswordException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
@@ -12,7 +13,6 @@ import com.tmp.authentication.authorization.jwt.exceptions.StorageException;
 import com.tmp.authentication.authorization.jwt.exceptions.TokenInBlackListException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnableToDeleteUserException;
 import com.tmp.authentication.authorization.jwt.exceptions.UnsupportedRolesSizeException;
-import com.tmp.authentication.authorization.jwt.exceptions.UserAlreadyExistsException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserImageNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.UserNotFoundException;
 import com.tmp.authentication.authorization.jwt.models.ExceptionResponseDTO;
@@ -98,15 +98,13 @@ public class CustomExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponseDTO> userAlreadyExistsExceptionHandler(
-            UserAlreadyExistsException userAlreadyExistsException) {
-        log.error("thrown UserAlreadyExistsException");
+    @ExceptionHandler(ManagerDepartmentException.class)
+    public ResponseEntity<ExceptionResponseDTO> managerDepartmentExceptionHandler() {
+        log.error("thrown ManagerDepartmentException");
 
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body(ExceptionResponseDTO.builder()
-                        .message(String.format("The user '%s' already exists in db",
-                                userAlreadyExistsException.getMessage()))
+                        .message("A manager department cannot be edited")
                         .build());
     }
 

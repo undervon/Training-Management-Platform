@@ -7,6 +7,7 @@ import io.jsonwebtoken.PrematureJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -97,6 +98,19 @@ public class InterceptedExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ExceptionResponseDTO.builder()
                         .message(methodArgumentNotValidException.getMessage())
+                        .build());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponseDTO> dataIntegrityViolationExceptionHandler(
+            DataIntegrityViolationException dataIntegrityViolationException) {
+        log.error("thrown DataIntegrityViolationException");
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ExceptionResponseDTO.builder()
+                        .message(dataIntegrityViolationException.getMostSpecificCause().getMessage()
+                                .split("Detail: ")[1])
                         .build());
     }
 }

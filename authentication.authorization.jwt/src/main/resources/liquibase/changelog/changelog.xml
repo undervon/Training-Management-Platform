@@ -49,6 +49,13 @@
         </createTable>
     </changeSet>
     <changeSet id="5" author="Silviu-auth">
+        <addUniqueConstraint columnNames="employee_number" constraintName="uk_9aw59jtyajbpyr0q02h20ahql"
+                             tableName="employees"/>
+    </changeSet>
+    <changeSet id="6" author="Silviu-auth">
+        <addUniqueConstraint columnNames="email" constraintName="uk_j9xgmd0ya5jmus09o0b8pqrpb" tableName="employees"/>
+    </changeSet>
+    <changeSet id="7" author="Silviu-auth">
         <createTable tableName="employees_certificates">
             <column name="id_certificate" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="employees_certificates_pkey"/>
@@ -58,7 +65,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="6" author="Silviu-auth">
+    <changeSet id="8" author="Silviu-auth">
         <createTable tableName="employees_roles">
             <column name="id_role" type="BIGINT">
                 <constraints nullable="false"/>
@@ -68,31 +75,31 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="7" author="Silviu-auth">
+    <changeSet id="9" author="Silviu-auth">
         <addPrimaryKey columnNames="id_employee, id_role" constraintName="employees_roles_pkey"
                        tableName="employees_roles"/>
     </changeSet>
-    <changeSet id="8" author="Silviu-auth">
+    <changeSet id="10" author="Silviu-auth">
         <addForeignKeyConstraint baseColumnNames="id_employee" baseTableName="employees_certificates"
                                  constraintName="fk27sqq2fsdlvo2cowv0t46ba8a" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id_employee" referencedTableName="employees"/>
     </changeSet>
-    <changeSet id="9" author="Silviu-auth">
+    <changeSet id="11" author="Silviu-auth">
         <addForeignKeyConstraint baseColumnNames="id_role" baseTableName="employees_roles"
                                  constraintName="fk5aha8dr5vtutvrtqq1myb8l5h" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id_role" referencedTableName="roles"/>
     </changeSet>
-    <changeSet id="10" author="Silviu-auth">
+    <changeSet id="12" author="Silviu-auth">
         <addForeignKeyConstraint baseColumnNames="id_manager" baseTableName="employees"
                                  constraintName="fk6poiw13to6nk7ux6up5kpyq5q" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id_manager" referencedTableName="managers"/>
     </changeSet>
-    <changeSet id="11" author="Silviu-auth">
+    <changeSet id="13" author="Silviu-auth">
         <addForeignKeyConstraint baseColumnNames="id_certificate" baseTableName="employees_certificates"
                                  constraintName="fk9exa2as6dphd5lol4vc70acqd" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id_certificate" referencedTableName="certificates"/>
     </changeSet>
-    <changeSet id="12" author="Silviu-auth">
+    <changeSet id="14" author="Silviu-auth">
         <addForeignKeyConstraint baseColumnNames="id_employee" baseTableName="employees_roles"
                                  constraintName="fkthtko3d0awnvsaxf0iu1w5ocm" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id_employee" referencedTableName="employees"/>

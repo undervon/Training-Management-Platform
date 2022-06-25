@@ -1,5 +1,6 @@
 package com.tmp.authentication.authorization.jwt.security;
 
+import com.tmp.authentication.authorization.jwt.models.enums.RoleValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +57,33 @@ public class SecurityConfig {
                 .antMatchers("/api/1.0/tmp/auth/**").permitAll()
                 // Private endpoints
 //                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/editUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/deleteUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/editRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/getUser/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
+//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/getUsers/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/user/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/subordinateUsers/**").hasAuthority(RoleValue.MANAGER.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/unassignedUsers/**").hasAuthority(RoleValue.MANAGER.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/assignUser/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
+//                        RoleValue.EMPLOYEE.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/getUserManager/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
+//                        RoleValue.EMPLOYEE.getAuthority())
+//
+//                .antMatchers("/api/1.0/tmp/auth/image/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
+//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+//
+//                .antMatchers("/api/1.0/tmp/auth/logout/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
+//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+//
+//                .antMatchers("/api/1.0/tmp/auth/createCertificate/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
+//                        RoleValue.EMPLOYEE.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/getCertificatesByUserId/**").hasAnyAuthority(
+//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+//                .antMatchers("/api/1.0/tmp/auth/*").hasAnyAuthority(
+//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/api-tmp-auth-docs/**").permitAll()

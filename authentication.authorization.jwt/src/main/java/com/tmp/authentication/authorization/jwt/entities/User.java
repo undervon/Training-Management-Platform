@@ -37,10 +37,14 @@ public class User {
 
     private String firstName;
     private String lastName;
+
+    @Column(unique = true)
     private String email;
     private String password;
 
     private String department;
+
+    @Column(unique = true)
     private String employeeNumber;
 
     @Builder.Default
