@@ -4,7 +4,6 @@ import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsExcepti
 import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
-import com.tmp.authentication.authorization.jwt.exceptions.ManagerDepartmentException;
 import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.PasswordException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
@@ -94,17 +93,6 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
                 .body(ExceptionResponseDTO.builder()
                         .message("The roles size is unsupported")
-                        .build());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(ManagerDepartmentException.class)
-    public ResponseEntity<ExceptionResponseDTO> managerDepartmentExceptionHandler() {
-        log.error("thrown ManagerDepartmentException");
-
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body(ExceptionResponseDTO.builder()
-                        .message("A manager department cannot be edited")
                         .build());
     }
 

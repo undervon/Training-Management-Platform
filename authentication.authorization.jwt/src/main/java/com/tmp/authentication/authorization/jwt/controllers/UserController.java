@@ -375,4 +375,25 @@ public class UserController {
                         .data("The user has successfully changed the password")
                         .build());
     }
+
+    @Operation(summary = "Get user roles by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = RoleDTO.class)))
+            }),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the user not found in DB",
+                    content = @Content)
+    })
+    @CrossOrigin
+    @GetMapping(value = "getRoles/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessResponseDTO<?>> getUserRolesByIdReq(@PathVariable("id") Long id) {
+        log.info("[ {} ] -> [ {} ] -> [ getUserRolesByIdReq ] id: {}",
+                this.getClass().getSimpleName(), HttpMethod.GET, id);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO.builder()
+                        .data(userService.getUserRolesByIdReq(id))
+                        .build());
+    }
 }

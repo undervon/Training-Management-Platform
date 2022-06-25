@@ -4,11 +4,11 @@ import com.tmp.authentication.authorization.jwt.entities.Certificate;
 import com.tmp.authentication.authorization.jwt.entities.Manager;
 import com.tmp.authentication.authorization.jwt.entities.Role;
 import com.tmp.authentication.authorization.jwt.entities.User;
+import com.tmp.authentication.authorization.jwt.entities.UserRole;
 import com.tmp.authentication.authorization.jwt.exceptions.BadCredentialsException;
 import com.tmp.authentication.authorization.jwt.exceptions.GenericException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageContentTypeException;
 import com.tmp.authentication.authorization.jwt.exceptions.ImageEmptyException;
-import com.tmp.authentication.authorization.jwt.exceptions.ManagerDepartmentException;
 import com.tmp.authentication.authorization.jwt.exceptions.ManagerNotFoundException;
 import com.tmp.authentication.authorization.jwt.exceptions.PasswordException;
 import com.tmp.authentication.authorization.jwt.exceptions.RoleAlreadyExistsException;
@@ -44,6 +44,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -219,13 +220,16 @@ public class UserService {
         }
 
         if (existsManagerByUsername(dbUser.getEmail())) {
+            Manager manager = findManagerByUsername(dbUser.getEmail());
             if (!dbUser.getDepartment().equals(editUserDTO.getDepartment())) {
-                throw new ManagerDepartmentException();
+                List<User> users = findUsersByManager(manager, dbUser.getEmail());
+
+                Manager genericManager = getManagerByUsername(managerGenericUsername);
+
+                users.forEach(employee -> employee.setManager(genericManager));
             }
 
             if (!dbUser.getEmail().equals(editUserDTO.getEmail())) {
-                Manager manager = findManagerByUsername(dbUser.getEmail());
-
                 manager.setEmail(editUserDTO.getEmail());
 
                 managerRepository.save(manager);
@@ -430,5 +434,19 @@ public class UserService {
         user.setPassword(bCryptPasswordEncoder.encode(changeUserPasswordDTO.getNewPassword()));
 
         userRepository.save(user);
+    }
+
+    public List<RoleDTO> getUserRolesByIdReq(Long id) {
+        User user = findUserById(id);
+
+        List<UserRole> userRoleList = userRoleRepository.findByIdUser(user);
+
+        List<RoleDTO> roleDTOList = new ArrayList<>();
+
+        userRoleList.forEach(userRole -> roleDTOList.add(RoleDTO.builder()
+                .roleValue(userRole.getIdRole().getRoleValue())
+                .build()));
+
+        return roleDTOList;
     }
 }
