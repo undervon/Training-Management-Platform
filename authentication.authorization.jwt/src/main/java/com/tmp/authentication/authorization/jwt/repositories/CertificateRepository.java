@@ -12,4 +12,6 @@ import java.util.Set;
 public interface CertificateRepository extends JpaRepository<Certificate, Long> {
 
     List<Certificate> getCertificatesByUsersIn(Set<User> users);
+
+    void deleteCertificateById(Long id);
 }

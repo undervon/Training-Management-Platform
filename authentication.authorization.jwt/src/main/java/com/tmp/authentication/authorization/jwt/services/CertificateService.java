@@ -17,12 +17,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,7 +33,9 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +71,9 @@ public class CertificateService {
         }
     }
 
-    private Resource load(File coursePath, String filename) {
+    private Resource load(File certificatePath, String filename) {
         try {
-            Path file = Paths.get(coursePath.toString())
+            Path file = Paths.get(certificatePath.toString())
                     .resolve(filename);
 
             Resource resource = new UrlResource(file.toUri());
@@ -83,6 +87,11 @@ public class CertificateService {
             throw new StorageException(String.format("Could not read file %s (%s)", filename,
                     malformedURLException.getMessage()));
         }
+    }
+
+    private void delete(File certificatePath) {
+        FileSystemUtils.deleteRecursively(Paths.get(certificatePath.toString())
+                .toFile());
     }
 
     private String generateCertificateURL(String certificateName) {
@@ -171,6 +180,7 @@ public class CertificateService {
         return CertificateAdapter.certificateToCertificateDTO(savedCertificate);
     }
 
+    @Transactional
     public List<CertificateDTO> getCertificatesByUserIdReq(Long id) {
         User user = userService.findUserById(id);
 
@@ -181,6 +191,31 @@ public class CertificateService {
                 .map(employeesCertificate -> certificateRepository.getReferenceById(
                         employeesCertificate.getIdCertificate().getId()))
                 .collect(Collectors.toList());
+
+        List<Certificate> newCertificateList = new ArrayList<>();
+        for (Certificate certificate : certificateList) {
+            File certificatePath = new File(certificatesPath, certificate.getName() + ".pdf");
+            LocalDateTime newDate = LocalDateTime.now().minusMonths(certificate.getAvailability());
+            if (certificate.getReleaseDate().isBefore(newDate)) {
+                delete(certificatePath);
+
+                Certificate newCertificate = Certificate.builder()
+                        .id(certificate.getId())
+                        .name(certificate.getName())
+                        .releaseDate(certificate.getReleaseDate())
+                        .availability(certificate.getAvailability())
+                        .path(certificate.getPath())
+                        .users(certificate.getUsers())
+                        .build();
+                newCertificateList.add(newCertificate);
+
+                certificateRepository.deleteCertificateById(certificate.getId());
+                employeesCertificateRepository.deleteEmployeesCertificateByIdCertificateAndIdEmployee(certificate,
+                        user);
+            }
+        }
+
+        certificateList.removeAll(newCertificateList);
 
         return CertificateAdapter.certificateListToCertificateDTOList(certificateList);
     }

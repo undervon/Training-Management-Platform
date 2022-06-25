@@ -1,5 +1,6 @@
 package com.tmp.authentication.authorization.jwt.repositories;
 
+import com.tmp.authentication.authorization.jwt.entities.Certificate;
 import com.tmp.authentication.authorization.jwt.entities.EmployeesCertificate;
 import com.tmp.authentication.authorization.jwt.entities.EmployeesCertificateId;
 import com.tmp.authentication.authorization.jwt.entities.User;
@@ -12,4 +13,6 @@ import java.util.List;
 public interface EmployeesCertificateRepository extends JpaRepository<EmployeesCertificate, EmployeesCertificateId> {
 
     List<EmployeesCertificate> getEmployeesCertificatesByIdEmployee(User idEmployee);
+
+    void deleteEmployeesCertificateByIdCertificateAndIdEmployee(Certificate certificate, User user);
 }
