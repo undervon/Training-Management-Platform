@@ -16,7 +16,6 @@ public class EditUserDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
 
     @Pattern(regexp = "HMI|VNI|ADAS|PSS|ADMIN")
     private String department;

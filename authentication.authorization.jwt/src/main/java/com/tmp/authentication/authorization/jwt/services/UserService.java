@@ -198,7 +198,7 @@ public class UserService {
                 .firstName(editUserDTO.getFirstName())
                 .lastName(editUserDTO.getLastName())
                 .email(editUserDTO.getEmail())
-                .password(bCryptPasswordEncoder.encode(editUserDTO.getPassword()))
+                .password(dbUser.getPassword())
                 .department(editUserDTO.getDepartment())
                 .employeeNumber(editUserDTO.getEmployeeNumber())
                 .joinDate(dbUser.getJoinDate())
