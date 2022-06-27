@@ -141,6 +141,7 @@ public class AssignedCoursesService {
                         .id(course.getId())
                         .name(course.getName())
                         .description(course.getDescription())
+                        .rating(course.getRating())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -160,6 +161,7 @@ public class AssignedCoursesService {
                         .id(course.getId())
                         .name(course.getName())
                         .description(course.getDescription())
+                        .rating(course.getRating())
                         .build())
                 .collect(Collectors.toList());
     }
