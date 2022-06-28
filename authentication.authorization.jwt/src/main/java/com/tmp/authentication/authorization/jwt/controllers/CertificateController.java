@@ -59,7 +59,7 @@ public class CertificateController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(SuccessResponseDTO.builder()
-                        .data(certificateService.createCertificateDTO(createCertificateDTO, "CertificateTemplate.html"))
+                        .data(certificateService.createCertificateReq(createCertificateDTO, "CertificateTemplate.html"))
                         .build());
     }
 

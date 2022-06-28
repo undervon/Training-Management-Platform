@@ -104,7 +104,7 @@ public class CertificateService {
     /*
         Methods from CertificateController
      */
-    public CertificateDTO createCertificateDTO(CreateCertificateDTO createCertificateDTO, String template) {
+    public CertificateDTO createCertificateReq(CreateCertificateDTO createCertificateDTO, String template) {
         Path route = Paths.get(certificatesPath);
 
         if (!Files.exists(route)) {
