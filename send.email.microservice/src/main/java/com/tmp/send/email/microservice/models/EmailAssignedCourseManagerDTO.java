@@ -20,5 +20,5 @@ public class EmailAssignedCourseManagerDTO {
     private String courseName;
     private Long courseId;
     private String courseCategory;
-    private Integer timeToMakeCourse;
+    private String timeToMakeCourse;
 }
