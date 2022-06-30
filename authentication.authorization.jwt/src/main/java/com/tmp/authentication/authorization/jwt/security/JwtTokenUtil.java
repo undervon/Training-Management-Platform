@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenUtil {
 
-    private static final long JWT_ACCESS_TOKEN_VALIDITY = 2 * 60 * 1000;                     // 2 minutes
+    private static final long JWT_ACCESS_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;               // 24 hours
     private static final long JWT_REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000;          // 7 days
 
     private static final long JWT_TIMEZONE_FIXING = 3 * 60 * 60 * 1000;                      // 3 hours
