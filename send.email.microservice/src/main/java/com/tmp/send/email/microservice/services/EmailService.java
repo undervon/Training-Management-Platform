@@ -86,25 +86,25 @@ public class EmailService {
 
         if (years != 0) {
             if (years == 1) {
-                dateIntervalInitial = dateIntervalInitial + years + " an ";
+                dateIntervalInitial = dateIntervalInitial + years + " year ";
             } else {
-                dateIntervalInitial = dateIntervalInitial + years + " ani ";
+                dateIntervalInitial = dateIntervalInitial + years + " years ";
             }
         }
 
         if (months != 0) {
             if (months == 1) {
-                dateIntervalInitial = dateIntervalInitial + months + " luna ";
+                dateIntervalInitial = dateIntervalInitial + months + " month ";
             } else {
-                dateIntervalInitial = dateIntervalInitial + months + " luni ";
+                dateIntervalInitial = dateIntervalInitial + months + " months ";
             }
         }
 
         if (days != 0) {
             if (days == 1) {
-                dateIntervalInitial = dateIntervalInitial + days + " zi ";
+                dateIntervalInitial = dateIntervalInitial + days + " day ";
             } else {
-                dateIntervalInitial = dateIntervalInitial + days + " zile ";
+                dateIntervalInitial = dateIntervalInitial + days + " days ";
             }
         }
 

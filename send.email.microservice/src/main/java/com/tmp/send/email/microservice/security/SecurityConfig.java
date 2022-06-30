@@ -1,5 +1,6 @@
 package com.tmp.send.email.microservice.security;
 
+import com.tmp.send.email.microservice.models.enums.RoleValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -47,9 +48,17 @@ public class SecurityConfig {
                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
         http.authorizeRequests()
-                .antMatchers("/api/1.0/tmp/email/send/**").permitAll()
                 // Private endpoints
-//                .antMatchers("/api/1.0/tmp/email/send/assignedCourseManager/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/email/send/assignedCourseEmployee/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/email/send/assignedCourseManager/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/email/send/courseCompletedEmployee/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/email/send/courseCompletedManager/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/email/send/createCourseManager/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/api-tmp-send-email-docs/**").permitAll()
