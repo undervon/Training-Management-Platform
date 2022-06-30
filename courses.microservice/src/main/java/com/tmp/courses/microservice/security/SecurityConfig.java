@@ -1,5 +1,6 @@
 package com.tmp.courses.microservice.security;
 
+import com.tmp.courses.microservice.models.enums.RoleValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -47,9 +48,20 @@ public class SecurityConfig {
                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
         http.authorizeRequests()
+                // course-controller
+                .antMatchers("/api/1.0/tmp/courses/addCourse/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/courses/deleteCourse/**").hasAuthority(RoleValue.MANAGER.getAuthority())
+                .antMatchers("/api/1.0/tmp/courses/getCourse/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/courses/getCourses/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/courses/updateCourse/**").hasAuthority(RoleValue.MANAGER.getAuthority())
+                // survey-controller
+                .antMatchers("/api/1.0/tmp/courses/addSurvey/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                // allowed for all for /api/1.0/tmp/courses/{directory} and /api/1.0/tmp/courses/{directory}/{filename}
                 .antMatchers("/api/1.0/tmp/courses/**").permitAll()
-                // Private endpoints
-//                .antMatchers("/api/1.0/tmp/courses/getCourse/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/api-tmp-courses-docs/**").permitAll()
