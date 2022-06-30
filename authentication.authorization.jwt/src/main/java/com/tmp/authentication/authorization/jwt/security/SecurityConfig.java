@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .antMatchers("/api/1.0/tmp/auth/getUser/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
                         RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/getUserManager/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
-                        RoleValue.EMPLOYEE.getAuthority())
+                        RoleValue.EMPLOYEE.getAuthority(), RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/getUsers/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
                         RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/subordinateUsers/**").hasAuthority(RoleValue.MANAGER.getAuthority())
