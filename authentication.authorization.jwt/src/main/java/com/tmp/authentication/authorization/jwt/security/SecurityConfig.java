@@ -49,41 +49,45 @@ public class SecurityConfig {
                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
         http.authorizeRequests()
+                // Private endpoints
+                // certificate-controller
+                .antMatchers("/api/1.0/tmp/auth/createCertificate/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/getCertificatesByUserId/**").hasAnyAuthority(
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                // login-controller
+                .antMatchers("/api/1.0/tmp/auth/generateAccessToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/login/**").permitAll()
+                // logout-controller
+                .antMatchers("/api/1.0/tmp/auth/logout/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/validateAccessToken/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/validateRefreshToken/**").permitAll()
-                .antMatchers("/api/1.0/tmp/auth/generateAccessToken/**").permitAll()
+                // user-image-controller
+                .antMatchers("/api/1.0/tmp/auth/image/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                // user-controller
+                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/assignUser/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
+                        RoleValue.EMPLOYEE.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/changePassword/**").permitAll()
+                .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/deleteUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/editRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/editUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/getRoles/**").hasAuthority(RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/getUser/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
+                        RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/getUserManager/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
+                        RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/getUsers/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
+                        RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/subordinateUsers/**").hasAuthority(RoleValue.MANAGER.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/unassignedUsers/**").hasAuthority(RoleValue.MANAGER.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/user/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                // allowed for all for /api/1.0/tmp/auth/{pdfName}
                 .antMatchers("/api/1.0/tmp/auth/**").permitAll()
-                // Private endpoints
-//                .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/editUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/deleteUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/editRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/getUser/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
-//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/getUsers/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/user/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/subordinateUsers/**").hasAuthority(RoleValue.MANAGER.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/unassignedUsers/**").hasAuthority(RoleValue.MANAGER.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/assignUser/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
-//                        RoleValue.EMPLOYEE.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/getUserManager/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
-//                        RoleValue.EMPLOYEE.getAuthority())
-//
-//                .antMatchers("/api/1.0/tmp/auth/image/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
-//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
-//
-//                .antMatchers("/api/1.0/tmp/auth/logout/**").hasAnyAuthority(RoleValue.ADMIN.getAuthority(),
-//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
-//
-//                .antMatchers("/api/1.0/tmp/auth/createCertificate/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
-//                        RoleValue.EMPLOYEE.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/getCertificatesByUserId/**").hasAnyAuthority(
-//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
-//                .antMatchers("/api/1.0/tmp/auth/*").hasAnyAuthority(
-//                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/api-tmp-auth-docs/**").permitAll()
