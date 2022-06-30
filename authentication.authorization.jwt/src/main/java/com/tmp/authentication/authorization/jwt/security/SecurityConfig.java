@@ -68,8 +68,7 @@ public class SecurityConfig {
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 // user-controller
                 .antMatchers("/api/1.0/tmp/auth/addUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-                .antMatchers("/api/1.0/tmp/auth/assignUser/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
-                        RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/assignUser/**").hasAuthority(RoleValue.MANAGER.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/changePassword/**").permitAll()
                 .antMatchers("/api/1.0/tmp/auth/deleteRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/deleteUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
