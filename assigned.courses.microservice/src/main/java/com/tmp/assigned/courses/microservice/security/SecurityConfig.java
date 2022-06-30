@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .antMatchers("/api/1.0/tmp/assigned/courses/assignUserCourse/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 .antMatchers("/api/1.0/tmp/assigned/courses/getAssignedCourseProperties/**").hasAnyAuthority(
-                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority(), RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/assigned/courses/getCompletedCourses/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 .antMatchers("/api/1.0/tmp/assigned/courses/getCoursesStatistics/**").hasAnyAuthority(
