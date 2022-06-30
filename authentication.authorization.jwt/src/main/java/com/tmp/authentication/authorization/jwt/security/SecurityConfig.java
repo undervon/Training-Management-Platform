@@ -75,8 +75,7 @@ public class SecurityConfig {
                 .antMatchers("/api/1.0/tmp/auth/editRole/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/editUser/**").hasAuthority(RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/getRoles/**").hasAuthority(RoleValue.ADMIN.getAuthority())
-                .antMatchers("/api/1.0/tmp/auth/getUser/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
-                        RoleValue.ADMIN.getAuthority())
+                .antMatchers("/api/1.0/tmp/auth/getUser/**").permitAll() // using in assigned courses
                 .antMatchers("/api/1.0/tmp/auth/getUserManager/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),
                         RoleValue.EMPLOYEE.getAuthority(), RoleValue.ADMIN.getAuthority())
                 .antMatchers("/api/1.0/tmp/auth/getUsers/**").hasAnyAuthority(RoleValue.MANAGER.getAuthority(),

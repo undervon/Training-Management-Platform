@@ -48,17 +48,16 @@ public class SecurityConfig {
                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
         http.authorizeRequests()
+                // Private endpoints
                 // assigned-courses-controller
                 .antMatchers("/api/1.0/tmp/assigned/courses/assignUserCourse/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 .antMatchers("/api/1.0/tmp/assigned/courses/getAssignedCourseProperties/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority(), RoleValue.ADMIN.getAuthority())
-                .antMatchers("/api/1.0/tmp/assigned/courses/getCompletedCourses/**").hasAnyAuthority(
-                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/assigned/courses/getCompletedCourses/**").permitAll() // using in courses
                 .antMatchers("/api/1.0/tmp/assigned/courses/getCoursesStatistics/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority(), RoleValue.ADMIN.getAuthority())
-                .antMatchers("/api/1.0/tmp/assigned/courses/getIncompleteCourses/**").hasAnyAuthority(
-                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/assigned/courses/getIncompleteCourses/**").permitAll() // using in courses
                 .antMatchers("/api/1.0/tmp/assigned/courses/setCompletedCourse/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 // Swagger UI and API Docs

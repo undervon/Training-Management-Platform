@@ -48,12 +48,12 @@ public class SecurityConfig {
                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
         http.authorizeRequests()
+                // Private endpoints
                 // course-controller
                 .antMatchers("/api/1.0/tmp/courses/addCourse/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 .antMatchers("/api/1.0/tmp/courses/deleteCourse/**").hasAuthority(RoleValue.MANAGER.getAuthority())
-                .antMatchers("/api/1.0/tmp/courses/getCourse/**").hasAnyAuthority(
-                        RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/courses/getCourse/**").permitAll() // using in assigned courses
                 .antMatchers("/api/1.0/tmp/courses/getCourses/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
                 .antMatchers("/api/1.0/tmp/courses/updateCourse/**").hasAuthority(RoleValue.MANAGER.getAuthority())
