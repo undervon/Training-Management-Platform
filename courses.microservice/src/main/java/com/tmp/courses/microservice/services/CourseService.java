@@ -93,6 +93,17 @@ public class CourseService {
         }
     }
 
+    protected void deleteAssignedCoursesByIdCourse(Long idCourse) {
+        try {
+            restTemplate.delete(String.format("http://%s:%s/api/1.0/tmp/assigned/courses/deleteAssignedCourses/%s",
+                    assignedPath,
+                    assignedPort,
+                    idCourse.toString()));
+        } catch (HttpClientErrorException httpClientErrorException) {
+            throw new GenericException();
+        }
+    }
+
     private void init(String uploadPath) {
         try {
             Files.createDirectories(Paths.get(uploadPath));
@@ -338,6 +349,8 @@ public class CourseService {
 
         File coursePath = new File(coursesPath, course.getId().toString() + "-" + course.getName().replace(" ", ""));
         delete(coursePath);
+
+        deleteAssignedCoursesByIdCourse(course.getId());
 
         courseRepository.delete(course);
     }
