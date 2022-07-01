@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -194,5 +195,12 @@ public class AssignedCoursesService {
                 .completed(assignedCourses.getCompleted())
                 .date(assignedCourses.getDate())
                 .build();
+    }
+
+    @Transactional
+    public void deleteAssignedCoursesByIdCourseReq(Long idCourse) {
+        SuccessResponseCourse course = getCourseById(idCourse);
+
+        assignedCoursesRepository.deleteAllByIdCourse(course.getData().getId());
     }
 }

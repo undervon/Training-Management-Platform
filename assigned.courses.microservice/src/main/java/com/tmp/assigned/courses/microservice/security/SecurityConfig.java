@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .antMatchers("/api/1.0/tmp/assigned/courses/getIncompleteCourses/**").permitAll() // using in courses
                 .antMatchers("/api/1.0/tmp/assigned/courses/setCompletedCourse/**").hasAnyAuthority(
                         RoleValue.MANAGER.getAuthority(), RoleValue.EMPLOYEE.getAuthority())
+                .antMatchers("/api/1.0/tmp/assigned/courses/deleteAssignedCourses/**").permitAll() // using in courses
                 // Swagger UI and API Docs
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/api-tmp-assigned-courses-docs/**").permitAll()

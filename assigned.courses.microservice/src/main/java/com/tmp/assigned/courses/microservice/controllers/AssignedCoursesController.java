@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -176,6 +177,31 @@ public class AssignedCoursesController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(SuccessResponseDTO.builder()
                         .data(assignedCoursesService.getAssignedCoursePropertiesReq(idEmployee, idCourse))
+                        .build());
+    }
+
+    @Operation(summary = "Delete all assigned courses by id course")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - if successful", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND - if the course not found in DB",
+                    content = @Content)
+    })
+    @CrossOrigin
+    @DeleteMapping(value = "/deleteAssignedCourses/{idCourse}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessResponseDTO<?>> deleteAssignedCoursesByIdCourseReq(
+            @PathVariable(value = "idCourse") Long idCourse) {
+        log.info("[ {} ] -> [ {} ] -> [ deleteAssignedCoursesByIdCourseReq ] idCourse: {}",
+                this.getClass().getSimpleName(), HttpMethod.DELETE, idCourse);
+
+        assignedCoursesService.deleteAssignedCoursesByIdCourseReq(idCourse);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(SuccessResponseDTO
+                        .builder()
+                        .data("The assigned courses has been successfully deleted")
                         .build());
     }
 }

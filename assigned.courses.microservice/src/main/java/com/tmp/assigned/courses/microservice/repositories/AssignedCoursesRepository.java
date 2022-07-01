@@ -17,4 +17,6 @@ public interface AssignedCoursesRepository  extends JpaRepository<AssignedCourse
     Optional<AssignedCourses> findAssignedCoursesByIdCourseAndIdEmployee(Long idCourse, Long idEmployee);
 
     Integer countAssignedCoursesByIdEmployeeAndCompleted(Long idEmployee, Boolean completed);
+
+    void deleteAllByIdCourse(long idCourse);
 }
