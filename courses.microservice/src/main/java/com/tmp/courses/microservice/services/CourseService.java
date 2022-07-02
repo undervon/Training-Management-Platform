@@ -335,6 +335,7 @@ public class CourseService {
                         .name(course.getName())
                         .description(course.getDescription())
                         .rating(course.getRating())
+                        .timeToMake(course.getTimeToMake())
                         .build())
                 .collect(Collectors.toList());
     }

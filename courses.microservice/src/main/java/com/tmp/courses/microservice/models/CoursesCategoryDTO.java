@@ -17,4 +17,5 @@ public class CoursesCategoryDTO {
     private String description;
 
     private Double rating;
+    private String timeToMake;
 }
