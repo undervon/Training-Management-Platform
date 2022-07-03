@@ -72,6 +72,11 @@ public class UserService {
     @Value("${user.manager-generic.email}")
     private String managerGenericUsername;
 
+    private final String rootManager = "manager@manager.com";
+
+    private final String adminDepartment = "ADMIN";
+    private final String nonAdminDepartment = "VNI";
+
     /*
         UserService methods
      */
@@ -294,6 +299,12 @@ public class UserService {
             throw new RoleAlreadyExistsException(newRoleValue.getAuthority());
         }
 
+        // if the input role is ADMIN, setting the user department in ADMIN and manager in manager@manager.com
+        if (newRoleValue.equals(RoleValue.ADMIN)) {
+            user.setDepartment(adminDepartment);
+            user.setManager(findManagerByUsername(rootManager));
+        }
+
         // if the input role is MANAGER, create new manager in managers table
         if (newRoleValue.equals(RoleValue.MANAGER)) {
             final Manager newManager = Manager.builder()
@@ -319,6 +330,12 @@ public class UserService {
 
         if (!user.getRoles().contains(role)) {
             throw new RoleDoesNotExistException(newRoleValue.getAuthority());
+        }
+
+        // if the input role is ADMIN, set VNI department and manager generic
+        if (newRoleValue.equals(RoleValue.ADMIN)) {
+            user.setDepartment(nonAdminDepartment);
+            user.setManager(findManagerByUsername(managerGenericUsername));
         }
 
         final String username = user.getEmail();
