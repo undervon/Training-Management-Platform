@@ -219,12 +219,16 @@ public class UserService {
             }
         }
 
+        Manager genericManager = getManagerByUsername(managerGenericUsername);
+
+        if (!dbUser.getDepartment().equals(editUserDTO.getDepartment())) {
+            user.setManager(genericManager);
+        }
+
         if (existsManagerByUsername(dbUser.getEmail())) {
             Manager manager = findManagerByUsername(dbUser.getEmail());
             if (!dbUser.getDepartment().equals(editUserDTO.getDepartment())) {
                 List<User> users = findUsersByManager(manager, dbUser.getEmail());
-
-                Manager genericManager = getManagerByUsername(managerGenericUsername);
 
                 users.forEach(employee -> employee.setManager(genericManager));
             }
