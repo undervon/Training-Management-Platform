@@ -1,0 +1,1553 @@
+{
+	"info": {
+		"_postman_id": "4519e907-2b16-4169-a074-29223b76334a",
+		"name": "Training Management Platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18381161"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin@admin.com\",\r\n    \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accessToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA\",\r\n    \"refreshToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwiaXNzIjoibG9jYWxob3N0OjgwOTAiLCJqdGkiOiIwYjQwZThiZS1hYTA4LTRmMjMtODE3NC02YWUyMmQ4MzYzZjQiLCJpYXQiOjE2NTc2MzUwMTQsImV4cCI6MTY1ODIzOTgxNH0.fLLI6yEktiVF58pP7R5a_LV-Sgke0UdvgkoQI86GIhjiYf3gigz6L0QCK672-M3TBXuQWYs2wjrvtmBSCOFPeQ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/validateAccessToken",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIkVNUExPWUVFIiwiTUFOQUdFUiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzgwMTcxMSwiaWF0IjoxNjU3NzE1MzExLCJqdGkiOiI3NjFlOTFiOC05NTJhLTRiMDgtOWQxOS0wM2RmZmI1ZWY0ODIifQ.33KCGfQGGpNDc46W9AuhCHQZ5EPrz9sD7Z7I4paNTG8_89_RZ_HYxiWR6shZo72t4q01qOhGFC_bn49B9xEjTg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/validateAccessToken",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"validateAccessToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/validateRefreshToken",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwiaXNzIjoibG9jYWxob3N0OjgwOTAiLCJqdGkiOiJjZjYzMzRhNC1lNmI4LTQ5Y2QtOTcwNy0xOWZmMmU5OWNjYWYiLCJpYXQiOjE2NTc2MzU3MDMsImV4cCI6MTY1ODI0MDUwM30.WW7pNHQYYMVIO9S51m_MPyDzwV4MzdtFH6KX96z_hrrHRKBq5tFPwzsF573wTmPdtIZ0AuN5MJWBQZsT2rzh-w\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/validateRefreshToken",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"validateRefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/generateAccessToken",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwiaXNzIjoibG9jYWxob3N0OjgwOTAiLCJqdGkiOiJjZjYzMzRhNC1lNmI4LTQ5Y2QtOTcwNy0xOWZmMmU5OWNjYWYiLCJpYXQiOjE2NTc2MzU3MDMsImV4cCI6MTY1ODI0MDUwM30.WW7pNHQYYMVIO9S51m_MPyDzwV4MzdtFH6KX96z_hrrHRKBq5tFPwzsF573wTmPdtIZ0AuN5MJWBQZsT2rzh-w\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/generateAccessToken",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"generateAccessToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/getRoles/1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzgwMjc5MiwiaWF0IjoxNjU3NzE2MzkyLCJqdGkiOiI0MWU0ZDQ5Ni04MmM2LTQyYWQtOTliNS02ZDM4NjI3ZGM2MGUifQ.l03atqR4BVW7_EqoEehjumQaNvfDw1az3aYQ-HI_licJakBFsnUYmVV3lpYAglh__CQej_Em8Os_E6yR04bgcQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/getRoles/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"getRoles",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/editRole/11",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzgwMjc5MiwiaWF0IjoxNjU3NzE2MzkyLCJqdGkiOiI0MWU0ZDQ5Ni04MmM2LTQyYWQtOTliNS02ZDM4NjI3ZGM2MGUifQ.l03atqR4BVW7_EqoEehjumQaNvfDw1az3aYQ-HI_licJakBFsnUYmVV3lpYAglh__CQej_Em8Os_E6yR04bgcQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleValue\": \"MANAGER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/editRole/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"editRole",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/deleteRole/11",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMTAyMCwiaWF0IjoxNjU3NjM0NjIwLCJqdGkiOiJjYjZkYTA1NC0zNzJhLTRkOTAtOTU1ZS00M2I4M2Y2Yzg3YzUifQ.u4MZBb3cfYlt4pAWFrBVS19ClNOGt3QKccPj_DjKkI3Du_1hsKrcT-9ldwkLJKvLlAV69u9qZrbrFma7lLERnQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleValue\": \"MANAGER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/deleteRole/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"deleteRole",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/addUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzgwMjc5MiwiaWF0IjoxNjU3NzE2MzkyLCJqdGkiOiI0MWU0ZDQ5Ni04MmM2LTQyYWQtOTliNS02ZDM4NjI3ZGM2MGUifQ.l03atqR4BVW7_EqoEehjumQaNvfDw1az3aYQ-HI_licJakBFsnUYmVV3lpYAglh__CQej_Em8Os_E6yR04bgcQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/addUser",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"addUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/editUser/1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMTAyMCwiaWF0IjoxNjU3NjM0NjIwLCJqdGkiOiJjYjZkYTA1NC0zNzJhLTRkOTAtOTU1ZS00M2I4M2Y2Yzg3YzUifQ.u4MZBb3cfYlt4pAWFrBVS19ClNOGt3QKccPj_DjKkI3Du_1hsKrcT-9ldwkLJKvLlAV69u9qZrbrFma7lLERnQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/editUser/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"editUser",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/deleteUser/11",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMjE3MSwiaWF0IjoxNjU3NjM1NzcxLCJqdGkiOiI4OWVjN2M1Yi00ZWI3LTRkZTMtYTAxMS1mYjg3ODYwYWMwNTMifQ.lMXmCNAruK9LSABy82ngO8bjOJOwjnX1Lzr372SJ0Bm2gNb92raw3vuMgiAjAM8pQeVHpCiwNL8dDkaeRS9g3A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/deleteUser/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"deleteUser",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/image/2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIkVNUExPWUVFIiwiTUFOQUdFUiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzMwOTI3OCwiaWF0IjoxNjU3MjIyODc4LCJqdGkiOiI2MTczMDQ0MS1iMDQxLTQwNWEtOGVmNy01MDgxMGUyYWY5OTIifQ.xL9kh7MJP2lghNCsPt2PWY17XAfrN49hd1AtTKJISPwPruSExJ2cbua0-GUl3y87zxvRgZksFCzKGc59_PAGmA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/image/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"image",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/getUserManager/10",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/getUserManager/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"getUserManager",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/getUser/2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzgwMjc5MiwiaWF0IjoxNjU3NzE2MzkyLCJqdGkiOiI0MWU0ZDQ5Ni04MmM2LTQyYWQtOTliNS02ZDM4NjI3ZGM2MGUifQ.l03atqR4BVW7_EqoEehjumQaNvfDw1az3aYQ-HI_licJakBFsnUYmVV3lpYAglh__CQej_Em8Os_E6yR04bgcQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/getUser/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"getUser",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/getUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/getUsers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"getUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/user/alexandra.stefan@student.tuiasi.ro",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/user/silviu.butnaru@student.tuiasi.ro",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"user",
+								"silviu.butnaru@student.tuiasi.ro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/subordinateUsers/alexandra.stefan@student.tuiasi.ro",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/subordinateUsers/alexandra.stefan@student.tuiasi.ro",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"subordinateUsers",
+								"alexandra.stefan@student.tuiasi.ro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/unassignedUsers/alexandra.stefan@student.tuiasi.ro",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/unassignedUsers/marian-ilie.butnaru@student.tuiasi.ro",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"unassignedUsers",
+								"marian-ilie.butnaru@student.tuiasi.ro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/createCertificate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employeeId\": 11,\r\n    \"courseName\": \"Developing a Business Execution Culture\",\r\n    \"courseCategory\": \"Management\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/createCertificate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"createCertificate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/Certificate-JavanistatoJavaExpert_4_1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIkVNUExPWUVFIiwiTUFOQUdFUiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzMwNzkxOSwiaWF0IjoxNjU3MjIxNTE5LCJqdGkiOiJmNWQwOWU1Mi01ZGE0LTQyYTMtOGM0Mi00ZGFhZmE3ZjU2MTYifQ.aVwr4Q-cScQ0yXTFiRr0PF_E5G14ZpWAfIdrLkmMi6Nq2GKQ1jl1ckiNbSwv5RJU-EUXmGbG5P8FBZrSHBWxag",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/Certificate-JavanistatoJavaExpert_4_1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"Certificate-JavanistatoJavaExpert_4_1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/getCertificatesByUserId/4",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/getCertificatesByUserId/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"getCertificatesByUserId",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/assignUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzcyMDcwMiwiaWF0IjoxNjU3NjM0MzAyLCJqdGkiOiJhNGUxYjE2Ni1iMmQ5LTRjN2YtODk1OS1lZWU3MjZjZjhkZWMifQ.d6CCyyq-A861TNaYrzBb8jqvzX6I-wlgQdseaLn_DM5ztsqRBWyRzb9QvNZXztjg7jxudg5VpVD5gLLk8lVoXg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idManager\": 4,\r\n    \"idUser\": 11\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/assignUser",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"assignUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8090/api/1.0/tmp/auth/changePassword",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"cosmin-alexandru.geman@student.tuiasi.ro\",\r\n    \"oldPassword\": \"cosmin-alexandru.geman@student.tuiasi.ro\",\r\n    \"newPassword\": \"cosmin-alexandru\",\r\n    \"confirmNewPassword\": \"cosmin-alexandru\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/api/1.0/tmp/auth/changePassword",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"auth",
+								"changePassword"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Send email",
+			"item": [
+				{
+					"name": "http://localhost:8091/api/1.0/tmp/email/send/assignedCourseManager",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"managerEmail\": \"silviu.butnaru@student.tuiasi.ro\",\r\n    \"managerUsername\": \"Silviu\",\r\n    \"employeeUsername\": \"Alexandra\",\r\n    \"employeeEmail\": \"alexandra.stefan@student.tuiasi.ro\",\r\n    \"courseName\": \"Java Novice to Javanista\",\r\n    \"courseId\": 100,\r\n    \"courseCategory\": \"Programming\",\r\n    \"timeToMakeCourse\": \"20 day(s)\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8091/api/1.0/tmp/email/send/assignedCourseManager",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8091",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"email",
+								"send",
+								"assignedCourseManager"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8091/api/1.0/tmp/email/send/assignedCourseEmployee",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzExNjc5NSwiaWF0IjoxNjU3MDMwMzk1LCJqdGkiOiJjOTIwN2NmZi1lMGRlLTRiOTYtYTg2Yi04OThiNDBmODc1YzIifQ.tYB2eCywESopDu8drKW5ziVSHIrwPIP62jNvsFRo4A2NGmxiMej8pkGwQX4NxGEVe-GlDSvp-X73SAJyqUZ_4w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employeeEmail\": \"silviu.butnaru@student.tuiasi.ro\",\r\n    \"employeeUsername\": \"Silviu\",\r\n    \"courseName\": \"Java Novice to Javanista\",\r\n    \"courseId\": 100,\r\n    \"courseCategory\": \"Programming\",\r\n    \"timeToMakeCourse\": \"20 day(s)\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8091/api/1.0/tmp/email/send/assignedCourseEmployee",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8091",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"email",
+								"send",
+								"assignedCourseEmployee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8091/api/1.0/tmp/email/send/courseCompletedManager",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIk1BTkFHRVIiLCJFTVBMT1lFRSJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzExNjc5NSwiaWF0IjoxNjU3MDMwMzk1LCJqdGkiOiJjOTIwN2NmZi1lMGRlLTRiOTYtYTg2Yi04OThiNDBmODc1YzIifQ.tYB2eCywESopDu8drKW5ziVSHIrwPIP62jNvsFRo4A2NGmxiMej8pkGwQX4NxGEVe-GlDSvp-X73SAJyqUZ_4w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"managerEmail\": \"silviu.butnaru@student.tuiasi.ro\",\r\n    \"managerUsername\": \"Silviu\",\r\n    \"employeeUsername\": \"Alexandra\",\r\n    \"employeeEmail\": \"alexandra.stefan@student.tuiasi.ro\",\r\n    \"courseName\": \"Java Novice to Javanista\",\r\n    \"courseId\": 100,\r\n    \"courseCategory\": \"Programming\",\r\n    \"courseStartDate\": \"04.06.2022 - 12:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8091/api/1.0/tmp/email/send/courseCompletedManager",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8091",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"email",
+								"send",
+								"courseCompletedManager"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8091/api/1.0/tmp/email/send/courseCompletedEmployee",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIkVNUExPWUVFIiwiTUFOQUdFUiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzMwODY0MiwiaWF0IjoxNjU3MjIyMjQyLCJqdGkiOiIzYmM2OTAyYi0yNDFhLTQzN2QtOGU1MC0zNGM2M2RiN2RhMmIifQ.37pH9uInU8vIWFclU4lR1O4Oya8_kNtPtuUj8IYncboGNy7pHt6khjC18_0a6XWkFXIkORSFuA6nz5Or6Ee1TQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employeeEmail\": \"silviu.butnaru@student.tuiasi.ro\",\r\n    \"employeeUsername\": \"Silviu\",\r\n    \"courseName\": \"Java Novice to Javanista\",\r\n    \"courseId\": 100,\r\n    \"courseCategory\": \"Programming\",\r\n    \"courseStartDate\": \"04.06.2022 - 12:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8091/api/1.0/tmp/email/send/courseCompletedEmployee",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8091",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"email",
+								"send",
+								"courseCompletedEmployee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8091/api/1.0/tmp/email/send/createCourseManager",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaWx2aXUuYnV0bmFydUBzdHVkZW50LnR1aWFzaS5ybyIsInJvbGVzIjpbIkVNUExPWUVFIiwiTUFOQUdFUiJdLCJpc3MiOiJsb2NhbGhvc3Q6ODA5MCIsImV4cCI6MTY1NzgwMTcxMSwiaWF0IjoxNjU3NzE1MzExLCJqdGkiOiI3NjFlOTFiOC05NTJhLTRiMDgtOWQxOS0wM2RmZmI1ZWY0ODIifQ.33KCGfQGGpNDc46W9AuhCHQZ5EPrz9sD7Z7I4paNTG8_89_RZ_HYxiWR6shZo72t4q01qOhGFC_bn49B9xEjTg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"managerEmail\": \"silviu.butnaru@student.tuiasi.ro\",\r\n    \"managerUsername\": \"Silviu\",\r\n    \"employeeUsername\": \"Alexandra\",\r\n    \"employeeEmail\": \"alexandra.stefan@student.tuiasi.ro\",\r\n    \"courseName\": \"Java Novice to Javanista\",\r\n    \"courseId\": 100,\r\n    \"courseCategory\": \"Programming\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8091/api/1.0/tmp/email/send/createCourseManager",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8091",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"email",
+								"send",
+								"createCourseManager"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "http://localhost:8092/api/1.0/tmp/courses/addCourse",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8092/api/1.0/tmp/courses/addCourse",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8092",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"courses",
+								"addCourse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8092/api/1.0/tmp/courses/getCourses/1?category=Programming",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8092/api/1.0/tmp/courses/getCourses/11?category=Business Operations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8092",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"courses",
+								"getCourses",
+								"11"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "Business Operations"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8092/api/1.0/tmp/courses/deleteCourse/1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8092/api/1.0/tmp/courses/deleteCourse/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8092",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"courses",
+								"deleteCourse",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8092/api/1.0/tmp/courses/getCourse/16",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8092/api/1.0/tmp/courses/getCourse/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8092",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"courses",
+								"getCourse",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8092/api/1.0/tmp/courses/updateCourse/1",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8092/api/1.0/tmp/courses/updateCourse/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8092",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"courses",
+								"updateCourse",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8092/api/1.0/tmp/courses/addSurvey",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 1,\r\n    \"rating\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8092/api/1.0/tmp/courses/addSurvey",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8092",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"courses",
+								"addSurvey"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AssignedCourses",
+			"item": [
+				{
+					"name": "http://localhost:8093/api/1.0/tmp/assigned/courses/assignUserCourse",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idEmployee\": 11,\r\n    \"idCourse\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/1.0/tmp/assigned/courses/assignUserCourse",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"assigned",
+								"courses",
+								"assignUserCourse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8093/api/1.0/tmp/assigned/courses/setCompletedCourse",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idEmployee\": 11,\r\n    \"idCourse\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/api/1.0/tmp/assigned/courses/setCompletedCourse",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"assigned",
+								"courses",
+								"setCompletedCourse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8093/api/1.0/tmp/assigned/courses/getCompletedCourses/2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8093/api/1.0/tmp/assigned/courses/getCompletedCourses/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"assigned",
+								"courses",
+								"getCompletedCourses",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8093/api/1.0/tmp/assigned/courses/getIncompleteCourses/2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8093/api/1.0/tmp/assigned/courses/getIncompleteCourses/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"assigned",
+								"courses",
+								"getIncompleteCourses",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8093/api/1.0/tmp/assigned/courses/getCoursesStatistics/2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8093/api/1.0/tmp/assigned/courses/getCoursesStatistics/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"assigned",
+								"courses",
+								"getCoursesStatistics",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8093/api/1.0/tmp/assigned/courses/getAssignedCourseProperties/2/1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8093/api/1.0/tmp/assigned/courses/getAssignedCourseProperties/11/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"assigned",
+								"courses",
+								"getAssignedCourseProperties",
+								"11",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8093/api/1.0/tmp/assigned/courses/deleteAssignedCourses/3",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb3NtaW4tYWxleGFuZHJ1LmdlbWFuQHN0dWRlbnQudHVpYXNpLnJvIiwicm9sZXMiOlsiTUFOQUdFUiIsIkVNUExPWUVFIl0sImlzcyI6ImxvY2FsaG9zdDo4MDkwIiwiZXhwIjoxNjU3NzIxNDE0LCJpYXQiOjE2NTc2MzUwMTQsImp0aSI6IjkzMThhMDRlLWFiZWEtNDA4Mi1hZmQzLTBmYTMyOTdjZjRmMyJ9.qZpeepIdrasnqUu8C46zTqoew0KiyifIehWh8A9IvRdkoxWCYLAqezT8A29I2Ak-PpPflcQ-VyOxbAtdwUFMGA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8093/api/1.0/tmp/assigned/courses/deleteAssignedCourses/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"api",
+								"1.0",
+								"tmp",
+								"assigned",
+								"courses",
+								"deleteAssignedCourses",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
