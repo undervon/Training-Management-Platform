@@ -1,6 +1,6 @@
 # Training Management Platform
 
-Complex server-side(back-end) web application created using:
+Complex server-side (back-end) web application created using:
 
 * Java 11
 * Spring Framework
