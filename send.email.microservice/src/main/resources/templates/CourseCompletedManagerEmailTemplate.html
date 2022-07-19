@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Course completed manager email template</title>
+        <style>
+            hr {
+                border: 0.1px solid #656464;
+                margin-bottom: 15px;
+                opacity: 50%;
+                width: 75%;
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            .emoji {
+                font-size: 25px;
+            }
+
+            .footer-text {
+                color: #656464;
+            }
+
+            .logo-image {
+                position: static;
+                width: 255px;
+                height: 128px;
+            }
+
+            .page {
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body class="page">
+        <img class="logo-image" src="cid:image" alt="continental-logo"><br><br><br>
+        Dear <th:block th:text="${managerUsername}">Alexandra</th:block>,<br><br>
+
+        We have new news for you!<br><br>
+        <span class="emoji">&#127881;&#127881;&#127881;</span><br><br>
+
+        Your subordinate,
+        <th:block th:text="${employeeUsername}">Silviu</th:block> with the email
+        '<th:block th:text="${employeeEmail}">silviu.butnaru@student.tuiasi.ro</th:block>', has just completed the course
+        '<th:block th:text="${courseName}">Java Novice to Javanista</th:block>' with number
+        <th:block th:text="${courseId}">99</th:block> in the
+        '<th:block th:text="${courseCategory}">Programming</th:block>' category.<br><br>
+
+        He assigned it on
+        <th:block th:text="${courseStartDate}">04.06.2022 - 12:00:00</th:block> and completed it on
+        <th:block th:text="${courseCompletionDate}">05.06.2022 - 12:00:00</th:block>.<br><br>
+        Therefore, it was covered in an interval of:
+        <th:block th:text="${courseCompletionInterval}">1 day</th:block>.<br><br><br><br>
+
+        <hr/>
+        <footer>
+            If you have any questions/concerns or encounter a problem, please contact us at
+            <a href="mailto:continental.suport@gmail.com">continental.suport@gmail.com</a><br><br>
+            <span class="footer-text">
+                All the best,<br>
+                Technical support, &copy; 2022 - Continental AG<br>
+            </span>
+        </footer>
+    </body>
+</html>

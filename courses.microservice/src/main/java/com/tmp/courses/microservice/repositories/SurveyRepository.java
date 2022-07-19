@@ -1,0 +1,15 @@
+package com.tmp.courses.microservice.repositories;
+
+import com.tmp.courses.microservice.entities.Survey;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface SurveyRepository extends JpaRepository<Survey, Long> {
+
+    List<Survey> getSurveysByName(String name);
+
+    void deleteSurveysByName(String name);
+}

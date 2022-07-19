@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  email:
+    image: send-email-app
+    container_name: Send_email_app
+    build:
+      context: .
+    ports:
+      - "8091:8091"
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    external: true
+
+#
+# Commands:
+#
+# docker-compose up                -> used to create a docker container
+# docker-compose down              -> used to destroy a docker container
+#

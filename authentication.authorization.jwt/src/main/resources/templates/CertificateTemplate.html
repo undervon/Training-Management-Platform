@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Certificate of Completion</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 48px;
+            text-transform: uppercase;
+            color: #ffa500;
+        }
+
+        #certificate-container {
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
+            page-break-after: always;
+            background: #f0f0f0;
+            width: 190mm;
+            height: 240mm;
+            text-align: center;
+        }
+
+        #logo-container {
+            text-align: left;
+        }
+
+        #logo-image {
+            position: absolute;
+            z-index: 1;
+            width: 255px;
+            height: auto;
+            margin-left: 40px;
+        }
+
+        #header-image {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 150mm;
+            margin-top: 40px;
+            opacity: 0.5;
+        }
+
+        #page-title {
+            margin: 0px 100px;
+        }
+
+        #employee-container {
+            display: flex;
+            flex-direction: column;
+            margin-right: 200px;
+            margin-bottom: 20px;
+            margin-left: 200px;
+        }
+
+        #employee-name {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        #reason-container {
+            display: flex;
+            flex-direction: column;
+            margin: 0px 200px;
+        }
+
+        #footer-container {
+            bottom: 60px;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+        }
+
+        #course-name {
+            color: #ffa500;
+        }
+
+        .detail-text {
+            font-size: 18px;
+        }
+
+        .emphasized-text {
+            font-size: 24px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<div id="certificate-container">
+    <div id="logo-container">
+        <img id="logo-image"
+             src="https://cdn.continental.com/fileadmin/_processed_/3/b/csm_continental_20logo-1920x1080_247d99d89e.png"/>
+    </div>
+    <div class="certificate-details">
+        <img id="header-image"
+             src="https://cdn.continental.com/fileadmin/_processed_/2/a/csm_2018_07_30_automechanika_header_27e9f62e68.jpg"/>
+        <div id="page-title">
+            <h1>Certificate of Completion</h1>
+        </div>
+        <span class="detail-text">This certificate is presented to</span>
+        <div id="employee-container">
+            <div id="employee-name">
+                <div class="emphasized-text">
+                    <th:block th:text="${employeeFirstName}">Silviu</th:block>
+                </div>
+                <div class="emphasized-text">
+                    <th:block th:text="${employeeLastName}">Butnaru</th:block>
+                </div>
+            </div>
+            <span class="detail-text">identified by</span>
+            <div class="emphasized-text">
+                <th:block th:text="${employeeNumber}">ID12345</th:block>
+            </div>
+        </div>
+        <div id="reason-container">
+            <span class="detail-text">for successfully completing the</span>
+            <div id="course-name" class="emphasized-text">
+                <th:block th:text="${courseName}">Java Novice to Javanista</th:block>
+                Course of
+                <th:block th:text="${courseCategory}">Programming</th:block>
+            </div>
+            <div class="detail-text">on the day of
+                <th:block th:text="${courseCompletedDate}">15.06.2022</th:block>
+            </div>
+        </div>
+        <div id="footer-container">
+                    <span class="detail-text">
+                        &copy; 2022 - Continental AG
+                    </span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
